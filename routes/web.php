@@ -13,6 +13,7 @@ use App\Http\Controllers\Petani\StockController;
 use App\Http\Controllers\Konsumen\DashboardController as KonsumenDashboardController;
 use App\Http\Controllers\Konsumen\ProductController as KonsumenProductController;
 use App\Http\Controllers\Konsumen\OrderController as KonsumenOrderController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Landing
@@ -55,6 +56,13 @@ Route::middleware(['auth', 'role:konsumen'])->prefix('konsumen')->name('konsumen
     Route::get('pesanan', [KonsumenOrderController::class, 'index'])->name('orders.index');
     Route::post('pesanan', [KonsumenOrderController::class, 'store'])->name('orders.store');
     Route::get('pesanan/{order}', [KonsumenOrderController::class, 'show'])->name('orders.show');
+});
+
+// Profile Role
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';

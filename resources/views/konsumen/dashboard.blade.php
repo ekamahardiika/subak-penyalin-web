@@ -1,11 +1,6 @@
 @extends('layouts.app')
 @section('content')
     <h1 class="text-2xl font-bold mb-2">Panel Konsumen</h1>
-    <div class="flex gap-2 mb-4 text-sm">
-        <a href="{{ route('konsumen.dashboard') }}" class="bg-emerald-600 text-white px-3 py-1 rounded">Menu Utama</a>
-        <a href="{{ route('konsumen.products.index') }}" class="bg-gray-200 px-3 py-1 rounded">Katalog Belanja</a>
-        <a href="{{ route('konsumen.orders.index') }}" class="bg-gray-200 px-3 py-1 rounded">Riwayat Belanjaan Saya</a>
-    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-white p-4 border rounded shadow-sm">

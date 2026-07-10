@@ -1,10 +1,6 @@
 @extends('layouts.app')
 @section('content')
     <h1 class="text-2xl font-bold mb-2">Panel Kerja Petani</h1>
-    <div class="flex gap-2 mb-4 text-sm">
-        <a href="{{ route('petani.dashboard') }}" class="bg-emerald-600 text-white px-3 py-1 rounded">Ringkasan</a>
-        <a href="{{ route('petani.stok.index') }}" class="bg-gray-200 px-3 py-1 rounded">Kelola Stok Gabah Saya</a>
-    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div class="bg-white p-4 border rounded shadow-sm">
