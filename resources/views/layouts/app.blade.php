@@ -17,152 +17,214 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-gray-50 text-gray-800" x-data="{ sidebarOpen: false }">
+<!-- Menggunakan Alpine.js x-init untuk membaca state dari localStorage agar tidak reset saat pindah menu -->
+
+<body class="font-sans antialiased bg-gray-50 text-gray-800" x-data="{
+    mobileOpen: false,
+    desktopExpanded: localStorage.getItem('sidebarExpanded') !== 'false'
+}" x-init="$watch('desktopExpanded', val => localStorage.setItem('sidebarExpanded', val))">
+
     <div class="min-h-screen flex">
 
-        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            class="fixed inset-y-0 left-0 z-50 w-64 bg-emerald-950 text-emerald-100 flex flex-col transition-transform duration-300 md:translate-x-0 md:static md:h-screen shrink-0 border-r border-emerald-900 shadow-xl">
-            <div class="h-16 flex items-center justify-between px-6 border-b border-emerald-900/60 bg-emerald-950">
-                <div class="flex items-center gap-2">
-                    <div class="bg-emerald-600 text-white p-1.5 rounded-lg shadow-md">
+        <!-- ASIDE SIDEBAR -->
+        <aside
+            :class="[
+                mobileOpen ? 'translate-x-0' : '-translate-x-full',
+                desktopExpanded ? 'md:w-64' : 'md:w-20'
+            ]"
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-emerald-950 text-emerald-100 flex flex-col transition-all duration-200 md:translate-x-0 md:static md:h-screen shrink-0 border-r border-emerald-900 shadow-xl">
+
+            <!-- Header Sidebar (Logo & Brand) -->
+            <div class="h-16 flex items-center border-b border-emerald-900/60 bg-emerald-950 overflow-hidden"
+                :class="desktopExpanded ? 'justify-between px-4' : 'justify-center px-0'">
+
+                <div class="flex items-center gap-2.5">
+                    <div
+                        class="bg-emerald-600 text-white p-1.5 rounded-xl shadow-md shrink-0 flex items-center justify-center w-9 h-9">
                         <i class="fa-solid fa-wheat-awn text-sm"></i>
                     </div>
-                    <span class="text-lg font-bold text-white tracking-wide">Sistem<span
-                            class="text-emerald-400">Gabah</span></span>
+                    <span x-show="desktopExpanded" class="text-lg font-bold text-white tracking-wide whitespace-nowrap">
+                        Sistem<span class="text-emerald-400">Gabah</span>
+                    </span>
                 </div>
-                <button @click="sidebarOpen = false" class="md:hidden text-emerald-400 hover:text-white">
+
+                <button @click="mobileOpen = false" class="md:hidden text-emerald-400 hover:text-white px-2">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
 
-            <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+            <!-- Navigasi Menu Utama -->
+            <nav class="flex-1 py-6 space-y-2 overflow-y-auto no-scrollbar" :class="desktopExpanded ? 'px-3' : 'px-2'">
 
                 @if (Auth::user()->isAdmin())
-                    [cite: 774]
-                    <p class="text-[11px] font-bold tracking-wider text-emerald-500 uppercase px-3 mb-2">Panel Admin</p>
+                    <div class="mb-2" :class="desktopExpanded ? 'px-3' : 'px-0 flex justify-center'">
+                        <p x-show="desktopExpanded"
+                            class="text-[10px] font-bold tracking-wider text-emerald-500 uppercase">Panel Admin</p>
+                        <hr x-show="!desktopExpanded" class="border-emerald-900 w-8 transition-all">
+                    </div>
 
-                    <a href="{{ route('admin.dashboard') }}" [cite: 24]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/dashboard') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <!-- Menu Dashboard -->
+                    <a href="{{ route('admin.dashboard') }}" title="Dashboard Admin"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/dashboard') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-chart-pie w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Dashboard Admin
+                            class="fa-solid fa-chart-pie w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Dashboard Admin</span>
                     </a>
 
-                    <a href="{{ route('admin.users.index') }}" [cite: 25, 289]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/users*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <!-- Menu Kelola Konsumen -->
+                    <a href="{{ route('admin.users.index') }}" title="Kelola Konsumen"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/users*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-users w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Kelola Konsumen
+                            class="fa-solid fa-users w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Kelola Konsumen</span>
                     </a>
 
-                    <a href="{{ route('admin.petani.index') }}" [cite: 26, 165]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/petani*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <!-- Menu Kelola Petani -->
+                    <a href="{{ route('admin.petani.index') }}" title="Kelola Petani"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/petani*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-tractor w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Kelola Petani
+                            class="fa-solid fa-tractor w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Kelola Petani</span>
                     </a>
 
-                    <a href="{{ route('admin.products.index') }}" [cite: 27, 225]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/products*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <!-- Menu Kelola Produk -->
+                    <a href="{{ route('admin.products.index') }}" title="Kelola Produk"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/products*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-boxes-stacked w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Kelola Produk
+                            class="fa-solid fa-boxes-stacked w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Kelola Produk</span>
                     </a>
 
-                    <a href="{{ route('admin.harga.index') }}" [cite: 28, 82]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/harga*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <!-- Menu Broadcast Harga -->
+                    <a href="{{ route('admin.harga.index') }}" title="Broadcast Harga"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/harga*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-bullhorn w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Broadcast Harga
+                            class="fa-solid fa-bullhorn w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Broadcast Harga</span>
                     </a>
 
-                    <a href="{{ route('admin.orders.index') }}" [cite: 29, 133]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/orders*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <!-- Menu Semua Pesanan -->
+                    <a href="{{ route('admin.orders.index') }}" title="Semua Pesanan"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/orders*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-receipt w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Semua Pesanan
+                            class="fa-solid fa-receipt w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Semua Pesanan</span>
                     </a>
 
-                    <a href="{{ route('admin.laporan.index') }}" [cite: 33, 119]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/laporan*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <!-- Menu Laporan Rekap -->
+                    <a href="{{ route('admin.laporan.index') }}" title="Laporan Rekap"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/laporan*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-file-invoice-dollar w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Laporan Rekap
+                            class="fa-solid fa-file-invoice-dollar w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Laporan Rekap</span>
                     </a>
                 @endif
 
                 @if (Auth::user()->isPetani())
-                    [cite: 778]
-                    <p class="text-[11px] font-bold tracking-wider text-emerald-500 uppercase px-3 mb-2">Panel Petani
-                    </p>
+                    <div class="mb-2" :class="desktopExpanded ? 'px-3' : 'px-0 flex justify-center'">
+                        <p x-show="desktopExpanded"
+                            class="text-[10px] font-bold tracking-wider text-emerald-500 uppercase">Panel Petani</p>
+                        <hr x-show="!desktopExpanded" class="border-emerald-900 w-8 transition-all">
+                    </div>
 
-                    <a href="{{ route('petani.dashboard') }}" [cite: 37]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('petani/dashboard') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <a href="{{ route('petani.dashboard') }}" title="Dashboard Petani"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('petani/dashboard') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-chart-pie w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Dashboard Petani
+                            class="fa-solid fa-chart-pie w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Dashboard Petani</span>
                     </a>
 
-                    <a href="{{ route('petani.stok.index') }}" [cite: 38, 475]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('petani/stok*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <a href="{{ route('petani.stok.index') }}" title="Kelola Stok Saya"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('petani/stok*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-warehouse w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Kelola Stok Saya
+                            class="fa-solid fa-warehouse w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Kelola Stok Saya</span>
                     </a>
                 @endif
 
                 @if (Auth::user()->isKonsumen())
-                    [cite: 782]
-                    <p class="text-[11px] font-bold tracking-wider text-emerald-500 uppercase px-3 mb-2">Panel Konsumen
-                    </p>
+                    <div class="mb-2" :class="desktopExpanded ? 'px-3' : 'px-0 flex justify-center'">
+                        <p x-show="desktopExpanded"
+                            class="text-[10px] font-bold tracking-wider text-emerald-500 uppercase">Panel Konsumen</p>
+                        <hr x-show="!desktopExpanded" class="border-emerald-900 w-8 transition-all">
+                    </div>
 
-                    <a href="{{ route('konsumen.dashboard') }}" [cite: 44]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('konsumen/dashboard') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <a href="{{ route('konsumen.dashboard') }}" title="Dashboard"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('konsumen/dashboard') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-chart-pie w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Dashboard
+                            class="fa-solid fa-chart-pie w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Dashboard</span>
                     </a>
 
-                    <a href="{{ route('konsumen.products.index') }}" [cite: 45, 440]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('konsumen/produk*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <a href="{{ route('konsumen.products.index') }}" title="Belanja Gabah"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('konsumen/produk*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-basket-shopping w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Belanja Gabah
+                            class="fa-solid fa-basket-shopping w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Belanja Gabah</span>
                     </a>
 
-                    <a href="{{ route('konsumen.orders.index') }}" [cite: 47, 371]
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('konsumen/pesanan*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                    <a href="{{ route('konsumen.orders.index') }}" title="Pesanan Saya"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('konsumen/pesanan*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
-                            class="fa-solid fa-box w-5 text-center text-emerald-400 group-hover:text-white transition-colors"></i>
-                        Pesanan Saya
+                            class="fa-solid fa-box w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Pesanan Saya</span>
                     </a>
                 @endif
 
             </nav>
 
-            <div class="p-4 border-t border-emerald-900/60 bg-emerald-950/40 text-xs text-emerald-500 text-center">
-                &copy; 2026 Sistem Gabah V.1
+            <!-- Footer Sidebar Copyright -->
+            <div
+                class="h-12 flex items-center justify-center border-t border-emerald-900/60 bg-emerald-950/40 text-xs text-emerald-500 overflow-hidden whitespace-nowrap px-2">
+                <span x-show="desktopExpanded">&copy; 2026 Sistem Gabah V.1</span>
+                <span x-show="!desktopExpanded" class="font-bold text-emerald-400">V.1</span>
             </div>
         </aside>
 
-        <div x-show="sidebarOpen" @click="sidebarOpen = false"
+        <!-- Overlay Mobile -->
+        <div x-show="mobileOpen" @click="mobileOpen = false"
             class="fixed inset-0 z-40 bg-black/40 md:hidden transition-opacity" x-transition></div>
 
+        <!-- MAIN LAYOUT WRAPPER -->
         <div class="flex-1 flex flex-col min-w-0 max-h-screen overflow-y-auto">
 
+            <!-- NAVBAR / HEADER -->
             <header
                 class="bg-white h-16 border-b border-gray-100 flex items-center justify-between px-6 sticky top-0 z-30 shadow-xs">
-                <button @click="sidebarOpen = true" class="md:hidden text-gray-600 hover:text-emerald-600">
-                    <i class="fa-solid fa-bars text-xl"></i>
-                </button>
 
-                <div class="hidden md:block">
-                    <h2 class="text-sm font-semibold text-gray-500">Aplikasi Panel Pengguna</h2>
+                <div class="flex items-center gap-4">
+                    <!-- Hamburger Mobile Trigger -->
+                    <button @click="mobileOpen = true" class="md:hidden text-gray-600 hover:text-emerald-600">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+
+                    <!-- Minimize/Maximize Trigger Desktop -->
+                    <button @click="desktopExpanded = !desktopExpanded"
+                        class="hidden md:inline-flex text-gray-400 hover:text-emerald-600 w-9 h-9 items-center justify-center rounded-xl bg-gray-50 border border-gray-100 transition-colors cursor-pointer">
+                        <i class="fa-solid text-sm" :class="desktopExpanded ? 'fa-outdent' : 'fa-indent'"></i>
+                    </button>
+
+                    <div class="hidden sm:block">
+                        <h2 class="text-sm font-semibold text-gray-500">Aplikasi Panel Pengguna</h2>
+                    </div>
                 </div>
 
+                <!-- Dropdown Profil -->
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open"
-                        class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-emerald-600 transition-colors focus:outline-none py-2">
+                        class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-emerald-600 transition-colors focus:outline-none py-2 cursor-pointer">
                         <div
                             class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center border border-emerald-200">
                             {{ \Illuminate\Support\Str::upper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
@@ -173,7 +235,8 @@
                             :class="open ? 'rotate-180' : ''"></i>
                     </button>
 
-                    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100"
+                    <div x-show="open" @click.away="open = false"
+                        x-transition:enter="transition ease-out duration-100"
                         x-transition:enter-start="transform opacity-0 scale-95"
                         x-transition:enter-end="transform opacity-100 scale-100"
                         x-transition:leave="transition ease-in duration-75"
@@ -197,7 +260,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
-                                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium text-left">
+                                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium text-left cursor-pointer">
                                 <i class="fa-solid fa-arrow-right-from-bracket text-red-400 w-4"></i> Keluar / Logout
                             </button>
                         </form>
@@ -205,6 +268,7 @@
                 </div>
             </header>
 
+            <!-- Dynamic Header Slot -->
             @isset($header)
                 <div class="bg-white border-b border-gray-100 py-4 px-6">
                     <div class="text-xl font-bold text-gray-800">
@@ -213,6 +277,7 @@
                 </div>
             @endisset
 
+            <!-- Flash Session Alerts -->
             <div class="px-6 mt-4">
                 @if (session('success'))
                     <div
@@ -230,6 +295,7 @@
                 @endif
             </div>
 
+            <!-- Main Yield Content -->
             <main class="p-6 flex-1">
                 @yield('content')
             </main>

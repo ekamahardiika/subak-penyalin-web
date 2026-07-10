@@ -7,6 +7,7 @@
     <title>Sistem Gabah - Penghubung Petani & Konsumen</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Font Awesome untuk Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -30,10 +31,73 @@
                 <a href="{{ route('kontak') }}" class="hover:text-emerald-400 transition-colors">Kontak</a>
             </nav>
             <div>
-                <a href="{{ route('login') }}"
-                    class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all shadow-lg shadow-emerald-900/30">
-                    Masuk / Login
-                </a>
+                @auth
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open"
+                            class="flex items-center gap-2 text-sm font-medium text-gray-200 hover:text-emerald-400 transition-colors focus:outline-none py-2 cursor-pointer">
+                            <div
+                                class="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center border border-emerald-500 shadow-sm">
+                                {{ \Illuminate\Support\Str::upper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+                            </div>
+                            <span
+                                class="hidden sm:inline-block max-w-[120px] truncate">{{ Auth::user()->name ?? 'Pengguna' }}</span>
+                            <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform"
+                                :class="open ? 'rotate-180' : ''"></i>
+                        </button>
+
+                        <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="transform opacity-0 scale-95"
+                            x-transition:enter-end="transform opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave-start="transform opacity-100 scale-100"
+                            x-transition:leave-end="transform opacity-0 scale-95"
+                            class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50"
+                            style="display: none;">
+
+                            <div class="px-4 py-2 border-b border-gray-100">
+                                <p class="text-xs text-gray-400">Masuk sebagai</p>
+                                <p class="text-xs font-semibold text-gray-700 truncate">{{ Auth::user()->email }}</p>
+                            </div>
+
+                            @if (Auth::user()->isAdmin())
+                                <a href="{{ route('admin.dashboard') }}"
+                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors">
+                                    <i class="fa-solid fa-chart-pie text-gray-400 w-4"></i> Dashboard Admin
+                                </a>
+                            @elseif(Auth::user()->isPetani())
+                                <a href="{{ route('petani.dashboard') }}"
+                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors">
+                                    <i class="fa-solid fa-chart-pie text-gray-400 w-4"></i> Dashboard Petani
+                                </a>
+                            @elseif(Auth::user()->isKonsumen())
+                                <a href="{{ route('konsumen.dashboard') }}"
+                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors">
+                                    <i class="fa-solid fa-chart-pie text-gray-400 w-4"></i> Dashboard Saya
+                                </a>
+                            @endif
+
+                            <a href="{{ route('profile.edit') }}"
+                                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors">
+                                <i class="fa-regular fa-user text-gray-400 w-4"></i> Profile Saya
+                            </a>
+
+                            <div class="border-t border-gray-100 my-1"></div>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit"
+                                    class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium text-left cursor-pointer">
+                                    <i class="fa-solid fa-arrow-right-from-bracket text-red-400 w-4"></i> Keluar / Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all shadow-lg shadow-emerald-900/30">
+                        Masuk / Login
+                    </a>
+                @endauth
             </div>
         </div>
     </header>
@@ -74,10 +138,12 @@
                 <h4 class="text-white font-semibold mb-4 text-sm tracking-wider uppercase">Tautan Cepat</h4>
                 <ul class="space-y-2 text-sm">
                     <li><a href="/" class="hover:text-emerald-400 transition-colors">Beranda</a></li>
-                    <li><a href="{{ route('produk') }}" class="hover:text-emerald-400 transition-colors">Produk</a></li>
+                    <li><a href="{{ route('produk') }}" class="hover:text-emerald-400 transition-colors">Produk</a>
+                    </li>
                     <li><a href="{{ route('tentang') }}" class="hover:text-emerald-400 transition-colors">Tentang
                             Kami</a></li>
-                    <li><a href="{{ route('kontak') }}" class="hover:text-emerald-400 transition-colors">Kontak</a></li>
+                    <li><a href="{{ route('kontak') }}" class="hover:text-emerald-400 transition-colors">Kontak</a>
+                    </li>
                 </ul>
             </div>
             <div>

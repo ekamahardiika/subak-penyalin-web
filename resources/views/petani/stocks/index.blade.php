@@ -1,57 +1,108 @@
 @extends('layouts.app')
-@section('content')
-    <h1 class="text-xl font-bold mb-4">Manajemen Stok Gabah Mandiri</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Form Tambah/Setor -->
-        <div class="bg-white p-4 border rounded shadow-sm h-fit">
-            <h2 class="font-bold text-sm mb-3">Setor / Tambah Pasokan Stok</h2>
-            <form action="{{ route('petani.stok.store') }}" method="POST" class="space-y-3 text-sm">
+@section('content')
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Manajemen Stok Gabah Mandiri</h1>
+        <p class="text-sm text-gray-500 mt-1">Kelola pasokan hasil panen gabah Anda ke dalam gudang alokasi pesanan konsumen.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+
+        <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
+            <div class="mb-4">
+                <h2 class="font-bold text-gray-900 text-base">Setor Pasokan</h2>
+                <p class="text-xs text-gray-400 mt-0.5">Tambahkan kuantitas panen baru.</p>
+            </div>
+
+            <form action="{{ route('petani.stok.store') }}" method="POST" class="space-y-4">
                 @csrf
+
                 <div>
-                    <label class="block text-xs font-medium">Pilih Varietas / Produk Komoditas</label>
-                    <select name="product_id" required class="w-full border p-1 rounded bg-white">
-                        @foreach ($products as $p)
-                            <option value="{{ $p->id }}">{{ $p->nama_produk }} (Rp
-                                {{ number_format($p->harga_jual) }})</option>
-                        @endforeach
-                    </select>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Varietas
+                        Komoditas</label>
+                    <div class="relative">
+                        <select name="product_id" required
+                            class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs appearance-none cursor-pointer">
+                            @foreach ($products as $p)
+                                <option value="{{ $p->id }}">{{ $p->nama_produk }} (Rp
+                                    {{ number_format($p->harga_jual, 0, ',', '.') }})</option>
+                            @endforeach
+                        </select>
+                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </span>
+                    </div>
                 </div>
+
                 <div>
-                    <label class="block text-xs font-medium">Jumlah Ditambahkan (KG)</label>
-                    <input type="number" step="0.01" name="stok_kg" required class="w-full border p-1 rounded"
-                        min="0">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Jumlah Kuantitas
+                        (KG)</label>
+                    <div class="relative">
+                        <input type="number" step="0.01" name="stok_kg" required
+                            class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs"
+                            min="0" placeholder="0.00" />
+                        <span
+                            class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 font-bold text-xs pointer-events-none">
+                            KG
+                        </span>
+                    </div>
                 </div>
-                <button type="submit" class="w-full bg-emerald-600 text-white py-1 rounded font-medium">Setor Tambah
-                    Stok</button>
+
+                <div class="pt-2">
+                    <button type="submit"
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer">
+                        Setor Tambah Stok <i class="fa-solid fa-plus text-xs"></i>
+                    </button>
+                </div>
             </form>
         </div>
 
-        <!-- Tabel List Stok Aktif -->
-        <div class="bg-white p-4 border rounded shadow-sm md:col-span-2">
-            <h2 class="font-bold text-sm mb-3">Daftar Stok Gabah Anda di Gudang</h2>
+        <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs md:col-span-2">
+            <div class="mb-4">
+                <h2 class="font-bold text-gray-900 text-base">Daftar Stok Gabah di Gudang</h2>
+                <p class="text-xs text-gray-400 mt-0.5">Sisa stok aktif mandiri Anda yang siap dialokasikan untuk pesanan.
+                </p>
+            </div>
+
             <div class="space-y-3">
                 @forelse($stocks as $stock)
-                    <div class="p-3 bg-gray-50 border rounded text-xs flex justify-between items-center">
-                        <div>
-                            <p class="font-bold text-sm">{{ $stock->product->nama_produk }}</p>
-                            <p class="text-gray-500">Sisa Stok Siap Alokasi: <span
-                                    class="text-emerald-600 font-bold">{{ number_format($stock->stok_kg, 2) }} KG</span></p>
+                    <div
+                        class="p-4 bg-gray-50/70 border border-gray-100 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:border-emerald-100">
+                        <div class="flex items-center gap-3.5">
+                            <div class="bg-emerald-50 text-emerald-600 p-2.5 rounded-xl border border-emerald-100">
+                                <i class="fa-solid fa-wheat-awn text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-900 text-sm">
+                                    {{ $stock->product->nama_produk ?? 'Varietas Gabah' }}</p>
+                                <p class="text-xs text-gray-400 mt-0.5">Sisa Siap Alokasi: <span
+                                        class="text-emerald-600 font-bold">{{ number_format($stock->stok_kg, 2, ',', '.') }}
+                                        KG</span></p>
+                            </div>
                         </div>
-                        <!-- Form Koreksi/Update Langsung -->
+
                         <form action="{{ route('petani.stok.update', $stock->id) }}" method="POST"
-                            class="flex items-center gap-1">
-                            @csrf @method('PATCH')
+                            class="flex items-center gap-2 bg-white p-1.5 border border-gray-200 rounded-xl shadow-xs w-fit">
+                            @csrf
+                            @method('PATCH')
                             <input type="number" step="0.01" name="stok_kg" value="{{ $stock->stok_kg }}" required
-                                class="w-16 border p-0.5 text-center bg-white rounded" min="0">
+                                class="w-20 px-2 py-1 text-center bg-gray-50 border border-gray-100 text-xs font-bold text-gray-800 rounded-lg focus:outline-none focus:border-emerald-500"
+                                min="0">
                             <button type="submit"
-                                class="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px]">Koreksi</button>
+                                class="bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white font-bold px-3 py-1.5 rounded-lg text-xs border border-emerald-200/60 transition-all cursor-pointer">
+                                Koreksi
+                            </button>
                         </form>
                     </div>
                 @empty
-                    <p class="text-gray-500 text-xs">Anda belum menyetor stok produk apa pun.</p>
+                    <div class="py-8 text-center text-gray-400 flex flex-col items-center justify-center space-y-2">
+                        <i class="fa-solid fa-box-open text-3xl text-gray-300"></i>
+                        <p class="text-xs">Anda belum menyetor pasokan produk apa pun.</p>
+                    </div>
                 @endforelse
             </div>
         </div>
+
     </div>
 @endsection

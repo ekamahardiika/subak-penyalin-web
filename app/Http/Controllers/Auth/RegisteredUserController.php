@@ -37,13 +37,14 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
-            'role' => 'konsumen',
+            'role' => 'konsumen', // Otomatis mendaftar sebagai konsumen
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Diarahkan langsung ke dashboard konsumen
+        return redirect(route('konsumen.dashboard', absolute: false));
     }
 }

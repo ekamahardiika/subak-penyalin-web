@@ -1,18 +1,39 @@
 @extends('layouts.app')
+
 @section('content')
-    <h1 class="text-xl font-bold mb-4">Katalog Produk Gabah (Silakan Pilih)</h1>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Katalog Produk Gabah</h1>
+        <p class="text-sm text-gray-500 mt-1">Silakan pilih varietas produk gabah unggulan yang tersedia untuk Anda beli.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
         @foreach ($products as $product)
-            <div class="bg-white p-4 border rounded shadow-sm">
-                <h3 class="font-bold text-base">{{ $product->nama_produk }}</h3>
-                <p class="text-emerald-600 font-bold mb-2">Rp {{ number_format($product->harga_jual) }} /
-                    {{ $product->satuan }}</p>
-                <p class="text-xs text-gray-500 mb-3">{{ $product->deskripsi }}</p>
-                <a href="{{ route('konsumen.products.show', $product->id) }}"
-                    class="block text-center bg-blue-600 text-white py-1 rounded text-xs font-semibold">Lihat Detail &
-                    Checkout</a>
+            <div
+                class="bg-white border border-gray-100 rounded-xl shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md hover:border-emerald-100 transition-all p-5">
+                <div>
+                    <h3 class="font-bold text-gray-900 text-lg tracking-tight mb-1">{{ $product->nama_produk }}</h3>
+
+                    <p class="text-lg font-black text-emerald-600 mb-2">
+                        Rp {{ number_format($product->harga_jual, 0, ',', '.') }}
+                        <span class="text-xs font-semibold text-gray-400">/ {{ $product->satuan ?? 'KG' }}</span>
+                    </p>
+
+                    <p class="text-xs text-gray-500 line-clamp-3 leading-relaxed mb-4">
+                        {{ $product->deskripsi ?? 'Tidak ada deskripsi produk.' }}
+                    </p>
+                </div>
+
+                <div>
+                    <a href="{{ route('konsumen.products.show', $product->id) }}"
+                        class="block text-center bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow-xs shadow-emerald-700/10 transition-all cursor-pointer">
+                        Lihat Detail & Checkout <i class="fa-solid fa-arrow-right text-[10px] ml-1"></i>
+                    </a>
+                </div>
             </div>
         @endforeach
     </div>
-    {{ $products->links() }}
+
+    <div class="mt-4">
+        {{ $products->links() }}
+    </div>
 @endsection
