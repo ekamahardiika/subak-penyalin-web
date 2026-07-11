@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- Tombol Kembali -->
     <div class="mb-4">
         <a href="{{ route('admin.products.index') }}"
             class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-emerald-600 transition-colors">
@@ -11,14 +10,14 @@
 
     <div class="w-full space-y-6">
 
-        <!-- Info Kredensial Produk -->
         <div class="bg-white border border-gray-100 rounded-xl shadow-xs overflow-hidden">
             <div class="p-6 bg-gradient-to-r from-emerald-900 to-emerald-950 text-white">
                 <div class="flex justify-between items-start">
                     <div class="space-y-1">
                         <span
-                            class="text-[10px] font-bold uppercase tracking-widest bg-emerald-800 text-emerald-300 px-2.5 py-0.5 rounded-md border border-emerald-700/50">Profil
-                            Komoditas</span>
+                            class="text-[10px] font-bold uppercase tracking-widest bg-emerald-800 text-emerald-300 px-2.5 py-0.5 rounded-md border border-emerald-700/50">
+                            Profil Komoditas
+                        </span>
                         <h1 class="text-2xl font-bold tracking-tight mt-1">{{ $product->nama_produk }}</h1>
                     </div>
                     <span
@@ -40,12 +39,12 @@
                     <span class="font-bold text-gray-400 uppercase tracking-wider text-xs block mb-1">Deskripsi
                         Singkat</span>
                     <p class="text-gray-600 leading-relaxed">
-                        {{ $product->deskripsi ?? 'Tidak ada deskripsi tertulis untuk komoditas ini.' }}</p>
+                        {{ $product->deskripsi ?? 'Tidak ada deskripsi tertulis untuk komoditas ini.' }}
+                    </p>
                 </div>
             </div>
         </div>
 
-        <!-- Sebaran Kepemilikan Stok Mitra Petani -->
         <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs space-y-4">
             <div>
                 <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">

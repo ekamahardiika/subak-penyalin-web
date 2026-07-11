@@ -9,14 +9,37 @@
     </div>
 
     <div class="w-full">
-        <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
+        <div x-data="{
+            confirmCreate(e) {
+                Swal.fire({
+                    title: 'Daftarkan Petani Baru?',
+                    text: 'Pastikan data email dan nomor kontak petani sudah valid.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#059669',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Ya, Simpan!',
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        popup: 'rounded-xl',
+                        confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-emerald-600 border-none',
+                        cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        e.target.submit();
+                    }
+                });
+            }
+        }" class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
             <div class="mb-5">
                 <h2 class="text-xl font-bold text-gray-900 tracking-tight">Tambah Akun Petani Baru</h2>
                 <p class="text-xs text-gray-500 mt-0.5">Daftarkan mitra petani baru untuk mengelola pasokan stok komoditas
                     gabah mandiri.</p>
             </div>
 
-            <form action="{{ route('admin.petani.store') }}" method="POST" class="space-y-4">
+            <form action="{{ route('admin.petani.store') }}" method="POST" @submit.prevent="confirmCreate"
+                class="space-y-4">
                 @csrf
 
                 <div>

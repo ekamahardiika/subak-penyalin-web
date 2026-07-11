@@ -9,14 +9,37 @@
     </div>
 
     <div class="w-full">
-        <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
+        <div x-data="{
+            confirmSubmit(e) {
+                Swal.fire({
+                    title: 'Siarkan Informasi Harga?',
+                    text: 'Patokan harga gabah harian baru ini akan segera disebarkan ke semua mitra dan konsumen!',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#059669',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Ya, Siarkan!',
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        popup: 'rounded-xl',
+                        confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-emerald-600 border-none',
+                        cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        e.target.submit();
+                    }
+                });
+            }
+        }" class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
             <div class="mb-5">
                 <h2 class="text-xl font-bold text-gray-900 tracking-tight">Buat Broadcast Harga Gabah</h2>
                 <p class="text-xs text-gray-500 mt-0.5">Informasikan acuan patokan harga pasar harian kepada seluruh mitra
                     petani dan konsumen.</p>
             </div>
 
-            <form action="{{ route('admin.harga.store') }}" method="POST" class="space-y-5">
+            <form action="{{ route('admin.harga.store') }}" method="POST" @submit.prevent="confirmSubmit"
+                class="space-y-5">
                 @csrf
 
                 <div>

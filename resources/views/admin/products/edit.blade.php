@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- Tombol Kembali -->
     <div class="mb-4">
         <a href="{{ route('admin.products.index') }}"
             class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-emerald-600 transition-colors">
@@ -22,7 +21,6 @@
                 @csrf
                 @method('PUT')
 
-                <!-- Nama Produk -->
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nama Produk</label>
                     <div class="relative">
@@ -34,9 +32,7 @@
                     </div>
                 </div>
 
-                <!-- Grid Input Harga & Satuan -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Harga Jual -->
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Harga Jual per
                             Satuan</label>
@@ -49,7 +45,6 @@
                         </div>
                     </div>
 
-                    <!-- Satuan Jual -->
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Satuan
                             Jual</label>
@@ -64,7 +59,6 @@
                     </div>
                 </div>
 
-                <!-- Status Aktif -->
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Status
                         Visibilitas</label>
@@ -82,7 +76,6 @@
                     </div>
                 </div>
 
-                <!-- Deskripsi -->
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Deskripsi
                         Produk</label>
@@ -90,7 +83,6 @@
                         class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs resize-none">{{ $product->deskripsi }}</textarea>
                 </div>
 
-                <!-- Ganti Gambar Produk -->
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Ganti Gambar
                         Komoditas</label>
@@ -102,9 +94,7 @@
                     </div>
                 </div>
 
-                <!-- Tombol Submit -->
                 <div class="pt-2">
-                    <!-- Disinkronkan ke emerald agar solid satu tema admin -->
                     <button type="submit"
                         class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer">
                         Perbarui Data Produk <i class="fa-solid fa-circle-check text-xs"></i>

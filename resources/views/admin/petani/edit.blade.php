@@ -9,14 +9,37 @@
     </div>
 
     <div class="w-full">
-        <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
+        <div x-data="{
+            confirmUpdate(e) {
+                Swal.fire({
+                    title: 'Perbarui Profil Petani?',
+                    text: 'Perubahan data profil akan langsung diterapkan pada hak akses terkait.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#059669',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Ya, Perbarui!',
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        popup: 'rounded-xl',
+                        confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-emerald-600 border-none',
+                        cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        e.target.submit();
+                    }
+                });
+            }
+        }" class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
             <div class="mb-5">
                 <h2 class="text-xl font-bold text-gray-900 tracking-tight">Edit Akun Petani</h2>
                 <p class="text-xs text-gray-500 mt-0.5">Perbarui informasi profil atau perbarui kata sandi akun mitra petani
                     terkait.</p>
             </div>
 
-            <form action="{{ route('admin.petani.update', $petani->id) }}" method="POST" class="space-y-4">
+            <form action="{{ route('admin.petani.update', $petani->id) }}" method="POST" @submit.prevent="confirmUpdate"
+                class="space-y-4">
                 @csrf
                 @method('PUT')
 
