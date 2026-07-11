@@ -36,27 +36,6 @@
         get pagedPetani() {
             const start = (this.currentPage - 1) * this.perPage;
             return this.filteredPetani.slice(start, start + parseInt(this.perPage));
-        },
-        confirmDelete(e) {
-            Swal.fire({
-                title: 'Hapus Akun Petani?',
-                text: 'Semua data penugasan, profil, dan histori log transaksi petani ini akan terhapus permanen!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal',
-                customClass: {
-                    popup: 'rounded-xl',
-                    confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-red-500 border-none',
-                    cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    e.target.submit();
-                }
-            });
         }
     }" x-init="$watch('search', () => currentPage = 1);
     $watch('perPage', () => currentPage = 1);" class="space-y-4">
@@ -114,12 +93,14 @@
                                         </a>
 
                                         <form :action="`{{ route('admin.petani.index') }}/${p.id}`" method="POST"
-                                            @submit.prevent="confirmDelete">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="inline-flex items-center gap-1 bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-700 text-xs font-bold transition-all border border-red-200/50 px-2.5 py-1.5 rounded-lg cursor-pointer">
-                                                <i class="fa-regular fa-trash-can text-xs"></i> Hapus
+                                            @submit.prevent="$dispatch('open-confirm-modal', {
+                                                form: $el,
+                                                title: 'Hapus Akun Petani?',
+                                                message: `Data petani \'${p.name}\' beserta seluruh data penugasan dan histori log transaksinya akan dihapus permanen.`
+                                            })"
+                                            @csrf @method('DELETE') <button type="submit"
+                                            class="inline-flex items-center gap-1 bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-700 text-xs font-bold transition-all border border-red-200/50 px-2.5 py-1.5 rounded-lg cursor-pointer">
+                                            <i class="fa-regular fa-trash-can text-xs"></i> Hapus
                                             </button>
                                         </form>
                                     </div>

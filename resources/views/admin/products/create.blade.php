@@ -16,8 +16,14 @@
                     katalog konsumen.</p>
             </div>
 
-            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data"
-                class="space-y-4">
+            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4"
+                @submit.prevent="$dispatch('open-confirm-modal', {
+                    form: $el,
+                    type: 'primary',
+                    title: 'Simpan Komoditas Baru?',
+                    message: 'Pastikan nama, harga, dan satuan produk sudah sesuai sebelum ditampilkan di katalog.',
+                    confirmLabel: 'Ya, Simpan'
+                })">
                 @csrf
 
                 <div>

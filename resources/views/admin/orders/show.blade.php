@@ -43,58 +43,20 @@
                 </div>
             </div>
 
-            <div x-data="{
-                confirmKonfirmasi(e) {
-                        Swal.fire({
-                            title: 'Konfirmasi Pesanan?',
-                            text: 'Pesanan ini akan langsung dikonfirmasi dan statusnya berubah!',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#059669',
-                            cancelButtonColor: '#6b7280',
-                            confirmButtonText: 'Ya, Konfirmasi!',
-                            cancelButtonText: 'Batal',
-                            customClass: {
-                                popup: 'rounded-xl',
-                                confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-emerald-600 border-none',
-                                cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
-                            }
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                e.target.submit();
-                            }
-                        });
-                    },
-                    confirmUpdate(e) {
-                        const statusVal = this.$refs.statusSelect.value;
-                        Swal.fire({
-                            title: 'Update Status Pesanan?',
-                            text: 'Status pesanan #' + '{{ $order->no_order }}' + ' akan diubah menjadi: ' + statusVal.toUpperCase(),
-                            icon: 'question',
-                            showCancelButton: true,
-                            confirmButtonColor: '#1f2937',
-                            cancelButtonColor: '#6b7280',
-                            confirmButtonText: 'Ya, Update!',
-                            cancelButtonText: 'Batal',
-                            customClass: {
-                                popup: 'rounded-xl',
-                                confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-800 border-none',
-                                cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
-                            }
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                e.target.submit();
-                            }
-                        });
-                    }
-            }"
+            <div x-data="{}"
                 class="p-6 bg-gray-50/50 border-b border-gray-50 flex flex-wrap items-center justify-between gap-4">
                 <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi Cepat Admin :</div>
 
                 <div class="flex flex-wrap items-center gap-3">
                     @if ($order->status == 'pending')
                         <form action="{{ route('admin.orders.confirm', $order->id) }}" method="POST"
-                            @submit.prevent="confirmKonfirmasi">
+                            @submit.prevent="$dispatch('open-confirm-modal', {
+                                form: $el,
+                                type: 'primary',
+                                title: 'Konfirmasi Pesanan?',
+                                message: 'Pesanan ini akan langsung dikonfirmasi dan statusnya berubah.',
+                                confirmLabel: 'Ya, Konfirmasi'
+                            })">
                             @csrf
                             @method('PATCH')
                             <button type="submit"
@@ -105,7 +67,14 @@
                     @endif
 
                     <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST"
-                        @submit.prevent="confirmUpdate" class="flex items-center gap-2">
+                        @submit.prevent="$dispatch('open-confirm-modal', {
+                            form: $el,
+                            type: 'primary',
+                            title: 'Update Status Pesanan?',
+                            message: `Status pesanan #{{ $order->no_order }} akan diubah menjadi: ${$refs.statusSelect.value.toUpperCase()}`,
+                            confirmLabel: 'Ya, Update'
+                        })"
+                        class="flex items-center gap-2">
                         @csrf
                         @method('PATCH')
 

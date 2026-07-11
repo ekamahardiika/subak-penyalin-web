@@ -44,27 +44,6 @@
         },
         formatRupiah(value) {
             return 'Rp ' + new Intl.NumberFormat('id-ID').format(value);
-        },
-        confirmDelete(e) {
-            Swal.fire({
-                title: 'Hapus Riwayat Broadcast?',
-                text: 'Data acuan penyiaran ini akan dihapus secara permanen dari arsip!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal',
-                customClass: {
-                    popup: 'rounded-xl',
-                    confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-red-500 border-none',
-                    cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    e.target.submit();
-                }
-            });
         }
     }" x-init="$watch('search', () => currentPage = 1);
     $watch('perPage', () => currentPage = 1);" class="space-y-4">
@@ -116,7 +95,11 @@
                                 <td class="px-6 py-4 text-gray-500 max-w-xs truncate" x-text="b.keterangan || '-'"></td>
                                 <td class="px-6 py-4 text-center">
                                     <form :action="`{{ route('admin.harga.index') }}/${b.id}`" method="POST"
-                                        @submit.prevent="confirmDelete">
+                                        @submit.prevent="$dispatch('open-confirm-modal', {
+                                            form: $el,
+                                            title: 'Hapus Riwayat Broadcast?',
+                                            message: `Data acuan harga tanggal ${formatTanggal(b.tanggal)} akan dihapus permanen dari arsip.`
+                                        })">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"

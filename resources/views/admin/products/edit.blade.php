@@ -17,7 +17,14 @@
             </div>
 
             <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data"
-                class="space-y-4">
+                class="space-y-4"
+                @submit.prevent="$dispatch('open-confirm-modal', {
+                    form: $el,
+                    type: 'primary',
+                    title: 'Perbarui Data Produk?',
+                    message: 'Perubahan akan langsung diterapkan pada katalog yang dilihat konsumen.',
+                    confirmLabel: 'Ya, Perbarui'
+                })">
                 @csrf
                 @method('PUT')
 

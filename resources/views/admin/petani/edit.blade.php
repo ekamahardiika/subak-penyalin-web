@@ -9,93 +9,74 @@
     </div>
 
     <div class="w-full">
-        <div x-data="{
-            confirmUpdate(e) {
-                Swal.fire({
-                    title: 'Perbarui Profil Petani?',
-                    text: 'Perubahan data profil akan langsung diterapkan pada hak akses terkait.',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#059669',
-                    cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Ya, Perbarui!',
-                    cancelButtonText: 'Batal',
-                    customClass: {
-                        popup: 'rounded-xl',
-                        confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-emerald-600 border-none',
-                        cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        e.target.submit();
-                    }
-                });
-            }
-        }" class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
+        <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
             <div class="mb-5">
                 <h2 class="text-xl font-bold text-gray-900 tracking-tight">Edit Akun Petani</h2>
                 <p class="text-xs text-gray-500 mt-0.5">Perbarui informasi profil atau perbarui kata sandi akun mitra petani
                     terkait.</p>
             </div>
 
-            <form action="{{ route('admin.petani.update', $petani->id) }}" method="POST" @submit.prevent="confirmUpdate"
-                class="space-y-4">
-                @csrf
-                @method('PUT')
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nama Lengkap</label>
-                    <div class="relative">
-                        <input type="text" name="name" value="{{ $petani->name }}" required
-                            class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
-                            <i class="fa-regular fa-user text-sm"></i>
-                        </span>
-                    </div>
+            <form action="{{ route('admin.petani.update', $petani->id) }}" method="POST" class="space-y-4"
+                @submit.prevent="$dispatch('open-confirm-modal', {
+                    form: $el,
+                    type: 'primary',
+                    title: 'Perbarui Profil Petani?',
+                    message: 'Perubahan data profil akan langsung diterapkan pada hak akses terkait.',
+                    confirmLabel: 'Ya, Perbarui'
+                })"
+                @csrf @method('PUT') <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nama Lengkap</label>
+                <div class="relative">
+                    <input type="text" name="name" value="{{ $petani->name }}" required
+                        class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
+                        <i class="fa-regular fa-user text-sm"></i>
+                    </span>
                 </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Alamat Email</label>
-                    <div class="relative">
-                        <input type="email" name="email" value="{{ $petani->email }}" required
-                            class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
-                            <i class="fa-regular fa-envelope text-sm"></i>
-                        </span>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nomor Telepon /
-                        WA</label>
-                    <div class="relative">
-                        <input type="text" name="phone" value="{{ $petani->phone }}"
-                            class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
-                            <i class="fa-solid fa-phone text-sm"></i>
-                        </span>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Ganti Kata
-                        Sandi</label>
-                    <div class="relative">
-                        <input type="password" name="password" placeholder="Kosongkan jika tidak ingin diubah"
-                            class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
-                            <i class="fa-solid fa-lock text-sm"></i>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="pt-2">
-                    <button type="submit"
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer">
-                        Perbarui Akun Petani <i class="fa-solid fa-user-check text-xs"></i>
-                    </button>
-                </div>
-            </form>
         </div>
+
+        <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Alamat Email</label>
+            <div class="relative">
+                <input type="email" name="email" value="{{ $petani->email }}" required
+                    class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
+                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
+                    <i class="fa-regular fa-envelope text-sm"></i>
+                </span>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nomor Telepon /
+                WA</label>
+            <div class="relative">
+                <input type="text" name="phone" value="{{ $petani->phone }}"
+                    class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
+                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
+                    <i class="fa-solid fa-phone text-sm"></i>
+                </span>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Ganti Kata
+                Sandi</label>
+            <div class="relative">
+                <input type="password" name="password" placeholder="Kosongkan jika tidak ingin diubah"
+                    class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
+                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
+                    <i class="fa-solid fa-lock text-sm"></i>
+                </span>
+            </div>
+        </div>
+
+        <div class="pt-2">
+            <button type="submit"
+                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer">
+                Perbarui Akun Petani <i class="fa-solid fa-user-check text-xs"></i>
+            </button>
+        </div>
+        </form>
+    </div>
     </div>
 @endsection

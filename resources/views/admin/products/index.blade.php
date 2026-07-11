@@ -36,27 +36,6 @@
         get pagedProducts() {
             const start = (this.currentPage - 1) * this.perPage;
             return this.filteredProducts.slice(start, start + parseInt(this.perPage));
-        },
-        confirmDelete(e) {
-            Swal.fire({
-                title: 'Hapus Komoditas?',
-                text: 'Menghapus produk dapat berdampak pada data relasi antrean stok petani. Lanjutkan?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal',
-                customClass: {
-                    popup: 'rounded-xl',
-                    confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-red-500 border-none',
-                    cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    e.target.submit();
-                }
-            });
         }
     }" x-init="$watch('search', () => currentPage = 1);
     $watch('perPage', () => currentPage = 1);" class="space-y-4">
@@ -127,7 +106,7 @@
                                     <div class="flex items-center justify-center gap-2">
                                         <a :href="`{{ route('admin.products.index') }}/${product.id}`"
                                             class="inline-flex items-center gap-1 bg-gray-50 hover:bg-emerald-50 text-gray-600 hover:text-emerald-700 font-bold px-2.5 py-1.5 rounded-lg text-xs border border-gray-200 hover:border-emerald-200 transition-all cursor-pointer">
-                                            <i class="fa-solid fa-cubes text-xs"></i> Stok Antrean
+                                            <i class="fa-solid fa-cubes text-xs"></i> Detail
                                         </a>
 
                                         <a :href="`{{ route('admin.products.index') }}/${product.id}/edit`"
@@ -136,7 +115,11 @@
                                         </a>
 
                                         <form :action="`{{ route('admin.products.index') }}/${product.id}`" method="POST"
-                                            @submit.prevent="confirmDelete">
+                                            @submit.prevent="$dispatch('open-confirm-modal', {
+                                                form: $el,
+                                                title: 'Hapus Komoditas?',
+                                                message: `Menghapus produk \'${product.nama_produk}\' dapat berdampak pada data relasi antrean stok petani.`
+                                            })">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
