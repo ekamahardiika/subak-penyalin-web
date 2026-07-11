@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Petani;
 use App\Http\Controllers\Controller;
 use App\Models\HargaBroadcast;
 use App\Models\PetaniStock;
+use App\Models\StockAllocation;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -34,13 +36,27 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // 5. Penjualan Bulan Ini (status selesai, terhitung lewat stock_allocations)
+        $penjualanBulanIniQuery = StockAllocation::query()
+            ->join('order_items', 'order_items.id', '=', 'stock_allocations.order_item_id')
+            ->join('orders', 'orders.id', '=', 'order_items.order_id')
+            ->join('petani_stocks', 'petani_stocks.id', '=', 'stock_allocations.petani_stock_id')
+            ->where('petani_stocks.user_id', $userId)
+            ->where('orders.status', 'selesai')
+            ->whereBetween('orders.tanggal_pesan', [now()->startOfMonth(), now()->endOfMonth()]);
+
+        $totalTerjualKgBulanIni = (clone $penjualanBulanIniQuery)->sum('stock_allocations.jumlah_kg');
+        $totalPendapatanBulanIni = (clone $penjualanBulanIniQuery)->sum(DB::raw('stock_allocations.jumlah_kg * order_items.harga_satuan'));
+
         return view('petani.dashboard', compact(
             'totalStokSaya',
             'hargaTerbaru',
             'stokPerProduk',
             'chartLabels',
             'chartData',
-            'riwayatStok'
+            'riwayatStok',
+            'totalTerjualKgBulanIni',
+            'totalPendapatanBulanIni'
         ));
     }
 }

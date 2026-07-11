@@ -43,6 +43,44 @@
         </div>
     </div>
 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-xs flex items-center justify-between">
+            <div class="space-y-1">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Terjual Bulan Ini</h3>
+                <p class="text-2xl font-extrabold text-sky-600 tracking-tight">
+                    {{ number_format($totalTerjualKgBulanIni, 2, ',', '.') }} <span
+                        class="text-sm font-semibold text-gray-500">KG</span>
+                </p>
+            </div>
+            <div class="bg-sky-50 text-sky-600 p-3.5 rounded-xl border border-sky-100">
+                <i class="fa-solid fa-truck-ramp-box text-xl"></i>
+            </div>
+        </div>
+
+        <div
+            class="bg-gradient-to-br from-violet-50 to-violet-100/40 p-6 rounded-xl border border-violet-200/70 shadow-xs flex items-center justify-between">
+            <div class="space-y-1">
+                <h3 class="text-xs font-bold text-violet-800 uppercase tracking-wider">Pendapatan Bulan Ini</h3>
+                <p class="text-2xl font-extrabold text-violet-950 tracking-tight">
+                    Rp {{ number_format($totalPendapatanBulanIni, 0, ',', '.') }}
+                </p>
+                <p class="text-xs text-violet-800/80 mt-1.5 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-info text-[10px]"></i> Hanya pesanan berstatus selesai
+                </p>
+            </div>
+            <div class="bg-white text-violet-600 p-3.5 rounded-xl border border-violet-200/50 shadow-xs">
+                <i class="fa-solid fa-sack-dollar text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 text-right">
+        <a href="{{ route('petani.penjualan.index') }}"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-violet-600 hover:text-violet-700 bg-violet-50 px-3 py-1.5 rounded-lg transition-colors">
+            Lihat Riwayat Penjualan Lengkap <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-gray-100 shadow-xs">
             <h3 class="text-sm font-bold text-gray-700 tracking-tight mb-3">Rincian Stok Komoditas</h3>

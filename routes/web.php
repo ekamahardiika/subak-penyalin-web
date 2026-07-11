@@ -14,6 +14,8 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Petani\DashboardController as PetaniDashboardController;
 use App\Http\Controllers\Petani\StockController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Petani\PenjualanController;
+
 use Illuminate\Support\Facades\Route;
 
 // Landing
@@ -47,7 +49,9 @@ Route::middleware(['auth', 'role:petani'])->prefix('petani')->name('petani.')->g
     Route::post('stok', [StockController::class, 'store'])->name('stok.store');
     Route::get('stok/{stock}', [StockController::class, 'edit'])->name('stok.edit');
     Route::patch('stok/{stock}', [StockController::class, 'update'])->name('stok.update');
+    Route::get('penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
 });
+
 
 // Konsumen
 Route::middleware(['auth', 'role:konsumen'])->prefix('konsumen')->name('konsumen.')->group(function () {

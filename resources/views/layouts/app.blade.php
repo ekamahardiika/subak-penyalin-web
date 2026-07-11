@@ -297,6 +297,14 @@
                             class="fa-solid fa-warehouse w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
                         <span x-show="desktopExpanded" class="whitespace-nowrap">Kelola Stok Saya</span>
                     </a>
+
+                    <a href="{{ route('petani.penjualan.index') }}" title="Riwayat Penjualan"
+                        :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
+                        class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('petani/penjualan*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
+                        <i
+                            class="fa-solid fa-sack-dollar w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
+                        <span x-show="desktopExpanded" class="whitespace-nowrap">Riwayat Penjualan</span>
+                    </a>
                 @endif
 
                 @if (Auth::user()->isKonsumen())
