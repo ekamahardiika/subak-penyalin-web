@@ -1,18 +1,18 @@
 <?php
 
-use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\HargaBroadcastController;
+use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PetaniController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\HargaBroadcastController;
-use App\Http\Controllers\Admin\OrderController as AdminOrderController;
-use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Konsumen\DashboardController as KonsumenDashboardController;
+use App\Http\Controllers\Konsumen\OrderController as KonsumenOrderController;
+use App\Http\Controllers\Konsumen\ProductController as KonsumenProductController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Petani\DashboardController as PetaniDashboardController;
 use App\Http\Controllers\Petani\StockController;
-use App\Http\Controllers\Konsumen\DashboardController as KonsumenDashboardController;
-use App\Http\Controllers\Konsumen\ProductController as KonsumenProductController;
-use App\Http\Controllers\Konsumen\OrderController as KonsumenOrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,9 +51,14 @@ Route::middleware(['auth', 'role:petani'])->prefix('petani')->name('petani.')->g
 // Konsumen
 Route::middleware(['auth', 'role:konsumen'])->prefix('konsumen')->name('konsumen.')->group(function () {
     Route::get('/dashboard', [KonsumenDashboardController::class, 'index'])->name('dashboard');
+
     Route::get('produk', [KonsumenProductController::class, 'index'])->name('products.index');
     Route::get('produk/{product}', [KonsumenProductController::class, 'show'])->name('products.show');
+
     Route::get('pesanan', [KonsumenOrderController::class, 'index'])->name('orders.index');
+    // PENTING: route checkout ini harus didaftarkan SEBELUM 'pesanan/{order}',
+    // supaya "checkout" tidak tertangkap sebagai parameter {order} (route model binding).
+    Route::get('pesanan/checkout', [KonsumenOrderController::class, 'create'])->name('orders.create');
     Route::post('pesanan', [KonsumenOrderController::class, 'store'])->name('orders.store');
     Route::get('pesanan/{order}', [KonsumenOrderController::class, 'show'])->name('orders.show');
 });

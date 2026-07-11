@@ -22,8 +22,10 @@ class OrderSeeder extends Seeder
         $subtotal = $qty * $product->harga_jual;
 
         $order = Order::create([
-            'no_order' => 'ORD-' . strtoupper(Str::random(8)),
+            'no_order' => 'ORD-'.strtoupper(Str::random(8)),
             'user_id' => $konsumen->id,
+            'nama_pemesan' => $konsumen->name,
+            'whatsapp_pemesan' => $konsumen->phone ?? '081200000000',
             'total_harga' => $subtotal,
             'status' => 'pending',
             'tanggal_pesan' => now(),

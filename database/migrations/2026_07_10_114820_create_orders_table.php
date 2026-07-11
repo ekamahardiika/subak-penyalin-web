@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('no_order')->unique();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('nama_pemesan')->nullable();
+            $table->string('whatsapp_pemesan')->nullable();
             $table->decimal('total_harga', 12, 2)->default(0);
             $table->enum('status', ['pending', 'dikonfirmasi', 'diproses', 'selesai', 'dibatalkan'])->default('pending');
             $table->timestamp('tanggal_pesan')->useCurrent();

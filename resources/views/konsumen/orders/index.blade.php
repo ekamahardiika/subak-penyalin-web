@@ -74,4 +74,12 @@
     <div class="mt-4">
         {{ $orders->links() }}
     </div>
+
+    {{-- Setelah checkout sukses (redirect ke sini membawa session('success')),
+         bersihkan keranjang localStorage supaya tidak terbawa ke sesi belanja berikutnya. --}}
+    @if (session('success'))
+        <script>
+            localStorage.removeItem('cart_gabah');
+        </script>
+    @endif
 @endsection

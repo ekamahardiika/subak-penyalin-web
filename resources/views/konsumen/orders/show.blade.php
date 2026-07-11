@@ -1,83 +1,132 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mb-4">
-        <a href="{{ route('konsumen.orders.index') }}"
-            class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-emerald-600 transition-colors">
-            <i class="fa-solid fa-arrow-left text-[10px]"></i> Kembali ke Riwayat Belanja
-        </a>
+    <a href="{{ route('konsumen.orders.index') }}"
+        class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-emerald-700 mb-4 transition-colors">
+        <i class="fa-solid fa-arrow-left text-[10px]"></i> Kembali ke Riwayat Pesanan
+    </a>
+
+    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-6">
+        <div>
+            <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Invoice</p>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight font-mono">{{ $order->no_order }}</h1>
+        </div>
+
+        @php
+            $statusLower = strtolower($order->status);
+        @endphp
+        @if (in_array($statusLower, ['selesai', 'success', 'lunas']))
+            <span
+                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wide w-fit">
+                {{ $order->status }}
+            </span>
+        @elseif(in_array($statusLower, ['pending', 'menunggu', 'proses', 'dikonfirmasi', 'diproses']))
+            <span
+                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200 uppercase tracking-wide w-fit">
+                {{ $order->status }}
+            </span>
+        @else
+            <span
+                class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200 uppercase tracking-wide w-fit">
+                {{ $order->status }}
+            </span>
+        @endif
     </div>
 
-    <div class="max-w-3xl mx-auto space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
 
-        <div class="bg-white rounded-xl border border-gray-100 shadow-xs overflow-hidden">
-            <div class="bg-gradient-to-r from-emerald-900 to-emerald-950 p-6 text-white flex justify-between items-center">
-                <div class="space-y-1">
-                    <p class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Nota Tagihan Pembelian</p>
-                    <h2 class="text-xl font-mono font-bold tracking-tight">{{ $order->no_order }}</h2>
-                </div>
-                <div class="text-right">
-                    <div
-                        class="bg-white/10 text-white backdrop-blur-xs px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-white/10">
-                        {{ $order->status }}
-                    </div>
-                </div>
+        <!-- DAFTAR PRODUK YANG DIPESAN -->
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
+            <div class="px-5 py-4 border-b border-gray-100">
+                <h3 class="font-bold text-sm text-gray-800">Produk Dipesan</h3>
             </div>
 
-            <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-gray-50 text-sm">
+            <div class="divide-y divide-gray-100">
+                @foreach ($order->items as $item)
+                    <div class="flex items-center gap-4 p-5">
+                        <div class="w-16 h-16 rounded-xl bg-gray-100 overflow-hidden shrink-0">
+                            @if ($item->product && $item->product->gambar)
+                                <img src="{{ asset('storage/' . $item->product->gambar) }}"
+                                    alt="{{ $item->product->nama_produk }}" class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                    <i class="fa-solid fa-wheat-awn text-xl"></i>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-bold text-gray-900 truncate">
+                                {{ $item->product->nama_produk ?? 'Produk telah dihapus' }}
+                            </p>
+                            <p class="text-xs text-gray-400 mt-0.5">
+                                {{ $item->qty }} {{ $item->product->satuan ?? '' }} &times;
+                                Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}
+                            </p>
+                        </div>
+
+                        <p class="text-sm font-bold text-gray-900 shrink-0">
+                            Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                        </p>
+                    </div>
+                @endforeach
+
+                @if ($order->items->isEmpty())
+                    <div class="text-center text-gray-400 text-sm py-10">
+                        <i class="fa-solid fa-box-open text-3xl text-gray-300"></i>
+                        <p class="mt-2">Tidak ada produk pada pesanan ini.</p>
+                    </div>
+                @endif
+            </div>
+
+            <div class="px-5 py-4 border-t border-gray-100 flex items-center justify-between">
+                <span class="text-sm font-medium text-gray-500">Total Belanja</span>
+                <span class="text-lg font-bold text-emerald-700">
+                    Rp {{ number_format($order->total_harga, 0, ',', '.') }}
+                </span>
+            </div>
+        </div>
+
+        <!-- INFORMASI PESANAN -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
+            <div class="bg-emerald-950 text-white px-5 py-4">
+                <h3 class="font-bold text-sm tracking-wide uppercase">Informasi Pesanan</h3>
+            </div>
+
+            <div class="p-5 space-y-4 text-sm">
                 <div>
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Waktu Pemesanan</p>
-                    <p class="font-medium text-gray-700">
-                        {{ \Carbon\Carbon::parse($order->tanggal_pesan)->format('d F Y, H:i') }} WITA
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">No Order</p>
+                    <p class="font-mono font-bold text-gray-800 mt-1">{{ $order->no_order }}</p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Tanggal Pesan</p>
+                    <p class="text-gray-700 mt-1">
+                        {{ $order->tanggal_pesan ? $order->tanggal_pesan->format('d M Y, H:i') : '-' }}
                     </p>
                 </div>
-                <div class="sm:text-right">
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Metode Pembayaran</p>
-                    <p class="font-medium text-gray-700">Transfer Bank (Verifikasi Manual)</p>
-                </div>
-            </div>
 
-            <div class="p-6 space-y-4">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Rincian Item Gabah</h3>
+                @if ($order->nama_pemesan)
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Nama Pemesan</p>
+                        <p class="text-gray-700 mt-1">{{ $order->nama_pemesan }}</p>
+                    </div>
+                @endif
 
-                <div class="space-y-2">
-                    @foreach ($order->items as $item)
-                        <div
-                            class="p-4 bg-gray-50/70 border border-gray-100 rounded-xl text-sm flex justify-between items-center">
-                            <div class="flex items-center gap-3">
-                                <div class="bg-emerald-100 text-emerald-800 p-2 rounded-lg text-xs">
-                                    <i class="fa-solid fa-wheat-awn"></i>
-                                </div>
-                                <div>
-                                    <p class="font-semibold text-gray-800">
-                                        {{ $item->product->nama_produk ?? 'Produk Gabah' }}</p>
-                                    <p class="text-xs text-gray-400">Kuantitas: <span
-                                            class="font-semibold text-gray-600">{{ $item->qty }} KG</span></p>
-                                </div>
-                            </div>
-                            <strong class="font-bold text-gray-900">Rp
-                                {{ number_format($item->subtotal, 0, ',', '.') }}</strong>
-                        </div>
-                    @endforeach
-                </div>
+                @if ($order->whatsapp_pemesan)
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">WhatsApp</p>
+                        <p class="text-gray-700 mt-1">{{ $order->whatsapp_pemesan }}</p>
+                    </div>
+                @endif
 
-                <div class="border-t border-gray-100 pt-4 flex justify-between items-center mt-6">
-                    <span class="text-sm font-bold text-gray-500 uppercase tracking-wider">Total Pembayaran</span>
-                    <span class="text-xl font-black text-emerald-600 tracking-tight">
-                        Rp {{ number_format($order->total_harga, 0, ',', '.') }}
-                    </span>
-                </div>
+                @if ($order->catatan)
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Catatan</p>
+                        <p class="text-gray-700 mt-1 leading-relaxed">{{ $order->catatan }}</p>
+                    </div>
+                @endif
             </div>
         </div>
-
-        <div class="bg-amber-50/60 border border-amber-200/60 p-4 rounded-xl text-xs text-amber-800 flex gap-3">
-            <i class="fa-solid fa-circle-info text-sm text-amber-600 mt-0.5"></i>
-            <div>
-                <span class="font-bold">Informasi Pembayaran:</span> Jika status pesanan Anda masih <span
-                    class="uppercase font-bold">pending</span>, harap lakukan transfer tepat senilai total pembayaran ke
-                nomor rekening penyedia dan kirimkan bukti transfer kepada admin atau petani terkait.
-            </div>
-        </div>
-
     </div>
 @endsection
