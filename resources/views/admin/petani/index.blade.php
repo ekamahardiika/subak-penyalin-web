@@ -97,10 +97,14 @@
                                                 form: $el,
                                                 title: 'Hapus Akun Petani?',
                                                 message: `Data petani \'${p.name}\' beserta seluruh data penugasan dan histori log transaksinya akan dihapus permanen.`
-                                            })"
-                                            @csrf @method('DELETE') <button type="submit"
-                                            class="inline-flex items-center gap-1 bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-700 text-xs font-bold transition-all border border-red-200/50 px-2.5 py-1.5 rounded-lg cursor-pointer">
-                                            <i class="fa-regular fa-trash-can text-xs"></i> Hapus
+                                            })">
+
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit"
+                                                class="inline-flex items-center gap-1 bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-700 text-xs font-bold transition-all border border-red-200/50 px-2.5 py-1.5 rounded-lg cursor-pointer">
+                                                <i class="fa-regular fa-trash-can text-xs"></i> Hapus
                                             </button>
                                         </form>
                                     </div>
@@ -109,7 +113,7 @@
                         </template>
 
                         <tr x-show="filteredPetani.length === 0">
-                            <td colspan="4" class="px-6 py-10 text-center text-gray-400">
+                            <td colspan="5" class="px-6 py-10 text-center text-gray-400">
                                 <div class="flex flex-col items-center justify-center space-y-2">
                                     <i class="fa-solid fa-users-slash text-3xl text-gray-300"></i>
                                     <p class="text-sm">Data mitra petani tidak ditemukan atau belum terdaftar.</p>
