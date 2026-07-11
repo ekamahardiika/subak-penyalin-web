@@ -9,7 +9,7 @@
         </a>
     </div>
 
-    <div class="max-w-3xl mx-auto space-y-6">
+    <div class="w-full space-y-6">
 
         <!-- Info Kredensial Produk -->
         <div class="bg-white border border-gray-100 rounded-xl shadow-xs overflow-hidden">

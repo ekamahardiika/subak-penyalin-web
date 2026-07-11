@@ -8,7 +8,7 @@
         </a>
     </div>
 
-    <div class="max-w-2xl mx-auto">
+    <div class="w-full">
         <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
             <div class="mb-5">
                 <h2 class="text-xl font-bold text-gray-900 tracking-tight">Buat Broadcast Harga Gabah</h2>

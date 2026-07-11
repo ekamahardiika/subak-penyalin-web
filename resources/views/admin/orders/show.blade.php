@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- Tombol Kembali -->
     <div class="mb-4">
         <a href="{{ route('admin.orders.index') }}"
             class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-emerald-600 transition-colors">
@@ -9,11 +8,9 @@
         </a>
     </div>
 
-    <div class="max-w-3xl mx-auto space-y-6">
+    <div class="w-full space-y-6">
 
-        <!-- Utama Kontrol Panel Transaksi -->
         <div class="bg-white rounded-xl border border-gray-100 shadow-xs overflow-hidden">
-            <!-- Header Ringkasan -->
             <div class="bg-gradient-to-r from-emerald-900 to-emerald-950 p-6 text-white flex justify-between items-center">
                 <div class="space-y-1">
                     <p class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Detail Kontrol Transaksi</p>
@@ -21,13 +18,16 @@
                 </div>
                 <div>
                     <span
-                        class="bg-white/10 backdrop-blur-xs px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border border-white/10">
+                        class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border backdrop-blur-xs
+                        {{ in_array(strtolower($order->status), ['selesai', 'success']) ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : '' }}
+                        {{ in_array(strtolower($order->status), ['pending', 'menunggu']) ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : '' }}
+                        {{ in_array(strtolower($order->status), ['dikonfirmasi', 'diproses']) ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : '' }}
+                        {{ !in_array(strtolower($order->status), ['selesai', 'success', 'pending', 'menunggu', 'dikonfirmasi', 'diproses']) ? 'bg-red-500/10 text-red-400 border-red-500/20' : '' }}">
                         {{ $order->status }}
                     </span>
                 </div>
             </div>
 
-            <!-- Metadata Info -->
             <div class="p-6 border-b border-gray-50 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div class="space-y-2">
                     <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Nama Konsumen</p>
@@ -43,14 +43,58 @@
                 </div>
             </div>
 
-            <!-- Panel Tombol Kontrol Aksi Manajemen -->
-            <div class="p-6 bg-gray-50/50 border-b border-gray-50 flex flex-wrap items-center justify-between gap-4">
+            <div x-data="{
+                confirmKonfirmasi(e) {
+                        Swal.fire({
+                            title: 'Konfirmasi Pesanan?',
+                            text: 'Pesanan ini akan langsung dikonfirmasi dan statusnya berubah!',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#059669',
+                            cancelButtonColor: '#6b7280',
+                            confirmButtonText: 'Ya, Konfirmasi!',
+                            cancelButtonText: 'Batal',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-emerald-600 border-none',
+                                cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                e.target.submit();
+                            }
+                        });
+                    },
+                    confirmUpdate(e) {
+                        const statusVal = this.$refs.statusSelect.value;
+                        Swal.fire({
+                            title: 'Update Status Pesanan?',
+                            text: 'Status pesanan #' + '{{ $order->no_order }}' + ' akan diubah menjadi: ' + statusVal.toUpperCase(),
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#1f2937',
+                            cancelButtonColor: '#6b7280',
+                            confirmButtonText: 'Ya, Update!',
+                            cancelButtonText: 'Batal',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-800 border-none',
+                                cancelButton: 'rounded-lg text-xs font-semibold px-4 py-2 bg-gray-500 border-none'
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                e.target.submit();
+                            }
+                        });
+                    }
+            }"
+                class="p-6 bg-gray-50/50 border-b border-gray-50 flex flex-wrap items-center justify-between gap-4">
                 <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi Cepat Admin :</div>
 
                 <div class="flex flex-wrap items-center gap-3">
-                    <!-- Tombol Konfirmasi Kilat Mandiri -->
                     @if ($order->status == 'pending')
-                        <form action="{{ route('admin.orders.confirm', $order->id) }}" method="POST">
+                        <form action="{{ route('admin.orders.confirm', $order->id) }}" method="POST"
+                            @submit.prevent="confirmKonfirmasi">
                             @csrf
                             @method('PATCH')
                             <button type="submit"
@@ -60,16 +104,16 @@
                         </form>
                     @endif
 
-                    <!-- Form Dropdown Pengubah Status Status Alur Kontrol -->
                     <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST"
-                        class="flex items-center gap-2">
+                        @submit.prevent="confirmUpdate" class="flex items-center gap-2">
                         @csrf
                         @method('PATCH')
 
                         <div class="relative">
-                            <select name="status"
+                            <select name="status" x-ref="statusSelect"
                                 class="block pl-4 pr-9 py-2 bg-white border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-emerald-500 appearance-none cursor-pointer shadow-2xs">
-                                <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending
+                                </option>
                                 <option value="dikonfirmasi" {{ $order->status == 'dikonfirmasi' ? 'selected' : '' }}>
                                     Dikonfirmasi</option>
                                 <option value="diproses" {{ $order->status == 'diproses' ? 'selected' : '' }}>Diproses
@@ -93,7 +137,6 @@
                 </div>
             </div>
 
-            <!-- List Item Rincian Terbeli -->
             <div class="p-6 space-y-4">
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Item Produk Terbeli</h3>
 
@@ -108,7 +151,8 @@
                                 </div>
                                 <div>
                                     <p class="font-bold text-gray-800 text-sm">
-                                        {{ $item->product->nama_produk ?? 'Komoditas Gabah' }}</p>
+                                        {{ $item->product->nama_produk ?? 'Komoditas Gabah' }}
+                                    </p>
                                     <p class="text-xs text-gray-400 mt-0.5">
                                         Kuantitas: <span class="font-bold text-gray-600">{{ $item->qty }}
                                             {{ $item->product->satuan ?? 'KG' }}</span>

@@ -24,6 +24,154 @@
     desktopExpanded: localStorage.getItem('sidebarExpanded') !== 'false'
 }" x-init="$watch('desktopExpanded', val => localStorage.setItem('sidebarExpanded', val))">
 
+    <!-- ============================================= -->
+    <!-- TOAST NOTIFICATION (gaya "sweet alert" custom pakai Alpine) -->
+    <!-- Otomatis muncul kalau ada session('success') / session('error') dari controller -->
+    <!-- ============================================= -->
+    <div x-data="{
+        toasts: [],
+        addToast(type, message) {
+            if (!message) return;
+            const id = Date.now() + Math.random();
+            this.toasts.push({ id, type, message });
+            setTimeout(() => this.removeToast(id), 4000);
+        },
+        removeToast(id) {
+            this.toasts = this.toasts.filter(t => t.id !== id);
+        }
+    }" x-init="@if(session('success'))
+    addToast('success', {{ \Illuminate\Support\Js::from(session('success')) }});
+    @endif
+    @if(session('error'))
+    addToast('error', {{ \Illuminate\Support\Js::from(session('error')) }});
+    @endif"
+        class="fixed top-4 right-4 z-[200] flex flex-col gap-3 w-[calc(100%-2rem)] sm:w-full sm:max-w-sm pointer-events-none">
+        <template x-for="toast in toasts" :key="toast.id">
+            <div x-show="true" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 -translate-y-2 translate-x-4"
+                x-transition:enter-end="opacity-100 translate-y-0 translate-x-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4"
+                class="pointer-events-auto flex items-start gap-3 bg-white p-4 rounded-2xl shadow-lg border"
+                :class="toast.type === 'success' ? 'border-emerald-100' : 'border-red-100'">
+
+                <div class="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center"
+                    :class="toast.type === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500'">
+                    <i class="fa-solid text-sm"
+                        :class="toast.type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'"></i>
+                </div>
+
+                <div class="flex-1 pt-0.5 min-w-0">
+                    <p class="text-sm font-bold text-gray-900"
+                        x-text="toast.type === 'success' ? 'Berhasil!' : 'Terjadi Kesalahan'"></p>
+                    <p class="text-xs text-gray-500 mt-0.5 break-words" x-text="toast.message"></p>
+                </div>
+
+                <button @click="removeToast(toast.id)"
+                    class="shrink-0 text-gray-300 hover:text-gray-500 transition-colors cursor-pointer">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+
+                <!-- Progress bar auto-dismiss -->
+                <div class="absolute left-0 bottom-0 h-1 rounded-b-2xl animate-toast-progress"
+                    :class="toast.type === 'success' ? 'bg-emerald-400' : 'bg-red-400'"></div>
+            </div>
+        </template>
+    </div>
+
+    <style>
+        @keyframes toast-progress {
+            from {
+                width: 100%;
+            }
+
+            to {
+                width: 0%;
+            }
+        }
+
+        .animate-toast-progress {
+            animation: toast-progress 4s linear forwards;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+
+    <!-- ============================================= -->
+    <!-- MODAL KONFIRMASI (gaya "Are you sure?" custom pakai Alpine) -->
+    <!-- Dipasang global di layout, dipanggil dari halaman manapun lewat $dispatch('open-confirm-modal', {...}) -->
+    <!-- Contoh pakai di form delete:
+         @submit.prevent="$dispatch('open-confirm-modal', {
+             form: $el,
+             title: 'Hapus Konsumen?',
+             message: 'Data ini akan dihapus permanen dan tidak dapat dikembalikan.'
+         })"
+    -->
+    <!-- ============================================= -->
+    <div x-data="{
+        show: false,
+        title: 'Apakah Anda yakin?',
+        message: '',
+        confirmLabel: 'Ya, Lanjutkan',
+        cancelLabel: 'Batal',
+        type: 'danger', // 'danger' (hapus, warna merah) atau 'primary' (simpan/update, warna emerald)
+        formEl: null,
+        cancel() {
+            this.show = false;
+            this.formEl = null;
+        },
+        confirmAction() {
+            if (this.formEl) this.formEl.submit();
+            this.show = false;
+        }
+    }"
+        @open-confirm-modal.window="
+            formEl = $event.detail.form || null;
+            title = $event.detail.title || 'Apakah Anda yakin?';
+            message = $event.detail.message || '';
+            confirmLabel = $event.detail.confirmLabel || 'Ya, Lanjutkan';
+            cancelLabel = $event.detail.cancelLabel || 'Batal';
+            type = $event.detail.type || 'danger';
+            show = true;
+        "
+        x-show="show" x-cloak class="fixed inset-0 z-[110] flex items-center justify-center p-4">
+
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black/40" x-show="show" x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" @click="cancel()"></div>
+
+        <!-- Card Modal -->
+        <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center" x-show="show"
+            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-90"
+            x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">
+
+            <div class="mx-auto w-16 h-16 rounded-full border-4 flex items-center justify-center mb-4"
+                :class="type === 'primary' ? 'bg-emerald-50 border-emerald-100' : 'bg-red-50 border-red-100'">
+                <i class="fa-solid text-2xl"
+                    :class="type === 'primary' ? 'fa-circle-question text-emerald-600' : 'fa-triangle-exclamation text-red-500'"></i>
+            </div>
+
+            <h3 class="text-lg font-bold text-gray-900" x-text="title"></h3>
+            <p class="text-sm text-gray-500 mt-1.5 leading-relaxed" x-text="message"></p>
+
+            <div class="flex gap-3 mt-6">
+                <button type="button" @click="cancel()"
+                    class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-2.5 rounded-xl text-sm transition-all cursor-pointer"
+                    x-text="cancelLabel"></button>
+                <button type="button" @click="confirmAction()"
+                    class="flex-1 text-white font-bold py-2.5 rounded-xl text-sm transition-all shadow-md cursor-pointer"
+                    :class="type === 'primary' ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-700/20' :
+                        'bg-red-600 hover:bg-red-700 shadow-red-700/20'"
+                    x-text="confirmLabel"></button>
+            </div>
+        </div>
+    </div>
+
     <div class="min-h-screen flex">
 
         <!-- ASIDE SIDEBAR -->
@@ -276,24 +424,6 @@
                     </div>
                 </div>
             @endisset
-
-            <!-- Flash Session Alerts -->
-            <div class="px-6 mt-4">
-                @if (session('success'))
-                    <div
-                        class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl flex items-center gap-3 text-sm">
-                        <i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>
-                        <span>{{ session('success') }}</span>
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div
-                        class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl flex items-center gap-3 text-sm">
-                        <i class="fa-solid fa-circle-exclamation text-red-500 text-base"></i>
-                        <span>{{ session('error') }}</span>
-                    </div>
-                @endif
-            </div>
 
             <!-- Main Yield Content -->
             <main class="p-6 flex-1">

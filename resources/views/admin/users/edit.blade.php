@@ -9,7 +9,7 @@
         </a>
     </div>
 
-    <div class="max-w-2xl mx-auto">
+    <div class="w-full">
         <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
             <div class="mb-5">
                 <h2 class="text-xl font-bold text-gray-900 tracking-tight">Edit Akun Konsumen</h2>
@@ -17,7 +17,14 @@
                     konsumen terdaftar.</p>
             </div>
 
-            <form action="{{ route('admin.users.update', $user->id) }}" method="POST" class="space-y-4">
+            <form action="{{ route('admin.users.update', $user->id) }}" method="POST" class="space-y-4"
+                @submit.prevent="$dispatch('open-confirm-modal', {
+                    form: $el,
+                    type: 'primary',
+                    title: 'Perbarui Data Konsumen?',
+                    message: 'Perubahan akan langsung disimpan ke akun konsumen ini.',
+                    confirmLabel: 'Ya, Perbarui'
+                })">
                 @csrf
                 @method('PUT')
 
