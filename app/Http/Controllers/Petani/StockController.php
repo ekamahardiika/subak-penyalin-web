@@ -36,6 +36,21 @@ class StockController extends Controller
         return back()->with('success', 'Stok berhasil ditambahkan');
     }
 
+    /**
+     * Halaman detail stok + form koreksi kuantitas.
+     * Diakses saat petani klik baris produk atau tombol "Koreksi" di index.
+     */
+    public function edit(PetaniStock $stock)
+    {
+        if ($stock->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $stock->load('product');
+
+        return view('petani.stocks.edit', compact('stock'));
+    }
+
     public function update(Request $request, PetaniStock $stock)
     {
         if ($stock->user_id !== Auth::id()) {
@@ -48,6 +63,6 @@ class StockController extends Controller
 
         $stock->update($validated);
 
-        return back()->with('success', 'Stok berhasil diupdate');
+        return redirect()->route('petani.stok.index')->with('success', 'Stok berhasil diupdate');
     }
 }

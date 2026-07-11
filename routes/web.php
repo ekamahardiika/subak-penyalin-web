@@ -45,6 +45,7 @@ Route::middleware(['auth', 'role:petani'])->prefix('petani')->name('petani.')->g
     Route::get('/dashboard', [PetaniDashboardController::class, 'index'])->name('dashboard');
     Route::get('stok', [StockController::class, 'index'])->name('stok.index');
     Route::post('stok', [StockController::class, 'store'])->name('stok.store');
+    Route::get('stok/{stock}', [StockController::class, 'edit'])->name('stok.edit');
     Route::patch('stok/{stock}', [StockController::class, 'update'])->name('stok.update');
 });
 
