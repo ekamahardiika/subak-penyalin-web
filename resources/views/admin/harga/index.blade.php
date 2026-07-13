@@ -94,19 +94,26 @@
                                 <td class="px-6 py-4 font-bold text-emerald-600" x-text="formatRupiah(b.harga_gabah)"></td>
                                 <td class="px-6 py-4 text-gray-500 max-w-xs truncate" x-text="b.keterangan || '-'"></td>
                                 <td class="px-6 py-4 text-center">
-                                    <form :action="`{{ route('admin.harga.index') }}/${b.id}`" method="POST"
-                                        @submit.prevent="$dispatch('open-confirm-modal', {
-                                            form: $el,
-                                            title: 'Hapus Riwayat Broadcast?',
-                                            message: `Data acuan harga tanggal ${formatTanggal(b.tanggal)} akan dihapus permanen dari arsip.`
-                                        })">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="inline-flex items-center gap-1 text-red-500 hover:text-red-700 text-xs font-bold transition-colors cursor-pointer bg-red-50 hover:bg-red-100 px-2.5 py-1.5 rounded-lg border border-red-200/50">
-                                            <i class="fa-regular fa-trash-can text-xs"></i> Hapus
-                                        </button>
-                                    </form>
+                                    <div class="inline-flex items-center gap-2">
+                                        <a :href="`{{ route('admin.harga.index') }}/${b.id}/edit`"
+                                            class="inline-flex items-center gap-1 text-blue-500 hover:text-blue-700 text-xs font-bold transition-colors cursor-pointer bg-blue-50 hover:bg-blue-100 px-2.5 py-1.5 rounded-lg border border-blue-200/50">
+                                            <i class="fa-regular fa-pen-to-square text-xs"></i> Edit
+                                        </a>
+
+                                        <form :action="`{{ route('admin.harga.index') }}/${b.id}`" method="POST"
+                                            @submit.prevent="$dispatch('open-confirm-modal', {
+                form: $el,
+                title: 'Hapus Riwayat Broadcast?',
+                message: `Data acuan harga tanggal ${formatTanggal(b.tanggal)} akan dihapus permanen dari arsip.`
+            })">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="inline-flex items-center gap-1 text-red-500 hover:text-red-700 text-xs font-bold transition-colors cursor-pointer bg-red-50 hover:bg-red-100 px-2.5 py-1.5 rounded-lg border border-red-200/50">
+                                                <i class="fa-regular fa-trash-can text-xs"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         </template>

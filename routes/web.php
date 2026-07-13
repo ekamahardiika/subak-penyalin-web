@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LandingController::class, 'home'])->name('home');
 Route::get('/tentang', [LandingController::class, 'tentang'])->name('tentang');
 Route::get('/produk', [LandingController::class, 'produk'])->name('produk');
+Route::get('/harga', [LandingController::class, 'harga'])->name('harga');
 Route::get('/kontak', [LandingController::class, 'kontak'])->name('kontak');
 
 // Admin
@@ -31,7 +32,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('petani', PetaniController::class)->except('show');
     Route::resource('products', AdminProductController::class);
 
-    Route::resource('harga', HargaBroadcastController::class)->only(['index', 'create', 'store', 'destroy']);
+    // FIX: tambah 'edit', 'update'
+    Route::resource('harga', HargaBroadcastController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');

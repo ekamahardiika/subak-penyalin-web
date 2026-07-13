@@ -12,6 +12,7 @@ class HargaBroadcastController extends Controller
     public function index()
     {
         $broadcasts = HargaBroadcast::with('creator')->latest()->paginate(10);
+
         return view('admin.harga.index', compact('broadcasts'));
     }
 
@@ -35,9 +36,28 @@ class HargaBroadcastController extends Controller
         return redirect()->route('admin.harga.index')->with('success', 'Harga gabah berhasil dibroadcast');
     }
 
+    public function edit(HargaBroadcast $harga)
+    {
+        return view('admin.harga.edit', compact('harga'));
+    }
+
+    public function update(Request $request, HargaBroadcast $harga)
+    {
+        $validated = $request->validate([
+            'harga_gabah' => 'required|numeric|min:0',
+            'keterangan' => 'nullable|string',
+            'tanggal' => 'required|date',
+        ]);
+
+        $harga->update($validated);
+
+        return redirect()->route('admin.harga.index')->with('success', 'Broadcast harga berhasil diperbarui');
+    }
+
     public function destroy(HargaBroadcast $harga)
     {
         $harga->delete();
+
         return redirect()->route('admin.harga.index')->with('success', 'Broadcast berhasil dihapus');
     }
 }

@@ -28,6 +28,10 @@
                 <a href="/" class="hover:text-emerald-400 transition-colors">Home</a>
                 <a href="{{ route('produk') }}" class="hover:text-emerald-400 transition-colors">Katalog Produk</a>
                 <a href="{{ route('tentang') }}" class="hover:text-emerald-400 transition-colors">Tentang Kami</a>
+                <a href="{{ route('harga') }}"
+                    class="{{ request()->routeIs('harga') ? 'text-emerald-400 font-bold' : 'hover:text-emerald-400 transition-colors' }}">
+                    Informasi Harga
+                </a>
                 <a href="{{ route('kontak') }}" class="hover:text-emerald-400 transition-colors">Kontak</a>
             </nav>
             <div>
@@ -142,6 +146,8 @@
                     </li>
                     <li><a href="{{ route('tentang') }}" class="hover:text-emerald-400 transition-colors">Tentang
                             Kami</a></li>
+                    <li><a href="{{ route('harga') }}" class="hover:text-emerald-400 transition-colors">Informasi Harga
+                    </a></li>
                     <li><a href="{{ route('kontak') }}" class="hover:text-emerald-400 transition-colors">Kontak</a>
                     </li>
                 </ul>
