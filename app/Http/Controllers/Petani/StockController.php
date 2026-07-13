@@ -22,7 +22,8 @@ class StockController extends Controller
     {
         $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
-            'stok_kg' => 'required|numeric|min:0',
+            // FIX: integer, tidak boleh ada pecahan kg
+            'stok_kg' => 'required|integer|min:1',
         ]);
 
         $stock = PetaniStock::firstOrNew([
@@ -58,7 +59,8 @@ class StockController extends Controller
         }
 
         $validated = $request->validate([
-            'stok_kg' => 'required|numeric|min:0',
+            // FIX: integer, tidak boleh ada pecahan kg
+            'stok_kg' => 'required|integer|min:0',
         ]);
 
         $stock->update($validated);

@@ -44,7 +44,7 @@
                     <div>
                         <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Stok Saat Ini</p>
                         <p class="text-sm font-bold text-emerald-700 mt-0.5">
-                            {{ number_format($stock->stok_kg, 2, ',', '.') }} {{ $stock->product->satuan ?? 'kg' }}
+                            {{ number_format($stock->stok_kg, 0, ',', '.') }} {{ $stock->product->satuan ?? 'kg' }}
                         </p>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                         Jumlah Kuantitas Baru (KG)
                     </label>
                     <div class="relative">
-                        <input type="number" step="0.01" name="stok_kg" value="{{ $stock->stok_kg }}" required
+                        <input type="number" step="1" name="stok_kg" value="{{ $stock->stok_kg }}" required
                             min="0"
                             class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs">
                         <span

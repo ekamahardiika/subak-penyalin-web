@@ -15,39 +15,61 @@ class OrderSeeder extends Seeder
 {
     public function run(): void
     {
+        // Ambil konsumen dan produk pertama sebagai sampel dasar
         $konsumen = User::where('role', 'konsumen')->first();
         $product = Product::first();
 
-        $qty = 20;
-        $subtotal = $qty * $product->harga_jual;
+        // Pastikan data konsumen dan produk ada sebelum melakukan seeding
+        if (! $konsumen || ! $product) {
+            $this->command->warn('Data konsumen atau produk tidak ditemukan. Pastikan UserSeeder dan ProductSeeder sudah dijalankan.');
 
-        $order = Order::create([
-            'no_order' => 'ORD-'.strtoupper(Str::random(8)),
-            'user_id' => $konsumen->id,
-            'nama_pemesan' => $konsumen->name,
-            'whatsapp_pemesan' => $konsumen->phone ?? '081200000000',
-            'total_harga' => $subtotal,
-            'status' => 'diproses',
-            'tanggal_pesan' => now(),
-            'catatan' => 'Contoh pesanan awal',
-        ]);
+            return;
+        }
 
-        $orderItem = OrderItem::create([
-            'order_id' => $order->id,
-            'product_id' => $product->id,
-            'qty' => $qty,
-            'harga_satuan' => $product->harga_jual,
-            'subtotal' => $subtotal,
-        ]);
+        // Variasi data untuk 5 order berbeda
+        $orderData = [
+            ['qty' => 10, 'status' => 'diproses', 'catatan' => 'Pesanan mendesak, mohon segera diproses.'],
+            ['qty' => 25, 'status' => 'diproses', 'catatan' => 'Packing kayu ya min.'],
+            ['qty' => 5, 'status' => 'diproses', 'catatan' => 'Kirim sebelum jam 5 sore.'],
+            ['qty' => 50, 'status' => 'diproses', 'catatan' => 'Pembelian grosir bulanan.'],
+            ['qty' => 15, 'status' => 'diproses', 'catatan' => 'Salah input alamat, nanti re-order.'],
+        ];
 
-        $petaniStock = PetaniStock::where('product_id', $product->id)->first();
+        foreach ($orderData as $index => $data) {
+            $qty = $data['qty'];
+            $subtotal = $qty * $product->harga_jual;
 
-        if ($petaniStock) {
-            StockAllocation::create([
-                'order_item_id' => $orderItem->id,
-                'petani_stock_id' => $petaniStock->id,
-                'jumlah_kg' => $qty,
+            // 1. Buat Order
+            $order = Order::create([
+                'no_order' => 'ORD-'.strtoupper(Str::random(8)),
+                'user_id' => $konsumen->id,
+                'nama_pemesan' => $konsumen->name,
+                'whatsapp_pemesan' => $konsumen->phone ?? '08120000'.str_pad($index, 4, '0', STR_PAD_LEFT),
+                'total_harga' => $subtotal,
+                'status' => $data['status'],
+                'tanggal_pesan' => now()->subDays(5 - $index), // Membuat tanggal bertahap mundur
+                'catatan' => $data['catatan'],
             ]);
+
+            // 2. Buat Order Item
+            $orderItem = OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $product->id,
+                'qty' => $qty,
+                'harga_satuan' => $product->harga_jual,
+                'subtotal' => $subtotal,
+            ]);
+
+            // 3. Alokasi Stok Petani
+            $petaniStock = PetaniStock::where('product_id', $product->id)->first();
+
+            if ($petaniStock) {
+                StockAllocation::create([
+                    'order_item_id' => $orderItem->id,
+                    'petani_stock_id' => $petaniStock->id,
+                    'jumlah_kg' => $qty,
+                ]);
+            }
         }
     }
 }

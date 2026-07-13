@@ -27,9 +27,12 @@ class OrderController extends Controller
     public function create()
     {
         $products = Product::where('status', 'aktif')
+            ->withSum('stocks as stok_tersedia', 'stok_kg')
             ->get()
             ->map(function ($p) {
                 $p->gambar_url = $p->gambar ? asset('storage/'.$p->gambar) : null;
+                // FIX: pastikan selalu integer (0 kalau belum ada petani yang setor stok sama sekali)
+                $p->stok_tersedia = (int) ($p->stok_tersedia ?? 0);
 
                 return $p;
             });

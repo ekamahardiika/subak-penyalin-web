@@ -37,22 +37,34 @@
                                 x-text="'Rp ' + formatRupiah(p.harga_jual) + ' / ' + p.satuan"></p>
 
                             <div class="mt-3">
-                                <template x-if="!cart[p.id]">
+                                <template x-if="p.stok_tersedia <= 0">
+                                    <button disabled
+                                        class="w-full bg-gray-100 text-gray-400 font-bold text-xs py-2 rounded-xl border border-gray-200 cursor-not-allowed">
+                                        <i class="fa-solid fa-ban mr-1"></i> Stok Habis
+                                    </button>
+                                </template>
+
+                                <template x-if="p.stok_tersedia > 0 && !cart[p.id]">
                                     <button @click="addToCart(p.id)"
                                         class="w-full bg-emerald-50 hover:bg-emerald-600 hover:text-white text-emerald-700 font-bold text-xs py-2 rounded-xl border border-emerald-200 transition-all cursor-pointer">
                                         <i class="fa-solid fa-cart-plus mr-1"></i> Tambah
                                     </button>
                                 </template>
-                                <template x-if="cart[p.id]">
+
+                                <template x-if="p.stok_tersedia > 0 && cart[p.id]">
                                     <div
                                         class="flex items-center justify-between bg-gray-50 rounded-xl border border-gray-200 p-1">
                                         <button @click="decrement(p.id)"
                                             class="w-7 h-7 rounded-lg bg-white border border-gray-200 text-gray-600 hover:text-red-600 hover:border-red-200 transition-colors cursor-pointer">
                                             <i class="fa-solid fa-minus text-[10px]"></i>
                                         </button>
+
                                         <span class="font-bold text-sm text-gray-800" x-text="cart[p.id]"></span>
-                                        <button @click="increment(p.id)"
-                                            class="w-7 h-7 rounded-lg bg-white border border-gray-200 text-gray-600 hover:text-emerald-700 hover:border-emerald-200 transition-colors cursor-pointer">
+
+                                        <button @click="increment(p.id)" :disabled="cart[p.id] >= p.stok_tersedia"
+                                            :class="cart[p.id] >= p.stok_tersedia ? 'opacity-30 cursor-not-allowed' :
+                                                'cursor-pointer'"
+                                            class="w-7 h-7 rounded-lg bg-white border border-gray-200 text-gray-600 hover:text-emerald-600 hover:border-emerald-200 transition-colors">
                                             <i class="fa-solid fa-plus text-[10px]"></i>
                                         </button>
                                     </div>
@@ -71,8 +83,7 @@
             <!-- KERANJANG / PESANAN -->
             <div class="bg-white rounded-2xl border border-gray-100 shadow-xs sticky top-20">
                 <div class="bg-emerald-950 text-white rounded-t-2xl px-5 py-4 flex items-center gap-2.5">
-                    <span
-                        class="w-6 h-6 rounded-full bg-emerald-600 flex items-center justify-center text-xs font-bold">2</span>
+        
                     <h3 class="font-bold text-sm tracking-wide uppercase">Pesanan</h3>
                 </div>
 
@@ -122,28 +133,59 @@
             return {
                 products: @json($products),
                 cart: {},
+
                 init() {
                     try {
                         this.cart = JSON.parse(localStorage.getItem('cart_gabah')) || {};
                     } catch (e) {
                         this.cart = {};
                     }
+
+                    // FIX: bersihkan item yang stoknya sudah tidak cukup lagi
+                    // (misal: produk habis setelah user sebelumnya sempat menambah ke keranjang)
+                    Object.keys(this.cart).forEach(id => {
+                        const p = this.products.find(p => p.id == id);
+                        if (!p || p.stok_tersedia <= 0) {
+                            delete this.cart[id];
+                        } else if (this.cart[id] > p.stok_tersedia) {
+                            this.cart[id] = p.stok_tersedia;
+                        }
+                    });
+
                     this.$watch('cart', (val) => localStorage.setItem('cart_gabah', JSON.stringify(val)));
                 },
+
                 addToCart(id) {
+                    const p = this.products.find(p => p.id == id);
+                    if (!p || p.stok_tersedia <= 0) return; // FIX: tidak bisa tambah kalau stok habis
+
                     this.cart[id] = (this.cart[id] || 0) + 1;
                 },
+
                 increment(id) {
-                    this.cart[id] = (this.cart[id] || 0) + 1;
+                    const p = this.products.find(p => p.id == id);
+                    if (!p) return;
+
+                    const current = this.cart[id] || 0;
+
+                    // FIX: tidak bisa nambah qty lebih dari stok yang tersedia
+                    if (current >= p.stok_tersedia) return;
+
+                    this.cart[id] = current + 1;
                 },
+
                 decrement(id) {
                     if (!this.cart[id]) return;
+
                     this.cart[id] -= 1;
+
                     if (this.cart[id] <= 0) delete this.cart[id];
                 },
+
                 removeFromCart(id) {
                     delete this.cart[id];
                 },
+
                 get cartItems() {
                     return Object.keys(this.cart).map(id => {
                         const p = this.products.find(p => p.id == id);
@@ -153,9 +195,11 @@
                         } : null;
                     }).filter(Boolean);
                 },
+
                 get cartTotal() {
                     return this.cartItems.reduce((sum, item) => sum + (item.qty * item.harga_jual), 0);
                 },
+
                 formatRupiah(num) {
                     return new Intl.NumberFormat('id-ID').format(Math.round(num || 0));
                 }

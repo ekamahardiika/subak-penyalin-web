@@ -71,7 +71,7 @@
                         <div class="text-right">
                             <span
                                 class="inline-flex items-center px-3 py-1 bg-emerald-50 border border-emerald-100 text-emerald-700 font-mono font-bold rounded-lg text-xs">
-                                {{ number_format($stock->stok_kg, 2, ',', '.') }} KG
+                                {{ number_format($stock->stok_kg, 0, ',', '.') }} KG
                             </span>
                         </div>
                     </div>

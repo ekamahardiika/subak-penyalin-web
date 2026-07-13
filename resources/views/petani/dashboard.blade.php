@@ -98,7 +98,7 @@
                                 </p>
                             </div>
                         </div>
-                        <p class="text-sm font-bold text-gray-900">{{ number_format($stok->stok_kg, 2, ',', '.') }} KG</p>
+                        <p class="text-sm font-bold text-gray-900">{{ number_format($stok->stok_kg, 0, ',', '.') }} KG</p>
                     </div>
                 @empty
                     <p class="text-xs text-gray-400 py-4 text-center">Anda belum mendaftarkan komoditas apapun.</p>
@@ -145,7 +145,7 @@
                     @forelse($riwayatStok as $log)
                         <tr class="hover:bg-gray-50/40 transition-colors">
                             <td class="p-3 font-semibold text-gray-800">{{ $log->product->nama_produk ?? '-' }}</td>
-                            <td class="p-3 font-bold text-emerald-600">{{ number_format($log->stok_kg, 2, ',', '.') }} KG
+                            <td class="p-3 font-bold text-emerald-600">{{ number_format($log->stok_kg, 0, ',', '.') }} KG
                             </td>
                             <td class="p-3 text-gray-500">{{ $log->updated_at->format('d M Y, H:i') }}</td>
                         </tr>

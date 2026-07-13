@@ -38,23 +38,38 @@
                     </span>
                 </p>
 
-                <div class="mt-auto pt-6 flex items-center gap-4">
-                    <div class="flex items-center bg-gray-50 rounded-xl border border-gray-200 p-1">
-                        <button @click="if (qty > 1) qty--"
-                            class="w-9 h-9 rounded-lg bg-white border border-gray-200 text-gray-600 hover:text-red-600 hover:border-red-200 transition-colors cursor-pointer">
-                            <i class="fa-solid fa-minus text-xs"></i>
+                <div class="mt-auto pt-6">
+                    <template x-if="stokTersedia <= 0">
+                        <button disabled
+                            class="w-full bg-gray-100 text-gray-400 font-bold text-sm py-2.5 rounded-xl border border-gray-200 cursor-not-allowed flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-ban"></i> Stok Habis
                         </button>
-                        <span class="w-12 text-center font-bold text-gray-800" x-text="qty"></span>
-                        <button @click="qty++"
-                            class="w-9 h-9 rounded-lg bg-white border border-gray-200 text-gray-600 hover:text-emerald-700 hover:border-emerald-200 transition-colors cursor-pointer">
-                            <i class="fa-solid fa-plus text-xs"></i>
-                        </button>
-                    </div>
+                    </template>
 
-                    <button @click="addToCart()"
-                        class="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 cursor-pointer">
-                        <i class="fa-solid fa-cart-plus"></i> Tambah ke Keranjang
-                    </button>
+                    <template x-if="stokTersedia > 0">
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center bg-gray-50 rounded-xl border border-gray-200 p-1">
+                                <button @click="if (qty > 1) qty--" :disabled="qty <= 1"
+                                    :class="qty <= 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'"
+                                    class="w-9 h-9 rounded-lg bg-white border border-gray-200 text-gray-600 hover:text-red-600 hover:border-red-200 transition-colors">
+                                    <i class="fa-solid fa-minus text-xs"></i>
+                                </button>
+
+                                <span class="w-12 text-center font-bold text-gray-800" x-text="qty"></span>
+
+                                <button @click="if (qty < stokTersedia) qty++" :disabled="qty >= stokTersedia"
+                                    :class="qty >= stokTersedia ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'"
+                                    class="w-9 h-9 rounded-lg bg-white border border-gray-200 text-gray-600 hover:text-emerald-700 hover:border-emerald-200 transition-colors">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                            </div>
+
+                            <button @click="addToCart()"
+                                class="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 cursor-pointer">
+                                <i class="fa-solid fa-cart-plus"></i> Tambah ke Keranjang
+                            </button>
+                        </div>
+                    </template>
                 </div>
 
                 <p x-show="added" x-transition class="text-xs font-bold text-emerald-600 mt-3">
@@ -71,16 +86,38 @@
                 added: false,
                 cart: {},
                 productId: {{ $product->id }},
+                stokTersedia: {{ $product->stok_tersedia }},
+
                 init() {
                     try {
                         this.cart = JSON.parse(localStorage.getItem('cart_gabah')) || {};
                     } catch (e) {
                         this.cart = {};
                     }
+
+                    // Jika stok kosong, set qty ke 0
+                    if (this.stokTersedia <= 0) {
+                        this.qty = 0;
+                    }
                 },
+
                 addToCart() {
-                    this.cart[this.productId] = (this.cart[this.productId] || 0) + this.qty;
+                    if (this.stokTersedia <= 0) return;
+
+                    // Mengambil jumlah yang saat ini sudah ada di keranjang (jika ada)
+                    const currentCartQty = this.cart[this.productId] || 0;
+
+                    // Total akumulasi setelah ditambah qty baru
+                    let totalNewQty = currentCartQty + this.qty;
+
+                    // Batasi total agar tidak melebihi stok yang tersedia
+                    if (totalNewQty > this.stokTersedia) {
+                        totalNewQty = this.stokTersedia;
+                    }
+
+                    this.cart[this.productId] = totalNewQty;
                     localStorage.setItem('cart_gabah', JSON.stringify(this.cart));
+
                     this.added = true;
                     setTimeout(() => this.added = false, 2500);
                 }

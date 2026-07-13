@@ -27,6 +27,10 @@ class OrderController extends Controller
     /**
      * Tandai pesanan selesai. Di sinilah stok petani benar-benar
      * dialokasikan dan dikurangi — bukan saat konsumen checkout.
+     *
+     * Alokasi dibagi PROPORSIONAL (bulat, tanpa koma) ke semua petani yang
+     * punya stok produk ini, sesuai porsi kepemilikan masing-masing,
+     * supaya beban pengambilan stok merata antar petani anggota subak.
      */
     public function complete(Order $order)
     {
@@ -54,24 +58,7 @@ class OrderController extends Controller
                         );
                     }
 
-                    $sisaQty = $item->qty;
-
-                    foreach ($petaniStocks as $stock) {
-                        if ($sisaQty <= 0) {
-                            break;
-                        }
-
-                        $ambil = min($stock->stok_kg, $sisaQty);
-
-                        StockAllocation::create([
-                            'order_item_id' => $item->id,
-                            'petani_stock_id' => $stock->id,
-                            'jumlah_kg' => $ambil,
-                        ]);
-
-                        $stock->decrement('stok_kg', $ambil);
-                        $sisaQty -= $ambil;
-                    }
+                    $this->allocateProportionally($item, $petaniStocks);
                 }
 
                 $order->update(['status' => 'selesai']);
@@ -80,7 +67,68 @@ class OrderController extends Controller
             return back()->with('error', $e->getMessage());
         }
 
-        return back()->with('success', 'Pesanan ditandai selesai, stok petani telah diperbarui');
+        return back()->with('success', 'Pesanan ditandai selesai, stok petani telah diperbarui secara merata');
+    }
+
+    /**
+     * Bagi qty pesanan (bulat, kg utuh, tanpa koma) ke setiap petani
+     * secara proporsional memakai largest remainder method:
+     * 1. Tiap petani dapat porsi floor(qty * porsi_stok) dulu.
+     * 2. Sisa kg yang belum terbagi (karena pembulatan ke bawah)
+     *    dikasihkan satu-satu ke petani dengan sisa desimal terbesar,
+     *    supaya totalnya tetap tepat sama dengan qty pesanan dan
+     *    pembagiannya tetap adil (bukan sekadar dibulatkan sepihak).
+     */
+    private function allocateProportionally($item, $petaniStocks): void
+    {
+        $qty = (int) round($item->qty);
+        $totalStok = (float) $petaniStocks->sum('stok_kg');
+
+        $floors = [];
+        $remainders = [];
+        $totalTerbagi = 0;
+
+        foreach ($petaniStocks as $stock) {
+            $porsi = $stock->stok_kg / $totalStok;
+            $exact = $qty * $porsi;
+            $floor = (int) floor($exact);
+
+            $floors[$stock->id] = $floor;
+            $remainders[$stock->id] = $exact - $floor;
+            $totalTerbagi += $floor;
+        }
+
+        // Sisa kg yang belum terbagi akibat pembulatan ke bawah
+        $sisaKg = $qty - $totalTerbagi;
+
+        // Urutkan petani berdasarkan sisa desimal terbesar,
+        // supaya sisaKg dibagikan ke yang "paling berhak" duluan
+        $urutanSisa = $petaniStocks->sortByDesc(fn ($stock) => $remainders[$stock->id]);
+
+        foreach ($urutanSisa as $stock) {
+            if ($sisaKg <= 0) {
+                break;
+            }
+
+            $floors[$stock->id]++;
+            $sisaKg--;
+        }
+
+        foreach ($petaniStocks as $stock) {
+            $ambil = $floors[$stock->id];
+
+            if ($ambil <= 0) {
+                continue;
+            }
+
+            StockAllocation::create([
+                'order_item_id' => $item->id,
+                'petani_stock_id' => $stock->id,
+                'jumlah_kg' => $ambil,
+            ]);
+
+            $stock->decrement('stok_kg', $ambil);
+        }
     }
 
     /**

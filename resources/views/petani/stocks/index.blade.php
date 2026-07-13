@@ -30,7 +30,7 @@
                                     {{ $stock->product->nama_produk ?? 'Varietas Gabah' }}
                                 </p>
                                 <p class="text-xs text-gray-400 mt-0.5">Sisa Siap Alokasi: <span
-                                        class="text-emerald-600 font-bold">{{ number_format($stock->stok_kg, 2, ',', '.') }}
+                                        class="text-emerald-600 font-bold">{{ number_format($stock->stok_kg, 0, ',', '.') }}
                                         KG</span>
                                 </p>
                             </div>
@@ -94,7 +94,7 @@
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Jumlah Kuantitas
                         (KG)</label>
                     <div class="relative">
-                        <input type="number" step="0.01" name="stok_kg" required
+                        <input type="number" step="1" name="stok_kg" required
                             class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs"
                             min="0" placeholder="0.00" />
                         <span

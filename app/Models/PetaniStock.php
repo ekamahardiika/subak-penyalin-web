@@ -12,6 +12,10 @@ class PetaniStock extends Model
         'user_id', 'product_id', 'stok_kg',
     ];
 
+    protected $casts = [
+        'stok_kg' => 'integer',
+    ];
+
     public function petani()
     {
         return $this->belongsTo(User::class, 'user_id');
