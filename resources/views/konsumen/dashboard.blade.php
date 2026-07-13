@@ -122,9 +122,9 @@
                                 <i class="fa-solid fa-seedling"></i>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-semibold text-gray-800 truncate">{{ $product->name }}</p>
+                                <p class="text-sm font-semibold text-gray-800 truncate">{{ $product->nama_produk }}</p>
                                 <p class="text-xs text-emerald-600 font-bold">Rp
-                                    {{ number_format($product->price ?? 0, 0, ',', '.') }} / KG</p>
+                                    {{ number_format($product->harga_jual ?? 0, 0, ',', '.') }} / KG</p>
                             </div>
                             <a href="{{ route('konsumen.products.show', $product->id) }}"
                                 class="text-gray-400 hover:text-emerald-600 px-2 py-1">

@@ -19,11 +19,10 @@
                 <div>
                     <span
                         class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border backdrop-blur-xs
-                        {{ in_array(strtolower($order->status), ['selesai', 'success']) ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : '' }}
-                        {{ in_array(strtolower($order->status), ['pending', 'menunggu']) ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : '' }}
-                        {{ in_array(strtolower($order->status), ['dikonfirmasi', 'diproses']) ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : '' }}
-                        {{ !in_array(strtolower($order->status), ['selesai', 'success', 'pending', 'menunggu', 'dikonfirmasi', 'diproses']) ? 'bg-red-500/10 text-red-400 border-red-500/20' : '' }}">
-                        {{ $order->status }}
+                        {{ $order->status === 'selesai' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : '' }}
+                        {{ $order->status === 'diproses' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : '' }}
+                        {{ $order->status === 'dibatalkan' ? 'bg-red-500/10 text-red-400 border-red-500/20' : '' }}">
+                        {{ ucfirst($order->status) }}
                     </span>
                 </div>
             </div>
@@ -47,63 +46,43 @@
                 class="p-6 bg-gray-50/50 border-b border-gray-50 flex flex-wrap items-center justify-between gap-4">
                 <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi Cepat Admin :</div>
 
-                <div class="flex flex-wrap items-center gap-3">
-                    @if ($order->status == 'pending')
-                        <form action="{{ route('admin.orders.confirm', $order->id) }}" method="POST"
+                @if ($order->status === 'diproses')
+                    <div class="flex flex-wrap items-center gap-3">
+                        <form action="{{ route('admin.orders.complete', $order->id) }}" method="POST"
                             @submit.prevent="$dispatch('open-confirm-modal', {
                                 form: $el,
                                 type: 'primary',
-                                title: 'Konfirmasi Pesanan?',
-                                message: 'Pesanan ini akan langsung dikonfirmasi dan statusnya berubah.',
-                                confirmLabel: 'Ya, Konfirmasi'
+                                title: 'Selesaikan Pesanan?',
+                                message: 'Stok petani akan dikurangi sesuai item pesanan ini. Tindakan ini tidak dapat dibatalkan.',
+                                confirmLabel: 'Ya, Selesaikan'
                             })">
                             @csrf
                             @method('PATCH')
                             <button type="submit"
                                 class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-xl text-xs transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
-                                <i class="fa-solid fa-circle-check"></i> Konfirmasi Langsung
+                                <i class="fa-solid fa-circle-check"></i> Tandai Selesai
                             </button>
                         </form>
-                    @endif
 
-                    <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST"
-                        @submit.prevent="$dispatch('open-confirm-modal', {
-                            form: $el,
-                            type: 'primary',
-                            title: 'Update Status Pesanan?',
-                            message: `Status pesanan #{{ $order->no_order }} akan diubah menjadi: ${$refs.statusSelect.value.toUpperCase()}`,
-                            confirmLabel: 'Ya, Update'
-                        })"
-                        class="flex items-center gap-2">
-                        @csrf
-                        @method('PATCH')
-
-                        <div class="relative">
-                            <select name="status" x-ref="statusSelect"
-                                class="block pl-4 pr-9 py-2 bg-white border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-emerald-500 appearance-none cursor-pointer shadow-2xs">
-                                <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending
-                                </option>
-                                <option value="dikonfirmasi" {{ $order->status == 'dikonfirmasi' ? 'selected' : '' }}>
-                                    Dikonfirmasi</option>
-                                <option value="diproses" {{ $order->status == 'diproses' ? 'selected' : '' }}>Diproses
-                                </option>
-                                <option value="selesai" {{ $order->status == 'selesai' ? 'selected' : '' }}>Selesai
-                                </option>
-                                <option value="dibatalkan" {{ $order->status == 'dibatalkan' ? 'selected' : '' }}>
-                                    Dibatalkan</option>
-                            </select>
-                            <span
-                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 pointer-events-none">
-                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                            </span>
-                        </div>
-
-                        <button type="submit"
-                            class="bg-gray-800 hover:bg-gray-900 text-white font-semibold px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer shadow-xs">
-                            Update
-                        </button>
-                    </form>
-                </div>
+                        <form action="{{ route('admin.orders.cancel', $order->id) }}" method="POST"
+                            @submit.prevent="$dispatch('open-confirm-modal', {
+                                form: $el,
+                                type: 'danger',
+                                title: 'Batalkan Pesanan?',
+                                message: 'Pesanan ini akan dibatalkan dan tidak dapat diproses lagi.',
+                                confirmLabel: 'Ya, Batalkan'
+                            })">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit"
+                                class="bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 font-semibold px-4 py-2 rounded-xl text-xs transition-all border border-red-200/50 flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-ban"></i> Batalkan Pesanan
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <span class="text-xs text-gray-400 italic">Status final — tidak dapat diubah lagi.</span>
+                @endif
             </div>
 
             <div class="p-6 space-y-4">

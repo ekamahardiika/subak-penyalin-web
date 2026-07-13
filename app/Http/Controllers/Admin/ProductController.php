@@ -1,16 +1,20 @@
 <?php
 
+// app/Http/Controllers/Admin/ProductController.php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
     public function index()
     {
         $products = Product::latest()->paginate(10);
+
         return view('admin.products.index', compact('products'));
     }
 
@@ -42,6 +46,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $stocks = $product->stocks()->with('petani')->get();
+
         return view('admin.products.show', compact('product', 'stocks'));
     }
 
@@ -62,6 +67,11 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('gambar')) {
+            // FIX: hapus file gambar lama sebelum menyimpan yang baru
+            if ($product->gambar && Storage::disk('public')->exists($product->gambar)) {
+                Storage::disk('public')->delete($product->gambar);
+            }
+
             $validated['gambar'] = $request->file('gambar')->store('products', 'public');
         }
 
@@ -72,7 +82,12 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        if ($product->gambar && Storage::disk('public')->exists($product->gambar)) {
+            Storage::disk('public')->delete($product->gambar);
+        }
+
         $product->delete();
+
         return redirect()->route('admin.products.index')->with('success', 'Produk berhasil dihapus');
     }
 }

@@ -93,7 +93,7 @@
                             </div>
                             <div>
                                 <p class="text-sm font-semibold text-gray-800">
-                                    {{ $stok->product->name ?? 'Produk Tanpa Nama' }}</p>
+                                    {{ $stok->product->nama_produk ?? 'Produk Tanpa Nama' }}</p>
                                 <p class="text-xs text-gray-400">Terakhir diupdate: {{ $stok->updated_at->diffForHumans() }}
                                 </p>
                             </div>
@@ -144,7 +144,7 @@
                 <tbody class="divide-y divide-gray-50 text-sm">
                     @forelse($riwayatStok as $log)
                         <tr class="hover:bg-gray-50/40 transition-colors">
-                            <td class="p-3 font-semibold text-gray-800">{{ $log->product->name ?? '-' }}</td>
+                            <td class="p-3 font-semibold text-gray-800">{{ $log->product->nama_produk ?? '-' }}</td>
                             <td class="p-3 font-bold text-emerald-600">{{ number_format($log->stok_kg, 2, ',', '.') }} KG
                             </td>
                             <td class="p-3 text-gray-500">{{ $log->updated_at->format('d M Y, H:i') }}</td>

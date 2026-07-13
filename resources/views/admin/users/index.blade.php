@@ -108,7 +108,7 @@
                                         <form :action="`{{ url('admin/users') }}/${u.id}`" method="POST"
                                             @submit.prevent="$dispatch('open-confirm-modal', {
                                                 form: $el,
-                                                title: 'Hapus Konsumen?',
+                                                title: 'Nonaktifkan Konsumen?',
                                                 message: `Data konsumen \'${u.name}\' akan dihapus permanen dan tidak dapat dikembalikan.`
                                             })">
                                             @csrf

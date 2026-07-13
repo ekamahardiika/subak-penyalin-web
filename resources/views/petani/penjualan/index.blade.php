@@ -73,7 +73,7 @@
                     @forelse($penjualan as $alloc)
                         <tr class="hover:bg-gray-50/40 transition-colors">
                             <td class="p-3 font-semibold text-gray-800">{{ $alloc->orderItem->order->no_order ?? '-' }}</td>
-                            <td class="p-3 text-gray-700">{{ $alloc->petaniStock->product->name ?? '-' }}</td>
+                            <td class="p-3 text-gray-700">{{ $alloc->petaniStock->product->nama_produk ?? '-' }}</td>
                             <td class="p-3 text-gray-600">{{ number_format($alloc->jumlah_kg, 2, ',', '.') }} KG</td>
                             <td class="p-3 text-gray-600">Rp
                                 {{ number_format($alloc->orderItem->harga_satuan, 0, ',', '.') }}</td>

@@ -12,10 +12,9 @@ use App\Http\Controllers\Konsumen\OrderController as KonsumenOrderController;
 use App\Http\Controllers\Konsumen\ProductController as KonsumenProductController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Petani\DashboardController as PetaniDashboardController;
+use App\Http\Controllers\Petani\PenjualanController;
 use App\Http\Controllers\Petani\StockController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Petani\PenjualanController;
-
 use Illuminate\Support\Facades\Route;
 
 // Landing
@@ -36,9 +35,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
-    Route::patch('orders/{order}/confirm', [AdminOrderController::class, 'confirm'])->name('orders.confirm');
-    Route::patch('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
-
+    Route::patch('orders/{order}/complete', [AdminOrderController::class, 'complete'])->name('orders.complete');
+    Route::patch('orders/{order}/cancel', [AdminOrderController::class, 'cancel'])->name('orders.cancel');
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
 });
 
@@ -51,7 +49,6 @@ Route::middleware(['auth', 'role:petani'])->prefix('petani')->name('petani.')->g
     Route::patch('stok/{stock}', [StockController::class, 'update'])->name('stok.update');
     Route::get('penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
 });
-
 
 // Konsumen
 Route::middleware(['auth', 'role:konsumen'])->prefix('konsumen')->name('konsumen.')->group(function () {

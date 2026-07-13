@@ -1,14 +1,13 @@
 <?php
 
+// database/migrations/xxxx_xx_xx_create_orders_table.php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
@@ -18,16 +17,14 @@ return new class extends Migration
             $table->string('nama_pemesan')->nullable();
             $table->string('whatsapp_pemesan')->nullable();
             $table->decimal('total_harga', 12, 2)->default(0);
-            $table->enum('status', ['pending', 'dikonfirmasi', 'diproses', 'selesai', 'dibatalkan'])->default('pending');
+            // FIX: hanya 3 status, default 'diproses'
+            $table->enum('status', ['diproses', 'selesai', 'dibatalkan'])->default('diproses');
             $table->timestamp('tanggal_pesan')->useCurrent();
             $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('orders');

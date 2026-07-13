@@ -70,6 +70,6 @@ class PetaniController extends Controller
     public function destroy(User $petani)
     {
         $petani->delete();
-        return redirect()->route('admin.petani.index')->with('success', 'Petani berhasil dihapus');
+        return redirect()->route('admin.petani.index')->with('success', 'Petani berhasil dinonaktifkan');
     }
 }

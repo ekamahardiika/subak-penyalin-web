@@ -1,5 +1,7 @@
 <?php
 
+// app/Http/Controllers/Petani/DashboardController.php
+
 namespace App\Http\Controllers\Petani;
 
 use App\Http\Controllers\Controller;
@@ -15,28 +17,25 @@ class DashboardController extends Controller
     {
         $userId = Auth::id();
 
-        // 1. Akumulasi Total Stok
         $totalStokSaya = PetaniStock::where('user_id', $userId)->sum('stok_kg');
 
-        // 2. Harga Terbaru
         $hargaTerbaru = HargaBroadcast::latest('tanggal')->first();
 
-        // 3. Rincian Stok per Jenis Produk & Data Grafik
         $stokPerProduk = PetaniStock::with('product')
             ->where('user_id', $userId)
             ->get();
 
-        $chartLabels = $stokPerProduk->map(fn ($item) => $item->product->name ?? 'Produk Konten')->toArray();
+        // FIX: kolom di model Product adalah 'nama_produk', bukan 'name'
+        $chartLabels = $stokPerProduk->map(fn ($item) => $item->product->nama_produk ?? 'Produk Tidak Dikenal')->toArray();
+
         $chartData = $stokPerProduk->map(fn ($item) => $item->stok_kg)->toArray();
 
-        // 4. Riwayat Pembaruan Stok Terakhir
         $riwayatStok = PetaniStock::with('product')
             ->where('user_id', $userId)
             ->latest('updated_at')
             ->take(5)
             ->get();
 
-        // 5. Penjualan Bulan Ini (status selesai, terhitung lewat stock_allocations)
         $penjualanBulanIniQuery = StockAllocation::query()
             ->join('order_items', 'order_items.id', '=', 'stock_allocations.order_item_id')
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
@@ -46,6 +45,7 @@ class DashboardController extends Controller
             ->whereBetween('orders.tanggal_pesan', [now()->startOfMonth(), now()->endOfMonth()]);
 
         $totalTerjualKgBulanIni = (clone $penjualanBulanIniQuery)->sum('stock_allocations.jumlah_kg');
+
         $totalPendapatanBulanIni = (clone $penjualanBulanIniQuery)->sum(DB::raw('stock_allocations.jumlah_kg * order_items.harga_satuan'));
 
         return view('petani.dashboard', compact(

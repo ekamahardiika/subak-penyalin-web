@@ -95,7 +95,7 @@
                                         <form :action="`{{ route('admin.petani.index') }}/${p.id}`" method="POST"
                                             @submit.prevent="$dispatch('open-confirm-modal', {
                                                 form: $el,
-                                                title: 'Hapus Akun Petani?',
+                                                title: 'Nonaktifkan Akun Petani?',
                                                 message: `Data petani \'${p.name}\' beserta seluruh data penugasan dan histori log transaksinya akan dihapus permanen.`
                                             })">
 

@@ -27,7 +27,7 @@ class OrderSeeder extends Seeder
             'nama_pemesan' => $konsumen->name,
             'whatsapp_pemesan' => $konsumen->phone ?? '081200000000',
             'total_harga' => $subtotal,
-            'status' => 'pending',
+            'status' => 'diproses',
             'tanggal_pesan' => now(),
             'catatan' => 'Contoh pesanan awal',
         ]);
