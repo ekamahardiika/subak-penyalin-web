@@ -40,6 +40,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::patch('orders/{order}/complete', [AdminOrderController::class, 'complete'])->name('orders.complete');
     Route::patch('orders/{order}/cancel', [AdminOrderController::class, 'cancel'])->name('orders.cancel');
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
+
+    Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('laporan/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.export-pdf'); // FIX: baru
 });
 
 // Petani
@@ -50,6 +53,8 @@ Route::middleware(['auth', 'role:petani'])->prefix('petani')->name('petani.')->g
     Route::get('stok/{stock}', [StockController::class, 'edit'])->name('stok.edit');
     Route::patch('stok/{stock}', [StockController::class, 'update'])->name('stok.update');
     Route::get('penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
+    Route::get('penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
+    Route::get('penjualan/export-pdf', [PenjualanController::class, 'exportPdf'])->name('penjualan.export-pdf'); // FIX: baru
 });
 
 // Konsumen

@@ -39,6 +39,11 @@
                         class="flex-1 sm:flex-none text-center bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap">
                         Reset
                     </a>
+                    {{-- FIX: tombol download PDF, ikut membawa filter tanggal yang sedang aktif --}}
+                    <a href="{{ route('admin.laporan.export-pdf', request()->query()) }}"
+                        class="flex-1 sm:flex-none text-center bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 font-semibold px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap border border-red-200/50 flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                    </a>
                 </div>
             </form>
         </div>

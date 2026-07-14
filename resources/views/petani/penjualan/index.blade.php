@@ -26,6 +26,11 @@
             class="text-sm font-semibold text-gray-500 hover:text-gray-700 px-2 py-2">
             Reset ke Bulan Ini
         </a>
+        {{-- FIX: tombol download PDF, ikut membawa filter tanggal yang sedang aktif --}}
+        <a href="{{ route('petani.penjualan.export-pdf', request()->query()) }}"
+            class="inline-flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 text-sm font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer border border-red-200/50">
+            <i class="fa-solid fa-file-pdf"></i> Download PDF
+        </a>
     </form>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
