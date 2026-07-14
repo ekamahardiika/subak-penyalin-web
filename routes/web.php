@@ -19,10 +19,10 @@ use Illuminate\Support\Facades\Route;
 
 // Landing
 Route::get('/', [LandingController::class, 'home'])->name('home');
-Route::get('/tentang', [LandingController::class, 'tentang'])->name('tentang');
-Route::get('/produk', [LandingController::class, 'produk'])->name('produk');
-Route::get('/harga', [LandingController::class, 'harga'])->name('harga');
-Route::get('/kontak', [LandingController::class, 'kontak'])->name('kontak');
+Route::redirect('/produk', '/#produk')->name('produk');
+Route::redirect('/tentang', '/#tentang')->name('tentang');
+Route::redirect('/harga', '/#harga')->name('harga');
+Route::redirect('/kontak', '/#kontak')->name('kontak');
 
 // Admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
