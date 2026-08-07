@@ -90,12 +90,54 @@
                         class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs resize-none">{{ $product->deskripsi }}</textarea>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Ganti Gambar
+                {{-- Area Upload & Preview Gambar --}}
+                <div x-data="{
+                    imagePreview: null,
+                    handleFileChange(event) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => { this.imagePreview = e.target.result; };
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                }">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Gambar
                         Komoditas</label>
+
+                    {{-- Pratinjau Gambar Saat Ini / Gambar Baru --}}
+                    <div class="mb-3 flex items-center gap-4 bg-gray-50 p-3 border border-gray-100 rounded-xl">
+                        <template x-if="imagePreview">
+                            <img :src="imagePreview"
+                                class="w-20 h-20 object-cover rounded-lg border border-emerald-200 shadow-2xs">
+                        </template>
+
+                        <template x-if="!imagePreview">
+                            @if ($product->gambar && \Illuminate\Support\Facades\Storage::disk('public')->exists($product->gambar))
+                                <img src="{{ \Illuminate\Support\Facades\Storage::url($product->gambar) }}"
+                                    alt="{{ $product->nama_produk }}"
+                                    class="w-20 h-20 object-cover rounded-lg border border-gray-200 shadow-2xs">
+                            @else
+                                <div
+                                    class="w-20 h-20 rounded-lg bg-gray-100 border border-gray-200 flex flex-col items-center justify-center text-gray-400 shrink-0">
+                                    <i class="fa-solid fa-wheat-awn text-xl mb-1"></i>
+                                    <span class="text-[9px]">Tanpa Foto</span>
+                                </div>
+                            @endif
+                        </template>
+
+                        <div class="text-xs">
+                            <span class="font-bold text-gray-700 block"
+                                x-text="imagePreview ? 'Pratinjau Gambar Baru:' : 'Gambar Saat Ini:'"></span>
+                            <p class="text-gray-400 text-[11px] mt-0.5">Unggah berkas baru di bawah ini jika ingin mengganti
+                                gambar produk.</p>
+                        </div>
+                    </div>
+
+                    {{-- Input File --}}
                     <div
-                        class="border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50 flex items-center justify-between">
-                        <input type="file" name="gambar"
+                        class="border border-dashed border-gray-200 rounded-xl p-3.5 bg-gray-50/50 hover:bg-gray-50 flex items-center justify-between transition-colors">
+                        <input type="file" name="gambar" accept="image/*" @change="handleFileChange"
                             class="block w-full text-xs text-gray-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition-all cursor-pointer" />
                         <i class="fa-regular fa-image text-gray-400 text-lg pr-2"></i>
                     </div>

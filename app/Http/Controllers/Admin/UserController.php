@@ -12,6 +12,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::where('role', 'konsumen')->latest()->get();
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -24,7 +25,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             'password' => 'required|min:6',
             'phone' => 'nullable|string|max:20',
         ]);
@@ -49,7 +50,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,'.$user->id.',id,deleted_at,NULL',
             'password' => 'nullable|min:6',
             'phone' => 'nullable|string|max:20',
         ]);
@@ -58,7 +59,7 @@ class UserController extends Controller
         $user->email = $validated['email'];
         $user->phone = $validated['phone'] ?? null;
 
-        if (!empty($validated['password'])) {
+        if (! empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
         }
 
@@ -70,6 +71,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+
         return redirect()->route('admin.users.index')->with('success', 'Konsumen berhasil dinonaktifkan');
     }
 }

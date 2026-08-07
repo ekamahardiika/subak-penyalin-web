@@ -24,14 +24,6 @@ class OrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
-    /**
-     * Tandai pesanan selesai. Di sinilah stok petani benar-benar
-     * dialokasikan dan dikurangi — bukan saat konsumen checkout.
-     *
-     * Alokasi dibagi PROPORSIONAL (bulat, tanpa koma) ke semua petani yang
-     * punya stok produk ini, sesuai porsi kepemilikan masing-masing,
-     * supaya beban pengambilan stok merata antar petani anggota subak.
-     */
     public function complete(Order $order)
     {
         if (! in_array('selesai', $order->allowed_next_statuses, true)) {
@@ -54,7 +46,7 @@ class OrderController extends Controller
                     if ($item->qty > $stokTersedia) {
                         throw new \RuntimeException(
                             "Stok tidak mencukupi untuk menyelesaikan pesanan ini (produk ID {$item->product_id}). ".
-                            'Stok mungkin sudah terpakai oleh pesanan lain yang lebih dulu diselesaikan.'
+                            'Stok mungkin sudah terpakai oleh pesanan lain.'
                         );
                     }
 
@@ -70,39 +62,32 @@ class OrderController extends Controller
         return back()->with('success', 'Pesanan ditandai selesai, stok petani telah diperbarui secara merata');
     }
 
-    /**
-     * Bagi qty pesanan (bulat, kg utuh, tanpa koma) ke setiap petani
-     * secara proporsional memakai largest remainder method:
-     * 1. Tiap petani dapat porsi floor(qty * porsi_stok) dulu.
-     * 2. Sisa kg yang belum terbagi (karena pembulatan ke bawah)
-     *    dikasihkan satu-satu ke petani dengan sisa desimal terbesar,
-     *    supaya totalnya tetap tepat sama dengan qty pesanan dan
-     *    pembagiannya tetap adil (bukan sekadar dibulatkan sepihak).
-     */
     private function allocateProportionally($item, $petaniStocks): void
     {
-        $qty = (int) round($item->qty);
-        $totalStok = (float) $petaniStocks->sum('stok_kg');
+        $qty = (int) $item->qty;
+        $totalStok = (int) $petaniStocks->sum('stok_kg');
 
         $floors = [];
         $remainders = [];
         $totalTerbagi = 0;
 
+        // Step 1: Hitung porsi floor (bulat ke bawah)
         foreach ($petaniStocks as $stock) {
             $porsi = $stock->stok_kg / $totalStok;
             $exact = $qty * $porsi;
             $floor = (int) floor($exact);
+
+            // Batasi agar tidak pernah melebih sisa stok petani tersebut
+            $floor = min($floor, $stock->stok_kg);
 
             $floors[$stock->id] = $floor;
             $remainders[$stock->id] = $exact - $floor;
             $totalTerbagi += $floor;
         }
 
-        // Sisa kg yang belum terbagi akibat pembulatan ke bawah
+        // Step 2: Sisa kg utuh dibagikan ke petani dengan sisa desimal terbesar
         $sisaKg = $qty - $totalTerbagi;
 
-        // Urutkan petani berdasarkan sisa desimal terbesar,
-        // supaya sisaKg dibagikan ke yang "paling berhak" duluan
         $urutanSisa = $petaniStocks->sortByDesc(fn ($stock) => $remainders[$stock->id]);
 
         foreach ($urutanSisa as $stock) {
@@ -110,10 +95,14 @@ class OrderController extends Controller
                 break;
             }
 
-            $floors[$stock->id]++;
-            $sisaKg--;
+            // Tambahkan +1 kg utuh selama stok petani masih mencukupi
+            if ($floors[$stock->id] < $stock->stok_kg) {
+                $floors[$stock->id]++;
+                $sisaKg--;
+            }
         }
 
+        // Step 3: Potong stok & simpan alokasi
         foreach ($petaniStocks as $stock) {
             $ambil = $floors[$stock->id];
 
@@ -131,10 +120,6 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Batalkan pesanan. Tidak perlu mengembalikan stok apa pun,
-     * karena stok baru dikurangi saat pesanan diselesaikan, bukan saat dibuat.
-     */
     public function cancel(Order $order)
     {
         if (! in_array('dibatalkan', $order->allowed_next_statuses, true)) {

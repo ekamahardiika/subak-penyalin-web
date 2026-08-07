@@ -27,20 +27,37 @@
                 </div>
             </div>
 
-            <div class="p-6 text-sm divide-y divide-gray-50">
-                <div class="py-3 flex justify-between items-center">
-                    <span class="font-bold text-gray-400 uppercase tracking-wider text-xs">Harga Pokok Jual</span>
-                    <span class="text-base font-black text-emerald-600">
-                        Rp {{ number_format($product->harga_jual, 0, ',', '.') }} <span
-                            class="text-xs text-gray-400 font-medium">/ {{ $product->satuan }}</span>
-                    </span>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 p-6">
+                {{-- Pratinjau Gambar Produk --}}
+                <div
+                    class="md:col-span-4 flex flex-col items-center justify-center bg-gray-50 border border-gray-100 rounded-xl p-3 min-h-[220px]">
+                    @if ($product->gambar && \Illuminate\Support\Facades\Storage::disk('public')->exists($product->gambar))
+                        <img src="{{ \Illuminate\Support\Facades\Storage::url($product->gambar) }}"
+                            alt="{{ $product->nama_produk }}" class="w-full h-48 object-cover rounded-lg shadow-xs">
+                    @else
+                        <div class="flex flex-col items-center justify-center text-gray-400 my-auto">
+                            <i class="fa-solid fa-wheat-awn text-5xl mb-2 text-emerald-800/20"></i>
+                            <span class="text-xs font-medium text-gray-400">Foto Tidak Tersedia</span>
+                        </div>
+                    @endif
                 </div>
-                <div class="py-3.5">
-                    <span class="font-bold text-gray-400 uppercase tracking-wider text-xs block mb-1">Deskripsi
-                        Singkat</span>
-                    <p class="text-gray-600 leading-relaxed">
-                        {{ $product->deskripsi ?? 'Tidak ada deskripsi tertulis untuk komoditas ini.' }}
-                    </p>
+
+                {{-- Detail Informasi --}}
+                <div class="md:col-span-8 text-sm divide-y divide-gray-50 flex flex-col justify-center">
+                    <div class="py-3 flex justify-between items-center">
+                        <span class="font-bold text-gray-400 uppercase tracking-wider text-xs">Harga Pokok Jual</span>
+                        <span class="text-base font-black text-emerald-600">
+                            Rp {{ number_format($product->harga_jual, 0, ',', '.') }} <span
+                                class="text-xs text-gray-400 font-medium">/ {{ $product->satuan }}</span>
+                        </span>
+                    </div>
+                    <div class="py-3.5">
+                        <span class="font-bold text-gray-400 uppercase tracking-wider text-xs block mb-1">Deskripsi
+                            Singkat</span>
+                        <p class="text-gray-600 leading-relaxed">
+                            {{ $product->deskripsi ?? 'Tidak ada deskripsi tertulis untuk komoditas ini.' }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

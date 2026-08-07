@@ -19,8 +19,13 @@
         perPage: 10,
         currentPage: 1,
         productList: {{ \Illuminate\Support\Js::from(method_exists($products, 'items') ? $products->items() : $products) }},
+        storageBaseUrl: '{{ \Illuminate\Support\Facades\Storage::url('') }}',
         formatRupiah(value) {
             return 'Rp ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(value);
+        },
+        getImageUrl(gambar) {
+            if (!gambar) return null;
+            return this.storageBaseUrl + gambar;
         },
         get filteredProducts() {
             if (this.search.trim() === '') return this.productList;
@@ -73,6 +78,7 @@
                 <table class="w-full text-sm text-left text-gray-600">
                     <thead class="text-xs text-gray-400 uppercase tracking-wider bg-gray-50/70 border-b border-gray-100">
                         <tr>
+                            <th scope="col" class="px-6 py-3.5 font-bold w-16">Foto</th>
                             <th scope="col" class="px-6 py-3.5 font-bold">Nama Produk</th>
                             <th scope="col" class="px-6 py-3.5 font-bold">Harga Jual / Satuan</th>
                             <th scope="col" class="px-6 py-3.5 font-bold text-center">Status</th>
@@ -82,6 +88,20 @@
                     <tbody class="divide-y divide-gray-100">
                         <template x-for="product in pagedProducts" :key="product.id">
                             <tr class="hover:bg-gray-50/50 transition-colors">
+                                {{-- Kolom Thumbnail Gambar --}}
+                                <td class="px-6 py-3">
+                                    <template x-if="product.gambar">
+                                        <img :src="getImageUrl(product.gambar)" :alt="product.nama_produk"
+                                            class="w-10 h-10 object-cover rounded-lg border border-gray-200">
+                                    </template>
+                                    <template x-if="!product.gambar">
+                                        <div
+                                            class="w-10 h-10 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400">
+                                            <i class="fa-solid fa-wheat-awn text-xs"></i>
+                                        </div>
+                                    </template>
+                                </td>
+
                                 <td class="px-6 py-4 font-bold text-gray-900" x-text="product.nama_produk"></td>
                                 <td class="px-6 py-4 font-semibold text-emerald-700">
                                     <span x-text="formatRupiah(product.harga_jual)"></span>
@@ -133,7 +153,7 @@
                         </template>
 
                         <tr x-show="filteredProducts.length === 0">
-                            <td colspan="4" class="px-6 py-10 text-center text-gray-400">
+                            <td colspan="5" class="px-6 py-10 text-center text-gray-400">
                                 <div class="flex flex-col items-center justify-center space-y-2">
                                     <i class="fa-solid fa-boxes-blank text-3xl text-gray-300"></i>
                                     <p class="text-sm">Belum ada komoditas terdaftar atau hasil pencarian tidak ditemukan.
