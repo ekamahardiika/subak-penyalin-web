@@ -55,7 +55,7 @@
                 <a href="#home" @click="activeSection = 'home'"
                     :class="activeSection === 'home' ? 'bg-green-400 text-green-950 font-bold' :
                         'hover:text-white text-gray-300'"
-                    class="px-4 py-2 rounded-full transition-all duration-300">Home</a>
+                    class="px-4 py-2 rounded-full transition-all duration-300">Beranda</a>
 
                 <a href="#tentang" @click="activeSection = 'tentang'"
                     :class="activeSection === 'tentang' ? 'bg-green-400 text-green-950 font-bold' :
@@ -182,7 +182,7 @@
                 <h4 class="text-white font-bold mb-4 text-xs tracking-wider uppercase">Tautan Cepat</h4>
                 <ul class="space-y-2.5 text-sm text-gray-400">
                     <li><a href="#home" class="hover:text-green-400 transition-colors">Beranda</a></li>
-                    <li><a href="#produk" class="hover:text-green-400 transition-colors">Produk</a></li>
+                    <li><a href="#produk" class="hover:text-green-400 transition-colors">Gabah</a></li>
                     <li><a href="#tentang" class="hover:text-green-400 transition-colors">Tentang Kami</a></li>
                     <li><a href="#kontak" class="hover:text-green-400 transition-colors">Kontak</a></li>
                 </ul>
