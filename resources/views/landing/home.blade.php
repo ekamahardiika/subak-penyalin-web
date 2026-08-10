@@ -5,8 +5,7 @@
     {{-- SECTION: HOME / HERO --}}
     {{-- ============================================================ --}}
     <div id="home" class="relative min-h-screen flex items-center pt-20 overflow-hidden scroll-mt-20">
-        <div class="absolute inset-0 bg-cover bg-center"
-            style="background-image: url('https://api.kemenpar.go.id/storage/app/resources/image_artikel/Sistem%20Pengairan%20Subak%20di%20Bali_Jatiluwih_Shutterstock%201750334231_Tanya%20Keisha.jpg');">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('hero/hero1.jpg') }}');">
         </div>
         <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-950/70 to-emerald-950/40"></div>
 
@@ -66,13 +65,11 @@
 
                 <div class="lg:col-span-7 grid grid-cols-2 gap-4 md:gap-6">
                     <div class="rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl border border-white/10">
-                        <img src="https://infarm.co.id/uploads/article/R1THxc13M0egAbi8tR2FI4Q417AMGq6T9XFy03bm.jpg"
-                            alt="Petani Subak Penyalin 1"
+                        <img src="{{ asset('hero/subak2.jpg') }}" alt="Petani Subak Penyalin 1"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </div>
                     <div class="rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl border border-white/10">
-                        <img src="https://rricoid-assets.obs.ap-southeast-4.myhuaweicloud.com/berita/27/images/1696492028334-f/2gtllx9p1nfg3cp.jpeg"
-                            alt="Petani Subak Penyalin 2"
+                        <img src="{{ asset('hero/subak3.jpg') }}" alt="Petani Subak Penyalin 2"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </div>
                 </div>

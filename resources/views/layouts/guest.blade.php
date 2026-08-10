@@ -32,7 +32,7 @@
         </div>
 
         <!-- CONTAINER CARD (mt-0 menghapus margin atas card / margin bawah logo) -->
-        <div class="w-full sm:max-w-md mt-0 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+        <div class="w-full sm:max-w-md mt-0 px-6 py-4 bg-white border shadow-md overflow-hidden sm:rounded-lg">
             {{ $slot }}
         </div>
     </div>
