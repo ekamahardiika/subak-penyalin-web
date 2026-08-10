@@ -38,7 +38,7 @@
 }">
 
     <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 border-b"
-        :class="isTop ? 'bg-transparent border-transparent' : 'bg-emerald-950 border-white/5 shadow-md'">
+        :class="isTop ? 'bg-transparent border-transparent' : 'bg-green-950 border-white/5 shadow-md'">
 
         <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
 
@@ -49,36 +49,36 @@
             </a>
 
             <nav class="hidden md:flex items-center gap-1 border px-2 py-1.5 rounded-full text-xs font-semibold transition-all duration-300"
-                :class="isTop ? 'bg-black/20 border-white/10 text-gray-200' : 'bg-emerald-900/40 border-white/5 text-gray-300'">
+                :class="isTop ? 'bg-black/20 border-white/10 text-gray-200' : 'bg-green-900/40 border-white/5 text-gray-300'">
 
                 <a href="#home" @click="activeSection = 'home'"
-                    :class="activeSection === 'home' ? 'bg-emerald-400 text-emerald-950 font-bold' :
+                    :class="activeSection === 'home' ? 'bg-green-400 text-green-950 font-bold' :
                         'hover:text-white text-gray-300'"
                     class="px-4 py-2 rounded-full transition-all duration-300">Home</a>
 
                 <a href="#tentang" @click="activeSection = 'tentang'"
-                    :class="activeSection === 'tentang' ? 'bg-emerald-400 text-emerald-950 font-bold' :
+                    :class="activeSection === 'tentang' ? 'bg-green-400 text-green-950 font-bold' :
                         'hover:text-white text-gray-300'"
-                    class="px-4 py-2 rounded-full transition-all duration-300">About Us</a>
+                    class="px-4 py-2 rounded-full transition-all duration-300">Tentang Kami</a>
 
                 <a href="#produk" @click="activeSection = 'produk'"
-                    :class="activeSection === 'produk' ? 'bg-emerald-400 text-emerald-950 font-bold' :
+                    :class="activeSection === 'produk' ? 'bg-green-400 text-green-950 font-bold' :
                         'hover:text-white text-gray-300'"
-                    class="px-4 py-2 rounded-full transition-all duration-300">Products</a>
+                    class="px-4 py-2 rounded-full transition-all duration-300">Gabah</a>
 
                 <a href="#kontak" @click="activeSection = 'kontak'"
-                    :class="activeSection === 'kontak' ? 'bg-emerald-400 text-emerald-950 font-bold' :
+                    :class="activeSection === 'kontak' ? 'bg-green-400 text-green-950 font-bold' :
                         'hover:text-white text-gray-300'"
-                    class="px-4 py-2 rounded-full transition-all duration-300">Contact</a>
+                    class="px-4 py-2 rounded-full transition-all duration-300">Kontak</a>
             </nav>
 
             <div class="flex items-center">
                 @auth
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open"
-                            class="flex items-center gap-2 text-sm font-medium text-gray-200 hover:text-emerald-400 transition-colors focus:outline-none py-2 cursor-pointer">
+                            class="flex items-center gap-2 text-sm font-medium text-gray-200 hover:text-green-400 transition-colors focus:outline-none py-2 cursor-pointer">
                             <div
-                                class="w-8 h-8 rounded-full bg-emerald-400 text-emerald-950 font-bold flex items-center justify-center border border-emerald-300 shadow-sm">
+                                class="w-8 h-8 rounded-full bg-green-400 text-green-950 font-bold flex items-center justify-center border border-green-300 shadow-sm">
                                 {{ \Illuminate\Support\Str::upper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
                             </div>
                             <span
@@ -103,23 +103,23 @@
 
                             @if (Auth::user()->isAdmin())
                                 <a href="{{ route('admin.dashboard') }}"
-                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-emerald-700 transition-colors">
+                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-green-700 transition-colors">
                                     <i class="fa-solid fa-chart-pie text-gray-400 w-4"></i> Dashboard Admin
                                 </a>
                             @elseif(Auth::user()->isPetani())
                                 <a href="{{ route('petani.dashboard') }}"
-                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-emerald-700 transition-colors">
+                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-green-700 transition-colors">
                                     <i class="fa-solid fa-chart-pie text-gray-400 w-4"></i> Dashboard Petani
                                 </a>
                             @elseif(Auth::user()->isKonsumen())
                                 <a href="{{ route('konsumen.dashboard') }}"
-                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-emerald-700 transition-colors">
+                                    class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-green-700 transition-colors">
                                     <i class="fa-solid fa-chart-pie text-gray-400 w-4"></i> Dashboard Saya
                                 </a>
                             @endif
 
                             <a href="{{ route('profile.edit') }}"
-                                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-emerald-700 transition-colors">
+                                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-green-700 transition-colors">
                                 <i class="fa-regular fa-user text-gray-400 w-4"></i> Profile Saya
                             </a>
 
@@ -136,10 +136,10 @@
                     </div>
                 @else
                     <a href="{{ route('login') }}"
-                        class="bg-emerald-400 hover:bg-emerald-500 text-emerald-950 text-xs font-bold px-5 py-2.5 rounded-full transition-all flex items-center gap-3 group shadow-lg shadow-emerald-400/10">
+                        class="bg-green-400 hover:bg-green-500 text-green-950 text-xs font-bold px-5 py-2.5 rounded-full transition-all flex items-center gap-3 group shadow-lg shadow-green-400/10">
                         Login
                         <span
-                            class="w-5 h-5 bg-emerald-950 text-emerald-400 rounded-full flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
+                            class="w-5 h-5 bg-green-950 text-green-400 rounded-full flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
                             <i class="fa-solid fa-arrow-right text-[9px]"></i>
                         </span>
                     </a>
@@ -152,13 +152,12 @@
         @yield('content')
     </main>
 
-    <footer class="bg-emerald-950 text-gray-300 pt-20 pb-8">
+    <footer class="bg-green-950 text-gray-300 pt-20 pb-8">
         <div
-            class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-emerald-900/60 pb-16 mb-8">
+            class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-green-900/60 pb-16 mb-8">
             <div class="md:col-span-2 space-y-4">
                 <div class="flex items-center gap-2">
-                    <span class="text-xl font-black text-white tracking-wide uppercase">Sistem<span
-                            class="text-emerald-400">Gabah</span></span>
+                    <span class="text-xl font-black text-white tracking-wide uppercase">Subak Penyalin</span>
                 </div>
                 <p class="text-sm text-gray-400 max-w-xl leading-relaxed">
                     Platform digital transparan yang menjembatani hasil panen terbaik para petani lokal langsung ke
@@ -166,23 +165,23 @@
                 </p>
                 <div class="flex gap-4 pt-2">
                     <a href="#"
-                        class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-emerald-400 hover:text-emerald-950 transition-all text-white text-sm"><i
+                        class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-400 hover:text-green-950 transition-all text-white text-sm"><i
                             class="fa-brands fa-facebook-f"></i></a>
                     <a href="#"
-                        class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-emerald-400 hover:text-emerald-950 transition-all text-white text-sm"><i
+                        class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-400 hover:text-green-950 transition-all text-white text-sm"><i
                             class="fa-brands fa-instagram"></i></a>
                     <a href="#"
-                        class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-emerald-400 hover:text-emerald-950 transition-all text-white text-sm"><i
+                        class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-400 hover:text-green-950 transition-all text-white text-sm"><i
                             class="fa-brands fa-whatsapp"></i></a>
                 </div>
             </div>
             <div>
                 <h4 class="text-white font-bold mb-4 text-xs tracking-wider uppercase">Tautan Cepat</h4>
                 <ul class="space-y-2.5 text-sm text-gray-400">
-                    <li><a href="#home" class="hover:text-emerald-400 transition-colors">Beranda</a></li>
-                    <li><a href="#produk" class="hover:text-emerald-400 transition-colors">Produk</a></li>
-                    <li><a href="#tentang" class="hover:text-emerald-400 transition-colors">Tentang Kami</a></li>
-                    <li><a href="#kontak" class="hover:text-emerald-400 transition-colors">Kontak</a></li>
+                    <li><a href="#home" class="hover:text-green-400 transition-colors">Beranda</a></li>
+                    <li><a href="#produk" class="hover:text-green-400 transition-colors">Produk</a></li>
+                    <li><a href="#tentang" class="hover:text-green-400 transition-colors">Tentang Kami</a></li>
+                    <li><a href="#kontak" class="hover:text-green-400 transition-colors">Kontak</a></li>
                 </ul>
             </div>
         </div>
