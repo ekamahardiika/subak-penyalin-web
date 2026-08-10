@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Stok Petani')
+
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Manajemen Stok Gabah Mandiri</h1>
@@ -22,8 +24,17 @@
                     <a href="{{ route('petani.stok.edit', $stock->id) }}"
                         class="p-4 bg-gray-50/70 border border-gray-100 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:border-emerald-200 hover:bg-emerald-50/40 group cursor-pointer">
                         <div class="flex items-center gap-3.5">
-                            <div class="bg-emerald-50 text-emerald-600 p-2.5 rounded-xl border border-emerald-100">
-                                <i class="fa-solid fa-wheat-awn text-sm"></i>
+                            <div
+                                class="w-10 h-10 rounded-xl overflow-hidden bg-emerald-50 shrink-0 border border-emerald-100 flex items-center justify-center">
+                                @if (!empty($stock->product->gambar) && file_exists(public_path('storage/' . $stock->product->gambar)))
+                                    <img src="{{ asset('storage/' . $stock->product->gambar) }}"
+                                        alt="{{ $stock->product->nama_produk ?? 'Produk' }}"
+                                        class="w-full h-full object-cover">
+                                @else
+                                    <div class="text-emerald-600 w-full h-full flex items-center justify-center">
+                                        <i class="fa-solid fa-wheat-awn text-sm"></i>
+                                    </div>
+                                @endif
                             </div>
                             <div>
                                 <p class="font-bold text-gray-900 text-sm group-hover:text-emerald-700 transition-colors">

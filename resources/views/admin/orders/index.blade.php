@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Pesanan')
+
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Semua Pesanan Masuk</h1>

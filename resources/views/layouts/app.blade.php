@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title', 'Subak Penyalin') - Subak Penyalin</title>
+    <link rel="icon" type="image/png" href="{{ asset('logo/Logo1.png') }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -17,17 +18,12 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<!-- Menggunakan Alpine.js x-init untuk membaca state dari localStorage agar tidak reset saat pindah menu -->
-
 <body class="font-sans antialiased bg-gray-50 text-gray-800" x-data="{
     mobileOpen: false,
     desktopExpanded: localStorage.getItem('sidebarExpanded') !== 'false'
 }" x-init="$watch('desktopExpanded', val => localStorage.setItem('sidebarExpanded', val))">
 
-    <!-- ============================================= -->
-    <!-- TOAST NOTIFICATION (gaya "sweet alert" custom pakai Alpine) -->
-    <!-- Otomatis muncul kalau ada session('success') / session('error') dari controller -->
-    <!-- ============================================= -->
+    <!-- TOAST NOTIFICATION -->
     <div x-data="{
         toasts: [],
         addToast(type, message) {
@@ -72,7 +68,6 @@
                     <i class="fa-solid fa-xmark text-xs"></i>
                 </button>
 
-                <!-- Progress bar auto-dismiss -->
                 <div class="absolute left-0 bottom-0 h-1 rounded-b-2xl animate-toast-progress"
                     :class="toast.type === 'success' ? 'bg-emerald-400' : 'bg-red-400'"></div>
             </div>
@@ -99,24 +94,14 @@
         }
     </style>
 
-    <!-- ============================================= -->
-    <!-- MODAL KONFIRMASI (gaya "Are you sure?" custom pakai Alpine) -->
-    <!-- Dipasang global di layout, dipanggil dari halaman manapun lewat $dispatch('open-confirm-modal', {...}) -->
-    <!-- Contoh pakai di form delete:
-         @submit.prevent="$dispatch('open-confirm-modal', {
-             form: $el,
-             title: 'Hapus Konsumen?',
-             message: 'Data ini akan dihapus permanen dan tidak dapat dikembalikan.'
-         })"
-    -->
-    <!-- ============================================= -->
+    <!-- MODAL KONFIRMASI -->
     <div x-data="{
         show: false,
         title: 'Apakah Anda yakin?',
         message: '',
         confirmLabel: 'Ya, Lanjutkan',
         cancelLabel: 'Batal',
-        type: 'danger', // 'danger' (hapus, warna merah) atau 'primary' (simpan/update, warna emerald)
+        type: 'danger',
         formEl: null,
         cancel() {
             this.show = false;
@@ -138,13 +123,11 @@
         "
         x-show="show" x-cloak class="fixed inset-0 z-[110] flex items-center justify-center p-4">
 
-        <!-- Overlay -->
         <div class="absolute inset-0 bg-black/40" x-show="show" x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0" @click="cancel()"></div>
 
-        <!-- Card Modal -->
         <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center" x-show="show"
             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-90"
             x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-150"
@@ -187,12 +170,12 @@
                 :class="desktopExpanded ? 'justify-between px-4' : 'justify-center px-0'">
 
                 <div class="flex items-center gap-2.5">
-                    <div
-                        class="bg-emerald-600 text-white p-1.5 rounded-xl shadow-md shrink-0 flex items-center justify-center w-9 h-9">
-                        <i class="fa-solid fa-wheat-awn text-sm"></i>
-                    </div>
+                    <!-- LOGO DARI PUBLIC/LOGO -->
+                    <img src="{{ asset('logo/Logo1.png') }}" alt="Subak Penyalin Logo"
+                        class="w-9 h-9 object-contain shrink-0">
+
                     <span x-show="desktopExpanded" class="text-lg font-bold text-white tracking-wide whitespace-nowrap">
-                        Sistem<span class="text-emerald-400">Gabah</span>
+                        Subak Penyalin
                     </span>
                 </div>
 
@@ -211,7 +194,6 @@
                         <hr x-show="!desktopExpanded" class="border-emerald-900 w-8 transition-all">
                     </div>
 
-                    <!-- Menu Dashboard -->
                     <a href="{{ route('admin.dashboard') }}" title="Dashboard Admin"
                         :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
                         class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/dashboard') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
@@ -220,7 +202,6 @@
                         <span x-show="desktopExpanded" class="whitespace-nowrap">Dashboard Admin</span>
                     </a>
 
-                    <!-- Menu Kelola Konsumen -->
                     <a href="{{ route('admin.users.index') }}" title="Kelola Konsumen"
                         :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
                         class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/users*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
@@ -229,7 +210,6 @@
                         <span x-show="desktopExpanded" class="whitespace-nowrap">Kelola Konsumen</span>
                     </a>
 
-                    <!-- Menu Kelola Petani -->
                     <a href="{{ route('admin.petani.index') }}" title="Kelola Petani"
                         :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
                         class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/petani*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
@@ -238,7 +218,6 @@
                         <span x-show="desktopExpanded" class="whitespace-nowrap">Kelola Petani</span>
                     </a>
 
-                    <!-- Menu Kelola Produk -->
                     <a href="{{ route('admin.products.index') }}" title="Kelola Produk"
                         :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
                         class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/products*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
@@ -247,7 +226,6 @@
                         <span x-show="desktopExpanded" class="whitespace-nowrap">Kelola Produk</span>
                     </a>
 
-                    <!-- Menu Broadcast Harga -->
                     <a href="{{ route('admin.harga.index') }}" title="Broadcast Harga"
                         :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
                         class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/harga*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
@@ -256,7 +234,6 @@
                         <span x-show="desktopExpanded" class="whitespace-nowrap">Broadcast Harga</span>
                     </a>
 
-                    <!-- Menu Semua Pesanan -->
                     <a href="{{ route('admin.orders.index') }}" title="Semua Pesanan"
                         :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
                         class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/orders*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
@@ -265,7 +242,6 @@
                         <span x-show="desktopExpanded" class="whitespace-nowrap">Semua Pesanan</span>
                     </a>
 
-                    <!-- Menu Laporan Rekap -->
                     <a href="{{ route('admin.laporan.index') }}" title="Laporan Rekap"
                         :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
                         class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/laporan*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
@@ -341,7 +317,6 @@
 
             </nav>
 
-            <!-- Footer Sidebar Copyright -->
             <div
                 class="h-12 flex items-center justify-center border-t border-emerald-900/60 bg-emerald-950/40 text-xs text-emerald-500 overflow-hidden whitespace-nowrap px-2">
                 <span x-show="desktopExpanded">&copy; 2026 Sistem Gabah V.1</span>
@@ -361,12 +336,10 @@
                 class="bg-white h-16 border-b border-gray-100 flex items-center justify-between px-6 sticky top-0 z-30 shadow-xs">
 
                 <div class="flex items-center gap-4">
-                    <!-- Hamburger Mobile Trigger -->
                     <button @click="mobileOpen = true" class="md:hidden text-gray-600 hover:text-emerald-600">
                         <i class="fa-solid fa-bars text-xl"></i>
                     </button>
 
-                    <!-- Minimize/Maximize Trigger Desktop -->
                     <button @click="desktopExpanded = !desktopExpanded"
                         class="hidden md:inline-flex text-gray-400 hover:text-emerald-600 w-9 h-9 items-center justify-center rounded-xl bg-gray-50 border border-gray-100 transition-colors cursor-pointer">
                         <i class="fa-solid text-sm" :class="desktopExpanded ? 'fa-outdent' : 'fa-indent'"></i>
@@ -377,7 +350,6 @@
                     </div>
                 </div>
 
-                <!-- Dropdown Profil -->
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open"
                         class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-emerald-600 transition-colors focus:outline-none py-2 cursor-pointer">
@@ -424,7 +396,6 @@
                 </div>
             </header>
 
-            <!-- Dynamic Header Slot -->
             @isset($header)
                 <div class="bg-white border-b border-gray-100 py-4 px-6">
                     <div class="text-xl font-bold text-gray-800">
@@ -433,7 +404,6 @@
                 </div>
             @endisset
 
-            <!-- Main Yield Content -->
             <main class="p-6 flex-1">
                 @yield('content')
             </main>

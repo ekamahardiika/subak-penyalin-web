@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subak Penyalin</title>
+    <title>@yield('title', 'Subak Penyalin') - Subak Penyalin</title>
+    <link rel="icon" type="image/png" href="{{ asset('logo/Logo1.png') }}">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="icon" type="image/png" href="{{ asset('logo/Logo1.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* FIX: scroll halus saat pindah section via anchor navbar, bukan lompat instan */
@@ -42,10 +44,9 @@
 
         <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
 
-            <a href="{{ route('home') }}#home" class="flex items-center gap-2">
-                <span class="text-xl font-black text-white tracking-wide uppercase">
-                    Subak Penyalin</span>
-                </span>
+            <a href="{{ route('home') }}#home" class="flex items-center gap-2.5">
+                <img src="{{ asset('logo/Logo1.png') }}" alt="Subak Penyalin Logo" class="w-12 h-12 object-contain">
+                <span class="text-xl font-black text-white tracking-wide uppercase">Subak Penyalin</span>
             </a>
 
             <nav class="hidden md:flex items-center gap-1 border px-2 py-1.5 rounded-full text-xs font-semibold transition-all duration-300"
@@ -156,9 +157,11 @@
         <div
             class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-green-900/60 pb-16 mb-8">
             <div class="md:col-span-2 space-y-4">
-                <div class="flex items-center gap-2">
+                <a href="{{ route('home') }}#home" class="flex items-center gap-2.5">
+                    <img src="{{ asset('logo/Logo1.png') }}" alt="Subak Penyalin Logo"
+                        class="w-12 h-12 object-contain">
                     <span class="text-xl font-black text-white tracking-wide uppercase">Subak Penyalin</span>
-                </div>
+                </a>
                 <p class="text-sm text-gray-400 max-w-xl leading-relaxed">
                     Platform digital transparan yang menjembatani hasil panen terbaik para petani lokal langsung ke
                     tangan konsumen demi kesejahteraan bersama.

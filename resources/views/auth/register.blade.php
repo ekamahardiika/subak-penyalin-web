@@ -1,3 +1,5 @@
+@section('title', 'Register')
+
 <x-guest-layout>
     <div class="w-full sm:max-w-2xl md:max-w-3xl mx-auto p-2 sm:p-4">
 

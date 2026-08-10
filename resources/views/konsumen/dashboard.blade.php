@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Dashboard Konsumen')
+
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Panel Konsumen</h1>
@@ -43,6 +45,18 @@
                         Rp {{ number_format($hargaHariIni->harga_gabah, 0, ',', '.') }}<span
                             class="text-sm font-semibold text-gray-500"> / KG</span>
                     </p>
+                    <p class="text-[11px] text-gray-400">
+                        Sumber: {{ $hargaHariIni->sumber_label }}
+                    </p>
+                    @if ($rataHargaJual)
+                        <p
+                            class="text-[11px] {{ $selisihPersen >= 0 ? 'text-emerald-600' : 'text-red-500' }} font-semibold mt-1">
+                            <i
+                                class="fa-solid {{ $selisihPersen >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down' }} text-[10px]"></i>
+                            Harga di platform ini rata-rata Rp {{ number_format($rataHargaJual, 0, ',', '.') }}/KG
+                            ({{ $selisihPersen >= 0 ? '+' : '' }}{{ number_format($selisihPersen, 1) }}% dari acuan)
+                        </p>
+                    @endif
                 @else
                     <p class="text-sm font-medium text-gray-400 pt-1">Belum ada rilis harga.</p>
                 @endif
@@ -118,9 +132,21 @@
                     @forelse($availableProducts as $product)
                         <div
                             class="flex items-center gap-3 p-2 rounded-lg border border-gray-50 hover:border-emerald-100 hover:bg-emerald-50/20 transition-all">
-                            <div class="bg-emerald-50 text-emerald-600 p-2.5 rounded-lg text-sm">
-                                <i class="fa-solid fa-seedling"></i>
+
+                            {{-- TAMPILAN GAMBAR PRODUK --}}
+                            <div
+                                class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100 flex items-center justify-center">
+                                @if (!empty($product->gambar) && file_exists(public_path('storage/' . $product->gambar)))
+                                    <img src="{{ asset('storage/' . $product->gambar) }}"
+                                        alt="{{ $product->nama_produk }}" class="w-full h-full object-cover">
+                                @else
+                                    <div
+                                        class="bg-emerald-50 text-emerald-600 w-full h-full flex items-center justify-center text-sm">
+                                        <i class="fa-solid fa-seedling"></i>
+                                    </div>
+                                @endif
                             </div>
+
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-semibold text-gray-800 truncate">{{ $product->nama_produk }}</p>
                                 <p class="text-xs text-emerald-600 font-bold">Rp

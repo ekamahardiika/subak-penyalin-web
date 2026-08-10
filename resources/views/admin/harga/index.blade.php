@@ -1,15 +1,17 @@
 @extends('layouts.app')
 
+@section('title', 'Harga')
+
 @section('content')
     <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Riwayat Broadcast Harga</h1>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Riwayat Harga Acuan Gabah</h1>
             <p class="text-sm text-gray-500 mt-0.5">Daftar arsip penyesuaian nilai acuan komoditas gabah platform.</p>
         </div>
         <div>
             <a href="{{ route('admin.harga.create') }}"
                 class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md shadow-emerald-700/20 cursor-pointer">
-                Buat Broadcast Baru <i class="fa-solid fa-plus text-[10px]"></i>
+                Rilis Harga Baru <i class="fa-solid fa-plus text-[10px]"></i>
             </a>
         </div>
     </div>
@@ -19,15 +21,22 @@
         perPage: 10,
         currentPage: 1,
         broadcasts: {{ \Illuminate\Support\Js::from(method_exists($broadcasts, 'items') ? $broadcasts->items() : $broadcasts) }},
+        sumberLabel(s) {
+            if (s === 'hpp_pemerintah') return 'HPP Pemerintah';
+            if (s === 'harga_pasar') return 'Harga Pasar';
+            return 'Lainnya';
+        },
         get filteredBroadcasts() {
             if (this.search.trim() === '') return this.broadcasts;
             return this.broadcasts.filter(b => {
                 const ket = b.keterangan ? b.keterangan.toLowerCase() : '';
                 const tgl = b.tanggal ? b.tanggal.toLowerCase() : '';
                 const hrg = b.harga_gabah ? b.harga_gabah.toString() : '';
+                const smb = b.sumber ? this.sumberLabel(b.sumber).toLowerCase() : '';
                 return ket.includes(this.search.toLowerCase()) ||
                     tgl.includes(this.search.toLowerCase()) ||
-                    hrg.includes(this.search.toLowerCase());
+                    hrg.includes(this.search.toLowerCase()) ||
+                    smb.includes(this.search.toLowerCase());
             });
         },
         get totalPages() {
@@ -71,7 +80,7 @@
                 <span class="absolute inset-y-0 left-3.5 flex items-center pointer-events-none text-gray-400">
                     <i class="fa-solid fa-magnifying-glass text-xs"></i>
                 </span>
-                <input type="text" x-model="search" placeholder="Cari tanggal, harga, keterangan..."
+                <input type="text" x-model="search" placeholder="Cari tanggal, harga, sumber, keterangan..."
                     class="block w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs placeholder-gray-400 focus:outline-none focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
             </div>
         </div>
@@ -83,6 +92,7 @@
                         <tr>
                             <th scope="col" class="px-6 py-3.5 font-bold">Tanggal</th>
                             <th scope="col" class="px-6 py-3.5 font-bold">Harga Acuan / KG</th>
+                            <th scope="col" class="px-6 py-3.5 font-bold">Sumber</th>
                             <th scope="col" class="px-6 py-3.5 font-bold">Keterangan</th>
                             <th scope="col" class="px-6 py-3.5 font-bold text-center">Aksi</th>
                         </tr>
@@ -92,6 +102,11 @@
                             <tr class="hover:bg-gray-50/50 transition-colors">
                                 <td class="px-6 py-4 font-semibold text-gray-900" x-text="formatTanggal(b.tanggal)"></td>
                                 <td class="px-6 py-4 font-bold text-emerald-600" x-text="formatRupiah(b.harga_gabah)"></td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-2.5 py-1 text-xs font-semibold bg-sky-50 text-sky-700 rounded-md border border-sky-100"
+                                        x-text="sumberLabel(b.sumber)"></span>
+                                </td>
                                 <td class="px-6 py-4 text-gray-500 max-w-xs truncate" x-text="b.keterangan || '-'"></td>
                                 <td class="px-6 py-4 text-center">
                                     <div class="inline-flex items-center gap-2">
@@ -103,7 +118,7 @@
                                         <form :action="`{{ route('admin.harga.index') }}/${b.id}`" method="POST"
                                             @submit.prevent="$dispatch('open-confirm-modal', {
                 form: $el,
-                title: 'Hapus Riwayat Broadcast?',
+                title: 'Hapus Riwayat Harga Acuan?',
                 message: `Data acuan harga tanggal ${formatTanggal(b.tanggal)} akan dihapus permanen dari arsip.`
             })">
                                             @csrf
@@ -119,10 +134,10 @@
                         </template>
 
                         <tr x-show="filteredBroadcasts.length === 0">
-                            <td colspan="4" class="px-6 py-10 text-center text-gray-400">
+                            <td colspan="5" class="px-6 py-10 text-center text-gray-400">
                                 <div class="flex flex-col items-center justify-center space-y-2">
                                     <i class="fa-solid fa-bullhorn text-3xl text-gray-300"></i>
-                                    <p class="text-sm">Belum ada riwayat penyiaran harga atau data tidak ditemukan.</p>
+                                    <p class="text-sm">Belum ada riwayat harga acuan atau data tidak ditemukan.</p>
                                 </div>
                             </td>
                         </tr>

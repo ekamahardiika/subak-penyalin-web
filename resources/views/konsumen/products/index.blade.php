@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Pesanan Saya')
+
 @section('content')
     <div x-data="cartPage()" x-init="init()">
 

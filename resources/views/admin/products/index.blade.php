@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Produk')
+
 @section('content')
     <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
         <div>

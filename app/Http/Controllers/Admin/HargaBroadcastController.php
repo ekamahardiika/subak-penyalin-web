@@ -21,10 +21,13 @@ class HargaBroadcastController extends Controller
         return view('admin.harga.create');
     }
 
+    // app/Http/Controllers/Admin/HargaBroadcastController.php
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'harga_gabah' => 'required|numeric|min:0',
+            'sumber' => 'required|in:hpp_pemerintah,harga_pasar,lainnya',
             'keterangan' => 'nullable|string',
             'tanggal' => 'required|date',
         ]);
@@ -33,25 +36,26 @@ class HargaBroadcastController extends Controller
 
         HargaBroadcast::create($validated);
 
-        return redirect()->route('admin.harga.index')->with('success', 'Harga gabah berhasil dibroadcast');
-    }
-
-    public function edit(HargaBroadcast $harga)
-    {
-        return view('admin.harga.edit', compact('harga'));
+        return redirect()->route('admin.harga.index')->with('success', 'Harga acuan berhasil disiarkan');
     }
 
     public function update(Request $request, HargaBroadcast $harga)
     {
         $validated = $request->validate([
             'harga_gabah' => 'required|numeric|min:0',
+            'sumber' => 'required|in:hpp_pemerintah,harga_pasar,lainnya',
             'keterangan' => 'nullable|string',
             'tanggal' => 'required|date',
         ]);
 
         $harga->update($validated);
 
-        return redirect()->route('admin.harga.index')->with('success', 'Broadcast harga berhasil diperbarui');
+        return redirect()->route('admin.harga.index')->with('success', 'Harga acuan berhasil diperbarui');
+    }
+
+    public function edit(HargaBroadcast $harga)
+    {
+        return view('admin.harga.edit', compact('harga'));
     }
 
     public function destroy(HargaBroadcast $harga)

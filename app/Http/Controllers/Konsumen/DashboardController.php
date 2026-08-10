@@ -33,12 +33,27 @@ class DashboardController extends Controller
         // Mengasumsikan ada model Product yang berelasi dengan stok atau langsung di-display
         $availableProducts = Product::latest()->take(3)->get();
 
+        // 5. BARU: Perbandingan harga acuan vs rata-rata harga jual riil di platform
+        $rataHargaJual = Product::where('status', 'aktif')->avg('harga_jual');
+
+        $selisihHarga = null;
+        $selisihPersen = null;
+        if ($hargaHariIni && $rataHargaJual) {
+            $selisihHarga = $rataHargaJual - $hargaHariIni->harga_gabah;
+            $selisihPersen = $hargaHariIni->harga_gabah > 0
+                ? ($selisihHarga / $hargaHariIni->harga_gabah) * 100
+                : null;
+        }
+
         return view('konsumen.dashboard', compact(
             'hargaHariIni',
             'totalTransaksi',
             'totalPengeluaran',
             'recentOrders',
-            'availableProducts'
+            'availableProducts',
+            'rataHargaJual',
+            'selisihHarga',
+            'selisihPersen'
         ));
     }
 }

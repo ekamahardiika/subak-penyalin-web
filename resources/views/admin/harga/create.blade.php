@@ -1,17 +1,19 @@
 @extends('layouts.app')
 
+@section('title', 'Tambah Harga')
+
 @section('content')
     <div class="mb-4">
         <a href="{{ route('admin.harga.index') }}"
             class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-emerald-600 transition-colors">
-            <i class="fa-solid fa-arrow-left text-[10px]"></i> Kembali ke Riwayat Broadcast
+            <i class="fa-solid fa-arrow-left text-[10px]"></i> Kembali ke Riwayat Harga Acuan
         </a>
     </div>
 
     <div class="w-full">
         <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
             <div class="mb-5">
-                <h2 class="text-xl font-bold text-gray-900 tracking-tight">Buat Broadcast Harga Gabah</h2>
+                <h2 class="text-xl font-bold text-gray-900 tracking-tight">Rilis Harga Acuan Gabah</h2>
                 <p class="text-xs text-gray-500 mt-0.5">Informasikan acuan patokan harga pasar harian kepada seluruh mitra
                     petani dan konsumen.</p>
             </div>
@@ -20,9 +22,9 @@
                 @submit.prevent="$dispatch('open-confirm-modal', {
                     form: $el,
                     type: 'primary',
-                    title: 'Siarkan Informasi Harga?',
-                    message: 'Patokan harga gabah harian baru ini akan segera disebarkan ke semua mitra dan konsumen.',
-                    confirmLabel: 'Ya, Siarkan'
+                    title: 'Rilis Informasi Harga?',
+                    message: 'Patokan harga gabah harian baru ini akan segera terlihat oleh semua mitra dan konsumen.',
+                    confirmLabel: 'Ya, Rilis'
                 })">
                 @csrf
 
@@ -49,6 +51,18 @@
                 </div>
 
                 <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Sumber Data
+                        Harga</label>
+                    <select name="sumber" required
+                        class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs">
+                        <option value="">-- Pilih sumber --</option>
+                        <option value="hpp_pemerintah">HPP Pemerintah (Bapanas/Kementan)</option>
+                        <option value="harga_pasar">Harga Pasar / Tengkulak</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Keterangan / Catatan
                         Tambahan</label>
                     <textarea name="keterangan" rows="3"
@@ -59,7 +73,7 @@
                 <div class="pt-2">
                     <button type="submit"
                         class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer">
-                        Simpan & Siarkan Informasi <i class="fa-solid fa-bullhorn text-xs"></i>
+                        Simpan & Rilis Harga Acuan <i class="fa-solid fa-bullhorn text-xs"></i>
                     </button>
                 </div>
             </form>

@@ -1,3 +1,5 @@
+@section('title', 'Verifikasi Email')
+
 <x-guest-layout>
     <div class="text-center mb-6 py-3">
         <div

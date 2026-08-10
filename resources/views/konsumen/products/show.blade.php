@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Detail Pesanan')
+
 @section('content')
     <div x-data="productDetail()" x-init="init()">
 

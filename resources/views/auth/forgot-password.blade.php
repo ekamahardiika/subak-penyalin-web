@@ -1,3 +1,5 @@
+@section('title', 'Lupa Password')
+
 <x-guest-layout>
     <div class="text-center mb-3 py-6">
         <h2 class="text-2xl font-bold text-gray-900">Lupa Kata Sandi?</h2>

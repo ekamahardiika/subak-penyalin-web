@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Tambah Petani')
+
 @section('content')
     <div class="mb-4">
         <a href="{{ route('admin.petani.index') }}"
@@ -16,6 +18,18 @@
                     gabah mandiri.</p>
             </div>
 
+            {{-- Alert Error Validasi --}}
+            @if ($errors->any())
+                <div class="mb-5 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-xl">
+                    <p class="text-xs font-bold uppercase tracking-wider mb-1">Gagal Menyimpan Data:</p>
+                    <ul class="list-disc pl-4 text-xs space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('admin.petani.store') }}" method="POST" class="space-y-4"
                 @submit.prevent="$dispatch('open-confirm-modal', {
                     form: $el,
@@ -30,8 +44,9 @@
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nama Lengkap</label>
                     <div class="relative">
-                        <input type="text" name="name" required placeholder="Nama lengkap petani"
-                            class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
+                        <input type="text" name="name" value="{{ old('name') }}" required
+                            placeholder="Nama lengkap petani"
+                            class="block w-full px-4 py-2.5 bg-gray-50 border @error('name') border-red-500 @else border-gray-200 @enderror rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
                         <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
                             <i class="fa-regular fa-user text-sm"></i>
                         </span>
@@ -41,8 +56,9 @@
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Alamat Email</label>
                     <div class="relative">
-                        <input type="email" name="email" required placeholder="nama@email.com"
-                            class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
+                        <input type="email" name="email" value="{{ old('email') }}" required
+                            placeholder="nama@email.com"
+                            class="block w-full px-4 py-2.5 bg-gray-50 border @error('email') border-red-500 @else border-gray-200 @enderror rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
                         <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
                             <i class="fa-regular fa-envelope text-sm"></i>
                         </span>
@@ -53,8 +69,8 @@
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nomor Telepon /
                         WA</label>
                     <div class="relative">
-                        <input type="text" name="phone" placeholder="Contoh: 08123456789"
-                            class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
+                        <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Contoh: 08123456789"
+                            class="block w-full px-4 py-2.5 bg-gray-50 border @error('phone') border-red-500 @else border-gray-200 @enderror rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
                         <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
                             <i class="fa-solid fa-phone text-sm"></i>
                         </span>
@@ -66,7 +82,7 @@
                         Karakter)</label>
                     <div class="relative">
                         <input type="password" name="password" required placeholder="••••••••"
-                            class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
+                            class="block w-full px-4 py-2.5 bg-gray-50 border @error('password') border-red-500 @else border-gray-200 @enderror rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs" />
                         <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 pointer-events-none">
                             <i class="fa-solid fa-lock text-sm"></i>
                         </span>

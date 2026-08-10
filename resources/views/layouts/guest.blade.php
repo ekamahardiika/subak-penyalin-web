@@ -1,30 +1,41 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <title>@yield('title', 'Subak Penyalin') - Subak Penyalin</title>
+    <link rel="icon" type="image/png" href="{{ asset('logo/Logo1.png') }}">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased ">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-emerald-800">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-white" />
-                </a>
-            </div>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
-            </div>
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
+<body class="font-sans text-gray-900 antialiased">
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-emerald-800">
+        <!-- WRAPPER LOGO TANPA MARGIN / PADDING BOWA -->
+        <div class="p-0 m-0">
+            <a href="/" class="block">
+                {{-- 
+                        - brightness-0 invert : memaksa gambar logo menjadi serba putih (white) jika berupa gambar berwarna/PNG transparan
+                        - style width & height : memastikan ukuran pasti teresekusi tanpa terpotong
+                    --}}
+                <img src="{{ asset('logo/Logo1.png') }}" alt="Subak Penyalin Logo" style="width: 150px; height: auto;"
+                    class="block mx-auto">
+            </a>
         </div>
-    </body>
+
+        <!-- CONTAINER CARD (mt-0 menghapus margin atas card / margin bawah logo) -->
+        <div class="w-full sm:max-w-md mt-0 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            {{ $slot }}
+        </div>
+    </div>
+</body>
+
 </html>

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Laporan')
+
 @section('content')
     <!-- Top Bar Header -->
     <div class="mb-6">

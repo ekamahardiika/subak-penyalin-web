@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Detail Pesanan')
+
 @section('content')
     <div class="mb-4">
         <a href="{{ route('admin.orders.index') }}"

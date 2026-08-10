@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Petani;
 use App\Http\Controllers\Controller;
 use App\Models\HargaBroadcast;
 use App\Models\PetaniStock;
+use App\Models\Product;
 use App\Models\StockAllocation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -48,6 +49,18 @@ class DashboardController extends Controller
 
         $totalPendapatanBulanIni = (clone $penjualanBulanIniQuery)->sum(DB::raw('stock_allocations.jumlah_kg * order_items.harga_satuan'));
 
+        // BARU: Perbandingan harga acuan vs rata-rata harga jual riil di platform
+        $rataHargaJual = Product::where('status', 'aktif')->avg('harga_jual');
+
+        $selisihHarga = null;
+        $selisihPersen = null;
+        if ($hargaTerbaru && $rataHargaJual) {
+            $selisihHarga = $rataHargaJual - $hargaTerbaru->harga_gabah;
+            $selisihPersen = $hargaTerbaru->harga_gabah > 0
+                ? ($selisihHarga / $hargaTerbaru->harga_gabah) * 100
+                : null;
+        }
+
         return view('petani.dashboard', compact(
             'totalStokSaya',
             'hargaTerbaru',
@@ -56,7 +69,10 @@ class DashboardController extends Controller
             'chartData',
             'riwayatStok',
             'totalTerjualKgBulanIni',
-            'totalPendapatanBulanIni'
+            'totalPendapatanBulanIni',
+            'rataHargaJual',
+            'selisihHarga',
+            'selisihPersen'
         ));
     }
 }

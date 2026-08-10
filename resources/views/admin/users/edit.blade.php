@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Konsumen')
+
 @section('content')
     <!-- Tombol Kembali -->
     <div class="mb-4">

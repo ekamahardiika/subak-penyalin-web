@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Petani')
+
 @section('content')
     <div class="mb-4">
         <a href="{{ route('admin.petani.index') }}"

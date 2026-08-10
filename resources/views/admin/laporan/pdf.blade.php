@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Laporan Penjualan - Sistem Gabah</h1>
+        <h1>Laporan Penjualan - Subak Penyalin</h1>
         <p>Dicetak pada {{ now()->translatedFormat('d F Y, H:i') }} WITA</p>
     </div>
 

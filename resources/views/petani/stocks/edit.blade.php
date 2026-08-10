@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Stok')
+
 @section('content')
     <a href="{{ route('petani.stok.index') }}"
         class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-emerald-700 mb-4 transition-colors">
@@ -21,8 +23,16 @@
             </div>
 
             <div class="p-6 flex items-start gap-5">
-                <div class="bg-emerald-50 text-emerald-600 p-4 rounded-2xl border border-emerald-100 shrink-0">
-                    <i class="fa-solid fa-wheat-awn text-2xl"></i>
+                <div
+                    class="w-16 h-16 rounded-2xl overflow-hidden bg-emerald-50 border border-emerald-100 shrink-0 flex items-center justify-center">
+                    @if (!empty($stock->product->gambar) && file_exists(public_path('storage/' . $stock->product->gambar)))
+                        <img src="{{ asset('storage/' . $stock->product->gambar) }}"
+                            alt="{{ $stock->product->nama_produk ?? 'Produk' }}" class="w-full h-full object-cover">
+                    @else
+                        <div class="text-emerald-600 w-full h-full flex items-center justify-center">
+                            <i class="fa-solid fa-wheat-awn text-2xl"></i>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="flex-1 space-y-3">

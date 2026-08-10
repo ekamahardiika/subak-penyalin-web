@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Dashboard Petani')
+
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Panel Kerja Petani</h1>
@@ -31,8 +33,23 @@
                             class="text-sm font-semibold text-amber-700"> / KG</span>
                     </p>
                     <p class="text-xs text-amber-800/80 mt-1.5 flex items-center gap-1">
-                        <i class="fa-solid fa-circle-info text-[10px]"></i> {{ $hargaTerbaru->keterangan }}
+                        <i class="fa-solid fa-circle-info text-[10px]"></i>
+                        Sumber: {{ $hargaTerbaru->sumber_label }}
+                        @if ($hargaTerbaru->keterangan)
+                            &mdash; {{ $hargaTerbaru->keterangan }}
+                        @endif
                     </p>
+                    @if ($rataHargaJual)
+                        <p
+                            class="text-xs mt-2 pt-2 border-t border-amber-200/50 {{ $selisihHarga >= 0 ? 'text-emerald-700' : 'text-red-600' }}">
+                            <i
+                                class="fa-solid {{ $selisihHarga >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down' }} text-[10px]"></i>
+                            Rata-rata harga jual Anda di platform ini:
+                            <strong>Rp {{ number_format($rataHargaJual, 0, ',', '.') }}</strong>
+                            ({{ $selisihHarga >= 0 ? 'lebih tinggi' : 'lebih rendah' }}
+                            {{ number_format(abs($selisihPersen), 1) }}% dari harga acuan)
+                        </p>
+                    @endif
                 @else
                     <p class="text-sm font-medium text-amber-700/80 pt-1">Belum ada rilis harga acuan resmi dari admin.</p>
                 @endif
@@ -88,13 +105,28 @@
                 @forelse($stokPerProduk as $stok)
                     <div class="flex justify-between items-center py-3">
                         <div class="flex items-center gap-3">
-                            <div class="bg-gray-50 p-2 rounded-lg text-gray-500">
-                                <i class="fa-solid fa-seedling"></i>
+
+                            {{-- FOTO PRODUK / FALLBACK ICON --}}
+                            <div
+                                class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100 flex items-center justify-center">
+                                @if (!empty($stok->product->gambar) && file_exists(public_path('storage/' . $stok->product->gambar)))
+                                    <img src="{{ asset('storage/' . $stok->product->gambar) }}"
+                                        alt="{{ $stok->product->nama_produk ?? 'Produk' }}"
+                                        class="w-full h-full object-cover">
+                                @else
+                                    <div
+                                        class="bg-gray-50 text-gray-500 w-full h-full flex items-center justify-center text-sm">
+                                        <i class="fa-solid fa-seedling"></i>
+                                    </div>
+                                @endif
                             </div>
+
                             <div>
                                 <p class="text-sm font-semibold text-gray-800">
-                                    {{ $stok->product->nama_produk ?? 'Produk Tanpa Nama' }}</p>
-                                <p class="text-xs text-gray-400">Terakhir diupdate: {{ $stok->updated_at->diffForHumans() }}
+                                    {{ $stok->product->nama_produk ?? 'Produk Tanpa Nama' }}
+                                </p>
+                                <p class="text-xs text-gray-400">Terakhir diupdate:
+                                    {{ $stok->updated_at->diffForHumans() }}
                                 </p>
                             </div>
                         </div>

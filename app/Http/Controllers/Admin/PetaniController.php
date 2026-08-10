@@ -12,6 +12,7 @@ class PetaniController extends Controller
     public function index()
     {
         $petani = User::where('role', 'petani')->latest()->paginate(10);
+
         return view('admin.petani.index', compact('petani'));
     }
 
@@ -49,7 +50,7 @@ class PetaniController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $petani->id,
+            'email' => 'required|email|unique:users,email,'.$petani->id,
             'password' => 'nullable|min:6',
             'phone' => 'nullable|string|max:20',
         ]);
@@ -58,7 +59,7 @@ class PetaniController extends Controller
         $petani->email = $validated['email'];
         $petani->phone = $validated['phone'] ?? null;
 
-        if (!empty($validated['password'])) {
+        if (! empty($validated['password'])) {
             $petani->password = Hash::make($validated['password']);
         }
 
@@ -70,6 +71,7 @@ class PetaniController extends Controller
     public function destroy(User $petani)
     {
         $petani->delete();
+
         return redirect()->route('admin.petani.index')->with('success', 'Petani berhasil dinonaktifkan');
     }
 }

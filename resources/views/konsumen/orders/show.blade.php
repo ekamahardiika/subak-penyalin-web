@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Detail Pesanan')
+
 @section('content')
     <a href="{{ route('konsumen.orders.index') }}"
         class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-emerald-700 mb-4 transition-colors">

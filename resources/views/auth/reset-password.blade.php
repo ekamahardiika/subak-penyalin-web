@@ -1,3 +1,5 @@
+@section('title', 'Reset Password')
+
 <x-guest-layout>
     <div class="text-center mb-6 py-3">
         <h2 class="text-2xl font-bold text-gray-900">Atur Ulang Sandi</h2>

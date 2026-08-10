@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Dashboard Admin')
+
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Dashboard Admin</h1>
@@ -22,7 +24,7 @@
 
         <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-xs flex items-center justify-between">
             <div class="space-y-1">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Stok Gudang</h3>
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Stok Gabah</h3>
                 <p class="text-2xl font-extrabold text-emerald-600 tracking-tight">
                     {{ number_format($totalStokGabah, 0, ',', '.') }} <span
                         class="text-xs font-medium text-gray-400">KG</span>

@@ -1,18 +1,20 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Harga')
+
 @section('content')
     <div class="mb-4">
         <a href="{{ route('admin.harga.index') }}"
             class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-emerald-600 transition-colors">
-            <i class="fa-solid fa-arrow-left text-[10px]"></i> Kembali ke Riwayat Broadcast
+            <i class="fa-solid fa-arrow-left text-[10px]"></i> Kembali ke Riwayat Harga Acuan
         </a>
     </div>
 
     <div class="w-full">
         <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs">
             <div class="mb-5">
-                <h2 class="text-xl font-bold text-gray-900 tracking-tight">Edit Broadcast Harga Gabah</h2>
-                <p class="text-xs text-gray-500 mt-0.5">Perbarui data acuan patokan harga pasar yang sudah pernah disiarkan.
+                <h2 class="text-xl font-bold text-gray-900 tracking-tight">Edit Harga Acuan Gabah</h2>
+                <p class="text-xs text-gray-500 mt-0.5">Perbarui data acuan patokan harga pasar yang sudah pernah dirilis.
                 </p>
             </div>
 
@@ -49,6 +51,19 @@
                             IDR / KG
                         </span>
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Sumber Data
+                        Harga</label>
+                    <select name="sumber" required
+                        class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs">
+                        <option value="hpp_pemerintah" @selected($harga->sumber === 'hpp_pemerintah')>HPP Pemerintah
+                            (Bapanas/Kementan)</option>
+                        <option value="harga_pasar" @selected($harga->sumber === 'harga_pasar')>Harga Pasar / Tengkulak
+                        </option>
+                        <option value="lainnya" @selected($harga->sumber === 'lainnya')>Lainnya</option>
+                    </select>
                 </div>
 
                 <div>

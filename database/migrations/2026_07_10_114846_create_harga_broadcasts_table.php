@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->decimal('harga_gabah', 12, 2);
+            // Sumber data harga acuan: HPP Pemerintah / Harga Pasar-Tengkulak / Lainnya
+            $table->string('sumber')->default('lainnya');
             $table->text('keterangan')->nullable();
             $table->date('tanggal')->default(now());
             $table->timestamps();
