@@ -14,7 +14,6 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
 
-            <!-- GRID PRODUK -->
             <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                 <template x-for="p in products" :key="p.id">
                     <div class="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden group">
@@ -82,7 +81,6 @@
                 </div>
             </div>
 
-            <!-- KERANJANG / PESANAN -->
             <div class="bg-white rounded-2xl border border-gray-100 shadow-xs sticky top-20">
                 <div class="bg-emerald-950 text-white rounded-t-2xl px-5 py-4 flex items-center gap-2.5">
         
@@ -143,8 +141,6 @@
                         this.cart = {};
                     }
 
-                    // FIX: bersihkan item yang stoknya sudah tidak cukup lagi
-                    // (misal: produk habis setelah user sebelumnya sempat menambah ke keranjang)
                     Object.keys(this.cart).forEach(id => {
                         const p = this.products.find(p => p.id == id);
                         if (!p || p.stok_tersedia <= 0) {
@@ -159,7 +155,7 @@
 
                 addToCart(id) {
                     const p = this.products.find(p => p.id == id);
-                    if (!p || p.stok_tersedia <= 0) return; // FIX: tidak bisa tambah kalau stok habis
+                    if (!p || p.stok_tersedia <= 0) return;
 
                     this.cart[id] = (this.cart[id] || 0) + 1;
                 },
@@ -170,7 +166,6 @@
 
                     const current = this.cart[id] || 0;
 
-                    // FIX: tidak bisa nambah qty lebih dari stok yang tersedia
                     if (current >= p.stok_tersedia) return;
 
                     this.cart[id] = current + 1;

@@ -26,7 +26,6 @@
             @csrf
             <input type="hidden" name="items" :value="JSON.stringify(cart)">
 
-            <!-- RINGKASAN PESANAN -->
             <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
                 <div class="px-5 py-4 border-b border-gray-100">
                     <h3 class="font-bold text-sm text-gray-800">Ringkasan Pesanan</h3>
@@ -83,7 +82,6 @@
                 </div>
             </div>
 
-            <!-- INFORMASI PEMESAN -->
             <div class="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
                 <div class="bg-emerald-950 text-white px-5 py-4 flex items-center gap-2.5">
                     <span

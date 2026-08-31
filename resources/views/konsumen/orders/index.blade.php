@@ -177,7 +177,6 @@
         </div>
     </div>
 
-    {{-- Pembersihan data keranjang pada localStorage setelah transaksi sukses dilakukan --}}
     @if (session('success'))
         <script>
             localStorage.removeItem('cart_gabah');

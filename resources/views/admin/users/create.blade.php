@@ -3,7 +3,7 @@
 @section('title', 'Tambah Konsumen')
 
 @section('content')
-    <!-- Tombol Kembali -->
+
     <div class="mb-4">
         <a href="{{ route('admin.users.index') }}"
             class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-emerald-600 transition-colors">

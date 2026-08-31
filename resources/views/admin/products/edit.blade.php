@@ -92,7 +92,7 @@
                         class="block w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors shadow-xs resize-none">{{ $product->deskripsi }}</textarea>
                 </div>
 
-                {{-- Area Upload & Preview Gambar --}}
+                {{-- Preview Gambar --}}
                 <div x-data="{
                     imagePreview: null,
                     handleFileChange(event) {
@@ -107,7 +107,7 @@
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Gambar
                         Komoditas</label>
 
-                    {{-- Pratinjau Gambar Saat Ini / Gambar Baru --}}
+                    {{-- Gambar --}}
                     <div class="mb-3 flex items-center gap-4 bg-gray-50 p-3 border border-gray-100 rounded-xl">
                         <template x-if="imagePreview">
                             <img :src="imagePreview"

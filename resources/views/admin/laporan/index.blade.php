@@ -3,16 +3,16 @@
 @section('title', 'Laporan')
 
 @section('content')
-    <!-- Top Bar Header -->
+
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Laporan Penjualan Selesai</h1>
         <p class="text-sm text-gray-500 mt-0.5">Pantau ringkasan omset pendapatan dari seluruh pesanan yang telah berhasil
             diselesaikan.</p>
     </div>
 
-    <!-- Grid Komponen Kontrol & Ringkasan -->
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6 items-start">
-        <!-- Form Filter Tanggal -->
+
         <div class="lg:col-span-2 bg-white p-4 border border-gray-100 rounded-xl shadow-xs">
             <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-1">
                 <i class="fa-regular fa-calendar-days text-emerald-600"></i> Rentang Periode Laporan
@@ -41,7 +41,7 @@
                         class="flex-1 sm:flex-none text-center bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap">
                         Reset
                     </a>
-                    {{-- FIX: tombol download PDF, ikut membawa filter tanggal yang sedang aktif --}}
+
                     <a href="{{ route('admin.laporan.export-pdf', request()->query()) }}"
                         class="flex-1 sm:flex-none text-center bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 font-semibold px-4 py-2 rounded-xl text-xs transition-all cursor-pointer whitespace-nowrap border border-red-200/50 flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-file-pdf"></i> PDF
@@ -50,7 +50,6 @@
             </form>
         </div>
 
-        <!-- Banner Info Omset -->
         <div
             class="bg-gradient-to-br from-emerald-800 to-emerald-950 p-5 rounded-xl border border-emerald-900 text-white shadow-xs flex items-center justify-between">
             <div class="space-y-1">
@@ -68,7 +67,6 @@
         </div>
     </div>
 
-    <!-- Container Data Tabel -->
     <div class="bg-white rounded-xl border border-gray-100 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-600">
@@ -112,7 +110,6 @@
         </div>
     </div>
 
-    <!-- Pagination -->
     <div class="mt-4">
         {{ $orders->links() }}
     </div>

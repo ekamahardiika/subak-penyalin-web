@@ -1,9 +1,10 @@
 @extends('layouts.landing')
 
 @section('content')
-    {{-- ============================================================ --}}
-    {{-- SECTION: HOME / HERO --}}
-    {{-- ============================================================ --}}
+
+
+    {{-- HERO SECTION --}}
+
     <div id="home" class="relative min-h-screen flex items-center pt-20 overflow-hidden scroll-mt-20">
         <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('hero/hero1.jpg') }}');">
         </div>
@@ -38,9 +39,7 @@
         </div>
     </div>
 
-    {{-- ============================================================ --}}
-    {{-- SECTION: TENTANG --}}
-    {{-- ============================================================ --}}
+    {{-- TENTANG SECTION --}}
     <div id="tentang" class="bg-green-950 text-white py-24 scroll-mt-20 overflow-hidden">
         <div class="max-w-7xl mx-auto px-6">
 
@@ -107,9 +106,8 @@
     </div>
 
 
-    {{-- ============================================================ --}}
-    {{-- SECTION: PRODUK --}}
-    {{-- ============================================================ --}}
+    {{-- PRODUK SECTION --}}
+
     <div id="produk" class="bg-gray-50 py-24 scroll-mt-20">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center max-w-2xl mx-auto mb-16">
@@ -126,7 +124,7 @@
                     <div
                         class="bg-white rounded-none border border-gray-200 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
                         <div>
-                            {{-- Foto Produk dengan Badge Pojok Kiri Atas --}}
+
                             <div class="h-60 bg-green-950 relative overflow-hidden flex items-center justify-center">
 
                                 @if ($product->gambar && \Illuminate\Support\Facades\Storage::disk('public')->exists($product->gambar))
@@ -141,7 +139,6 @@
                                 @endif
                             </div>
 
-                            {{-- Informasi Produk --}}
                             <div class="p-6">
                                 <h3 class="font-bold text-2xl text-gray-800 tracking-tight mb-3">
                                     {{ $product->nama_produk }}
@@ -154,7 +151,6 @@
                             </div>
                         </div>
 
-                        {{-- Tombol Beli / Pesan --}}
                         <div class="px-6 pb-6 pt-2">
                             <a href="{{ route('login') }}"
                                 class="w-full inline-flex items-center justify-center bg-green-950 hover:bg-green-900 text-white font-bold py-3.5 px-6 rounded-full text-xs tracking-widest uppercase transition-all shadow-md">
@@ -172,15 +168,13 @@
         </div>
     </div>
 
-    {{-- ============================================================ --}}
-    {{-- SECTION: HUBUNGI KAMI --}}
-    {{-- ============================================================ --}}
+    {{-- KONTAK SECTION --}}
+
     <div id="kontak" class="bg-white py-20 scroll-mt-20">
         <div class="max-w-7xl mx-auto px-6">
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
 
-                {{-- Sisi Kiri: Kontak & Alamat Ringkas --}}
                 <div class="lg:col-span-5 space-y-8">
                     <div>
                         <span class="text-green-700 text-xs font-bold tracking-widest uppercase block mb-2">Kontak
@@ -193,7 +187,7 @@
                     </div>
 
                     <div class="space-y-6 pt-2 border-t border-gray-100">
-                        {{-- Alamat --}}
+
                         <div class="flex items-start gap-4">
                             <i class="fa-solid fa-location-dot text-green-600 text-lg mt-1 w-5"></i>
                             <div>
@@ -204,7 +198,6 @@
                             </div>
                         </div>
 
-                        {{-- WhatsApp --}}
                         <div class="flex items-start gap-4">
                             <i class="fa-solid fa-phone text-green-600 text-lg mt-1 w-5"></i>
                             <div>
@@ -216,7 +209,6 @@
                             </div>
                         </div>
 
-                        {{-- Email --}}
                         <div class="flex items-start gap-4">
                             <i class="fa-solid fa-envelope text-green-600 text-lg mt-1 w-5"></i>
                             <div>
@@ -230,7 +222,6 @@
                     </div>
                 </div>
 
-                {{-- Sisi Kanan: Map Minimalis --}}
                 <div class="lg:col-span-7">
                     <div class="w-full h-[380px] rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
                         <iframe class="w-full h-full border-0"
@@ -239,9 +230,7 @@
                         </iframe>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 @endsection

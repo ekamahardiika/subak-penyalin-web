@@ -97,7 +97,6 @@
                         this.cart = {};
                     }
 
-                    // Jika stok kosong, set qty ke 0
                     if (this.stokTersedia <= 0) {
                         this.qty = 0;
                     }
@@ -106,13 +105,10 @@
                 addToCart() {
                     if (this.stokTersedia <= 0) return;
 
-                    // Mengambil jumlah yang saat ini sudah ada di keranjang (jika ada)
                     const currentCartQty = this.cart[this.productId] || 0;
 
-                    // Total akumulasi setelah ditambah qty baru
                     let totalNewQty = currentCartQty + this.qty;
 
-                    // Batasi total agar tidak melebihi stok yang tersedia
                     if (totalNewQty > this.stokTersedia) {
                         totalNewQty = this.stokTersedia;
                     }

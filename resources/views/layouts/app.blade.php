@@ -94,7 +94,7 @@
         }
     </style>
 
-    <!-- MODAL KONFIRMASI -->
+    <!-- MODAL  -->
     <div x-data="{
         show: false,
         title: 'Apakah Anda yakin?',
@@ -157,7 +157,7 @@
 
     <div class="min-h-screen flex">
 
-        <!-- ASIDE SIDEBAR -->
+        <!-- SIDEBAR -->
         <aside
             :class="[
                 mobileOpen ? 'translate-x-0' : '-translate-x-full',
@@ -165,12 +165,11 @@
             ]"
             class="fixed inset-y-0 left-0 z-50 w-64 bg-emerald-950 text-emerald-100 flex flex-col transition-all duration-200 md:translate-x-0 md:static md:h-screen shrink-0 border-r border-emerald-900 shadow-xl">
 
-            <!-- Header Sidebar (Logo & Brand) -->
             <div class="h-16 flex items-center border-b border-emerald-900/60 bg-emerald-950 overflow-hidden"
                 :class="desktopExpanded ? 'justify-between px-4' : 'justify-center px-0'">
 
                 <div class="flex items-center gap-2.5">
-                    <!-- LOGO DARI PUBLIC/LOGO -->
+
                     <img src="{{ asset('logo/Logo1.png') }}" alt="Subak Penyalin Logo"
                         class="w-9 h-9 object-contain shrink-0">
 
@@ -184,7 +183,6 @@
                 </button>
             </div>
 
-            <!-- Navigasi Menu Utama -->
             <nav class="flex-1 py-6 space-y-2 overflow-y-auto no-scrollbar" :class="desktopExpanded ? 'px-3' : 'px-2'">
 
                 @if (Auth::user()->isAdmin())
@@ -324,14 +322,11 @@
             </div>
         </aside>
 
-        <!-- Overlay Mobile -->
         <div x-show="mobileOpen" @click="mobileOpen = false"
             class="fixed inset-0 z-40 bg-black/40 md:hidden transition-opacity" x-transition></div>
 
-        <!-- MAIN LAYOUT WRAPPER -->
         <div class="flex-1 flex flex-col min-w-0 max-h-screen overflow-y-auto">
 
-            <!-- NAVBAR / HEADER -->
             <header
                 class="bg-white h-16 border-b border-gray-100 flex items-center justify-between px-6 sticky top-0 z-30 shadow-xs">
 

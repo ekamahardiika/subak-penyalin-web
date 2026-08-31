@@ -106,7 +106,6 @@
                     <div class="flex justify-between items-center py-3">
                         <div class="flex items-center gap-3">
 
-                            {{-- FOTO PRODUK / FALLBACK ICON --}}
                             <div
                                 class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100 flex items-center justify-center">
                                 @if (!empty($stok->product->gambar) && file_exists(public_path('storage/' . $stok->product->gambar)))

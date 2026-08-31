@@ -145,7 +145,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // 1. Setup Grafik Batang / Bar Chart untuk Pendapatan Bulanan
         const ctxSales = document.getElementById('salesChart').getContext('2d');
         new Chart(ctxSales, {
             type: 'bar',
@@ -154,7 +153,7 @@
                 datasets: [{
                     label: 'Omset Bersih (Rp)',
                     data: @json($chartSalesData),
-                    backgroundColor: 'rgba(16, 185, 129, 0.85)', // emerald-500 dengan opacity
+                    backgroundColor: 'rgba(16, 185, 129, 0.85)', 
                     borderColor: 'rgb(16, 185, 129)',
                     borderWidth: 1,
                     borderRadius: 6
@@ -196,7 +195,6 @@
             }
         });
 
-        // 2. Setup Grafik Donut/Pie untuk Distribusi Pasokan Produk
         const ctxStock = document.getElementById('stockPieChart');
         if (ctxStock) {
             new Chart(ctxStock, {

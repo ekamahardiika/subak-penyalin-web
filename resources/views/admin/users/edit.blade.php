@@ -3,7 +3,7 @@
 @section('title', 'Edit Konsumen')
 
 @section('content')
-    <!-- Tombol Kembali -->
+
     <div class="mb-4">
         <a href="{{ route('admin.users.index') }}"
             class="inline-flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-emerald-600 transition-colors">
@@ -82,7 +82,6 @@
 
                 <!-- Tombol Submit -->
                 <div class="pt-2">
-                    <!-- Diubah warnanya menjadi emerald agar konsisten dengan tema platform -->
                     <button type="submit"
                         class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer">
                         Perbarui Data Konsumen <i class="fa-solid fa-user-check text-xs"></i>

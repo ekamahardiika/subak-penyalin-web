@@ -11,7 +11,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
 
-        <!-- DAFTAR STOK (KIRI) -->
+        <!-- DAFTAR STOK -->
         <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs md:col-span-2 md:order-1">
             <div class="mb-4">
                 <h2 class="font-bold text-gray-900 text-base">Daftar Stok Gabah di Gudang</h2>
@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <!-- SETOR PASOKAN (KANAN) -->
+        <!-- SETOR PASOKAN  -->
         <div class="bg-white p-6 border border-gray-100 rounded-xl shadow-xs md:order-2">
             <div class="mb-4">
                 <h2 class="font-bold text-gray-900 text-base">Setor Pasokan</h2>

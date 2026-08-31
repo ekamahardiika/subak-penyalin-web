@@ -18,7 +18,6 @@
                     gabah mandiri.</p>
             </div>
 
-            {{-- Alert Error Validasi --}}
             @if ($errors->any())
                 <div class="mb-5 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-xl">
                     <p class="text-xs font-bold uppercase tracking-wider mb-1">Gagal Menyimpan Data:</p>

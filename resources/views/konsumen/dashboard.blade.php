@@ -133,7 +133,6 @@
                         <div
                             class="flex items-center gap-3 p-2 rounded-lg border border-gray-50 hover:border-emerald-100 hover:bg-emerald-50/20 transition-all">
 
-                            {{-- TAMPILAN GAMBAR PRODUK --}}
                             <div
                                 class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100 flex items-center justify-center">
                                 @if (!empty($product->gambar) && file_exists(public_path('storage/' . $product->gambar)))

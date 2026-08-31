@@ -30,7 +30,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 p-6">
-                {{-- Pratinjau Gambar Produk --}}
+                {{--  Gambar Produk --}}
                 <div
                     class="md:col-span-4 flex flex-col items-center justify-center bg-gray-50 border border-gray-100 rounded-xl p-3 min-h-[220px]">
                     @if ($product->gambar && \Illuminate\Support\Facades\Storage::disk('public')->exists($product->gambar))

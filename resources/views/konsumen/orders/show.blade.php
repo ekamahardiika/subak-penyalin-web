@@ -37,7 +37,6 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
 
-        <!-- DAFTAR PRODUK YANG DIPESAN -->
         <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
             <div class="px-5 py-4 border-b border-gray-100">
                 <h3 class="font-bold text-sm text-gray-800">Produk Dipesan</h3>
@@ -89,7 +88,6 @@
             </div>
         </div>
 
-        <!-- INFORMASI PESANAN -->
         <div class="bg-white rounded-2xl border border-gray-100 shadow-xs overflow-hidden">
             <div class="bg-emerald-950 text-white px-5 py-4">
                 <h3 class="font-bold text-sm tracking-wide uppercase">Informasi Pesanan</h3>
