@@ -15,18 +15,16 @@ class OrderSeeder extends Seeder
 {
     public function run(): void
     {
-        // Ambil konsumen dan produk pertama sebagai sampel dasar
+
         $konsumen = User::where('role', 'konsumen')->first();
         $product = Product::first();
 
-        // Pastikan data konsumen dan produk ada sebelum melakukan seeding
         if (! $konsumen || ! $product) {
             $this->command->warn('Data konsumen atau produk tidak ditemukan. Pastikan UserSeeder dan ProductSeeder sudah dijalankan.');
 
             return;
         }
 
-        // Variasi data untuk 5 order berbeda
         $orderData = [
             ['qty' => 10, 'status' => 'diproses', 'catatan' => 'Pesanan mendesak, mohon segera diproses.'],
             ['qty' => 25, 'status' => 'diproses', 'catatan' => 'Packing kayu ya min.'],
@@ -39,7 +37,6 @@ class OrderSeeder extends Seeder
             $qty = $data['qty'];
             $subtotal = $qty * $product->harga_jual;
 
-            // 1. Buat Order
             $order = Order::create([
                 'no_order' => 'ORD-'.strtoupper(Str::random(8)),
                 'user_id' => $konsumen->id,
@@ -47,11 +44,10 @@ class OrderSeeder extends Seeder
                 'whatsapp_pemesan' => $konsumen->phone ?? '08120000'.str_pad($index, 4, '0', STR_PAD_LEFT),
                 'total_harga' => $subtotal,
                 'status' => $data['status'],
-                'tanggal_pesan' => now()->subDays(5 - $index), // Membuat tanggal bertahap mundur
+                'tanggal_pesan' => now()->subDays(5 - $index), 
                 'catatan' => $data['catatan'],
             ]);
 
-            // 2. Buat Order Item
             $orderItem = OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $product->id,
@@ -60,7 +56,6 @@ class OrderSeeder extends Seeder
                 'subtotal' => $subtotal,
             ]);
 
-            // 3. Alokasi Stok Petani
             $petaniStock = PetaniStock::where('product_id', $product->id)->first();
 
             if ($petaniStock) {

@@ -21,7 +21,6 @@ class HargaBroadcastController extends Controller
         return view('admin.harga.create');
     }
 
-    // app/Http/Controllers/Admin/HargaBroadcastController.php
 
     public function store(Request $request)
     {

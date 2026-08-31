@@ -22,7 +22,7 @@ class StockController extends Controller
     {
         $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
-            // FIX: integer, tidak boleh ada pecahan kg
+
             'stok_kg' => 'required|integer|min:1',
         ]);
 
@@ -37,10 +37,6 @@ class StockController extends Controller
         return back()->with('success', 'Stok berhasil ditambahkan');
     }
 
-    /**
-     * Halaman detail stok + form koreksi kuantitas.
-     * Diakses saat petani klik baris produk atau tombol "Koreksi" di index.
-     */
     public function edit(PetaniStock $stock)
     {
         if ($stock->user_id !== Auth::id()) {
@@ -59,7 +55,7 @@ class StockController extends Controller
         }
 
         $validated = $request->validate([
-            // FIX: integer, tidak boleh ada pecahan kg
+
             'stok_kg' => 'required|integer|min:0',
         ]);
 

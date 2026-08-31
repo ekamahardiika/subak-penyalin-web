@@ -14,8 +14,6 @@ class Order extends Model
         'tanggal_pesan' => 'datetime',
     ];
 
-    // FIX: hanya 3 status. 'diproses' adalah satu-satunya status yang masih bisa berubah,
-    // 'selesai' dan 'dibatalkan' final (tidak ada tujuan transisi lagi).
     public const ALLOWED_TRANSITIONS = [
         'diproses' => ['selesai', 'dibatalkan'],
         'selesai' => [],

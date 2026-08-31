@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-// app/Models/HargaBroadcast.php
-
 class HargaBroadcast extends Model
 {
     protected $table = 'harga_broadcasts';
@@ -19,7 +17,6 @@ class HargaBroadcast extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    // Label yang enak dibaca di view
     public function getSumberLabelAttribute(): string
     {
         return match ($this->sumber) {

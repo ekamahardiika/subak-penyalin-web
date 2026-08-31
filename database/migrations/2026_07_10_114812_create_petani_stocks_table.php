@@ -14,7 +14,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
-            // FIX: stok kg dibulatkan, tidak ada pecahan
             $table->unsignedInteger('stok_kg')->default(0);
             $table->timestamps();
 

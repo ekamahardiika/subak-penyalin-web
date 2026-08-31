@@ -10,10 +10,8 @@ class LandingController extends Controller
 {
     public function home()
     {
-        // Section Produk: preview saja, tidak ada katalog penuh/pagination
         $products = Product::where('status', 'aktif')->take(6)->get();
 
-        // Section Harga
         $riwayat = HargaBroadcast::orderByDesc('tanggal')->get();
         $hargaTerbaru = $riwayat->first();
 

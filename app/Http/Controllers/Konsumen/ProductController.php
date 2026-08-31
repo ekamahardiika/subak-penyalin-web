@@ -8,9 +8,7 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
-    /**
-     * Grid daftar produk + panel keranjang (mirip contoh gambar Form Order).
-     */
+
     public function index()
     {
         $products = Product::where('status', 'aktif')
@@ -26,9 +24,6 @@ class ProductController extends Controller
         return view('konsumen.products.index', compact('products'));
     }
 
-    /**
-     * Halaman detail produk yang muncul saat produk di-klik dari index.
-     */
     public function show(Product $product)
     {
         abort_if($product->status !== 'aktif', 404);

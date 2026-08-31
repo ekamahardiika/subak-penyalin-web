@@ -71,13 +71,11 @@ class OrderController extends Controller
         $remainders = [];
         $totalTerbagi = 0;
 
-        // Step 1: Hitung porsi floor (bulat ke bawah)
         foreach ($petaniStocks as $stock) {
             $porsi = $stock->stok_kg / $totalStok;
             $exact = $qty * $porsi;
             $floor = (int) floor($exact);
 
-            // Batasi agar tidak pernah melebih sisa stok petani tersebut
             $floor = min($floor, $stock->stok_kg);
 
             $floors[$stock->id] = $floor;
@@ -85,7 +83,6 @@ class OrderController extends Controller
             $totalTerbagi += $floor;
         }
 
-        // Step 2: Sisa kg utuh dibagikan ke petani dengan sisa desimal terbesar
         $sisaKg = $qty - $totalTerbagi;
 
         $urutanSisa = $petaniStocks->sortByDesc(fn ($stock) => $remainders[$stock->id]);
@@ -95,14 +92,12 @@ class OrderController extends Controller
                 break;
             }
 
-            // Tambahkan +1 kg utuh selama stok petani masih mencukupi
             if ($floors[$stock->id] < $stock->stok_kg) {
                 $floors[$stock->id]++;
                 $sisaKg--;
             }
         }
 
-        // Step 3: Potong stok & simpan alokasi
         foreach ($petaniStocks as $stock) {
             $ambil = $floors[$stock->id];
 

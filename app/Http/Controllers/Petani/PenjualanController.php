@@ -36,7 +36,6 @@ class PenjualanController extends Controller
         $totalKg = (clone $baseQuery)->sum('stock_allocations.jumlah_kg');
         $totalPendapatan = (clone $baseQuery)->sum(DB::raw('stock_allocations.jumlah_kg * order_items.harga_satuan'));
 
-        // Tidak dipaginate — PDF berisi seluruh data sesuai filter yang aktif
         $penjualan = $baseQuery
             ->with(['orderItem.order', 'petaniStock.product'])
             ->orderByDesc('orders.tanggal_pesan')
@@ -51,9 +50,6 @@ class PenjualanController extends Controller
         return $pdf->download('laporan-penjualan-saya-'.now()->format('Y-m-d').'.pdf');
     }
 
-    /**
-     * Query dasar penjualan petani (dipakai bareng oleh index() dan exportPdf()).
-     */
     private function filteredQuery(Request $request): array
     {
         $userId = Auth::id();

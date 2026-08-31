@@ -31,7 +31,6 @@ class OrderController extends Controller
             ->get()
             ->map(function ($p) {
                 $p->gambar_url = $p->gambar ? asset('storage/'.$p->gambar) : null;
-                // FIX: pastikan selalu integer (0 kalau belum ada petani yang setor stok sama sekali)
                 $p->stok_tersedia = (int) ($p->stok_tersedia ?? 0);
 
                 return $p;
@@ -58,8 +57,6 @@ class OrderController extends Controller
             return back()->with('error', 'Keranjang belanja masih kosong');
         }
 
-        // Cek stok saat ini hanya sebagai validasi awal (bukan reservasi).
-        // Stok baru benar-benar dikurangi saat admin menandai pesanan "Selesai".
         foreach ($items as $productId => $qty) {
             $qty = (float) $qty;
 
@@ -112,8 +109,6 @@ class OrderController extends Controller
                     'harga_satuan' => $product->harga_jual,
                     'subtotal' => $subtotal,
                 ]);
-                // Tidak ada StockAllocation/decrement di sini lagi.
-                // Itu baru terjadi di Admin\OrderController@complete().
             }
 
             $order->update(['total_harga' => $totalHarga]);

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('nama_pemesan')->nullable();
             $table->string('whatsapp_pemesan')->nullable();
             $table->decimal('total_harga', 12, 2)->default(0);
-            // FIX: hanya 3 status, default 'diproses'
             $table->enum('status', ['diproses', 'selesai', 'dibatalkan'])->default('diproses');
             $table->timestamp('tanggal_pesan')->useCurrent();
             $table->text('catatan')->nullable();

@@ -26,7 +26,6 @@ class LaporanController extends Controller
 
         $totalPenjualan = (clone $query)->sum('total_harga');
 
-        // Tidak dipaginate — PDF berisi seluruh data sesuai filter yang aktif
         $orders = $query->latest('tanggal_pesan')->get();
 
         $periode = [
@@ -40,10 +39,6 @@ class LaporanController extends Controller
         return $pdf->download('laporan-penjualan-'.now()->format('Y-m-d').'.pdf');
     }
 
-    /**
-     * Query dasar laporan penjualan (dipakai bareng oleh index() dan exportPdf()
-     * supaya filter yang tampil di layar selalu sama persis dengan isi PDF).
-     */
     private function filteredQuery(Request $request)
     {
         $query = Order::with('user', 'items.product')->where('status', 'selesai');

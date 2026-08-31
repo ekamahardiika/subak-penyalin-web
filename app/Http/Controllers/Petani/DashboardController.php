@@ -26,7 +26,6 @@ class DashboardController extends Controller
             ->where('user_id', $userId)
             ->get();
 
-        // FIX: kolom di model Product adalah 'nama_produk', bukan 'name'
         $chartLabels = $stokPerProduk->map(fn ($item) => $item->product->nama_produk ?? 'Produk Tidak Dikenal')->toArray();
 
         $chartData = $stokPerProduk->map(fn ($item) => $item->stok_kg)->toArray();
@@ -49,7 +48,6 @@ class DashboardController extends Controller
 
         $totalPendapatanBulanIni = (clone $penjualanBulanIniQuery)->sum(DB::raw('stock_allocations.jumlah_kg * order_items.harga_satuan'));
 
-        // BARU: Perbandingan harga acuan vs rata-rata harga jual riil di platform
         $rataHargaJual = Product::where('status', 'aktif')->avg('harga_jual');
 
         $selisihHarga = null;

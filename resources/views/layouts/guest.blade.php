@@ -9,30 +9,23 @@
     <title>@yield('title', 'Subak Penyalin') - Subak Penyalin</title>
     <link rel="icon" type="image/png" href="{{ asset('logo/Logo1.png') }}">
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="font-sans text-gray-900 antialiased">
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-emerald-800">
-        <!-- WRAPPER LOGO TANPA MARGIN / PADDING BOWA -->
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 px-4 sm:px-0 bg-emerald-800">
         <div class="p-0 m-0">
             <a href="/" class="block">
-                {{-- 
-                        - brightness-0 invert : memaksa gambar logo menjadi serba putih (white) jika berupa gambar berwarna/PNG transparan
-                        - style width & height : memastikan ukuran pasti teresekusi tanpa terpotong
-                    --}}
                 <img src="{{ asset('logo/Logo1.png') }}" alt="Subak Penyalin Logo" style="width: 150px; height: auto;"
                     class="block mx-auto">
             </a>
         </div>
 
-        <!-- CONTAINER CARD (mt-0 menghapus margin atas card / margin bawah logo) -->
-        <div class="w-full sm:max-w-md mt-0 px-6 py-4 bg-white border shadow-md overflow-hidden sm:rounded-lg">
+        <div
+            class="w-full sm:max-w-md mt-0 px-6 py-4 bg-white border shadow-md overflow-hidden rounded-lg sm:rounded-lg">
             {{ $slot }}
         </div>
     </div>

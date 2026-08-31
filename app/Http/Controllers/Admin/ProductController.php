@@ -67,7 +67,6 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('gambar')) {
-            // FIX: hapus file gambar lama sebelum menyimpan yang baru
             if ($product->gambar && Storage::disk('public')->exists($product->gambar)) {
                 Storage::disk('public')->delete($product->gambar);
             }

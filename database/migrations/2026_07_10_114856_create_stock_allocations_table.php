@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_item_id')->constrained('order_items')->cascadeOnDelete();
             $table->foreignId('petani_stock_id')->constrained('petani_stocks')->cascadeOnDelete();
-            // FIX: Diubah ke unsignedInteger agar jumlah alokasi selalu angka utuh
             $table->unsignedInteger('jumlah_kg');
             $table->timestamps();
         });

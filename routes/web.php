@@ -17,7 +17,7 @@ use App\Http\Controllers\Petani\StockController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// Landing
+// Landing Page
 Route::get('/', [LandingController::class, 'home'])->name('home');
 Route::redirect('/produk', '/#produk')->name('produk');
 Route::redirect('/tentang', '/#tentang')->name('tentang');
@@ -32,7 +32,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('petani', PetaniController::class)->except('show');
     Route::resource('products', AdminProductController::class);
 
-    // FIX: tambah 'edit', 'update'
     Route::resource('harga', HargaBroadcastController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
@@ -65,14 +64,13 @@ Route::middleware(['auth', 'role:konsumen'])->prefix('konsumen')->name('konsumen
     Route::get('produk/{product}', [KonsumenProductController::class, 'show'])->name('products.show');
 
     Route::get('pesanan', [KonsumenOrderController::class, 'index'])->name('orders.index');
-    // PENTING: route checkout ini harus didaftarkan SEBELUM 'pesanan/{order}',
-    // supaya "checkout" tidak tertangkap sebagai parameter {order} (route model binding).
+
     Route::get('pesanan/checkout', [KonsumenOrderController::class, 'create'])->name('orders.create');
     Route::post('pesanan', [KonsumenOrderController::class, 'store'])->name('orders.store');
     Route::get('pesanan/{order}', [KonsumenOrderController::class, 'show'])->name('orders.show');
 });
 
-// Profile Role
+// Profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
