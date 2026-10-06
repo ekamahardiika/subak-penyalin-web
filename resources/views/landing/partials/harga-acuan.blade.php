@@ -3,7 +3,7 @@
     <div class="flex flex-wrap justify-center gap-6">
 
         @foreach ($hargaApi['items'] as $item)
-            <div class="w-full sm:w-[280px] lg:w-[260px]">
+            <div class="rounded-3xl border border-gray-200 bg-gray-50 p-6 text-center">
 
                 <p class="text-sm text-gray-500 font-semibold">
                     {{ $item['nama'] }}

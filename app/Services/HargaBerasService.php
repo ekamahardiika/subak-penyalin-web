@@ -4,12 +4,10 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\RateLimiter;
 
 class HargaBerasService
 {
-    /**
-     * ID komoditas SIGAPURA => nama yang ditampilkan
-     */
     private const KOMODITAS = [
         1  => 'Beras Medium',
         3  => 'Beras Super',
@@ -17,114 +15,167 @@ class HargaBerasService
         75 => 'Beras Premium',
     ];
 
+    /**
+     * Cache data selama 3 jam.
+     */
+    private const CACHE_MINUTES = 480;
+
+    /**
+     * Maksimal request ke API SIGAPURA.
+     */
+    private const MAX_API_REQUESTS = 10;
+
+    /**
+     * Durasi rate limit dalam detik.
+     */
+    private const RATE_LIMIT_SECONDS = 60;
+
     public function get(?int $districtId = null): ?array
     {
         $cacheKey = 'harga_beras_sigapura_' . ($districtId ?? 'all');
+        $lastGoodKey = $cacheKey . '_last_good';
 
-        return Cache::remember(
-            $cacheKey,
-            now()->addHours(3),
-            function () use ($districtId, $cacheKey) {
+        /*
+        |--------------------------------------------------------------------------
+        | 1. Cek cache utama
+        |--------------------------------------------------------------------------
+        |
+        | Kalau data masih ada, langsung return.
+        | Tidak ada request ke SIGAPURA.
+        |
+        */
+        $cached = Cache::get($cacheKey);
 
-                try {
+        if ($cached !== null) {
+            return $cached;
+        }
 
-                    $res = Http::timeout(10)
-                        ->retry(2, 300)
-                        ->acceptJson()
-                        ->get(
-                            config('services.sigapura.url') . '/market-price-change-average',
-                            [
-                                'commodities' => implode(
-                                    ',',
-                                    array_keys(self::KOMODITAS)
-                                ),
+        /*
+        |--------------------------------------------------------------------------
+        | 2. Rate limit request ke SIGAPURA
+        |--------------------------------------------------------------------------
+        |
+        | Maksimal 10 request dalam 1 menit.
+        |
+        */
+        $rateLimitKey = 'sigapura-api-request';
 
-                                'mart_type' => 'tradisional',
+        if (
+            RateLimiter::tooManyAttempts(
+                $rateLimitKey,
+                self::MAX_API_REQUESTS
+            )
+        ) {
+            return Cache::get($lastGoodKey);
+        }
 
-                                'district_id' => $districtId ?? '',
-
-                                'start_date' => now()
-                                    ->subDays(6)
-                                    ->toDateString(),
-
-                                'end_date' => now()
-                                    ->toDateString(),
-                            ]
-                        );
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | API gagal
-                    |--------------------------------------------------------------------------
-                    */
-
-                    if ($res->failed()) {
-                        return Cache::get(
-                            $cacheKey . '_last_good'
-                        );
-                    }
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Normalisasi
-                    |--------------------------------------------------------------------------
-                    */
-
-                    $data = $this->normalize(
-                        $res->json()
-                    );
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Tidak ada data
-                    |--------------------------------------------------------------------------
-                    */
-
-                    if (empty($data['items'])) {
-                        return Cache::get(
-                            $cacheKey . '_last_good'
-                        );
-                    }
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Simpan data terakhir yang valid
-                    |--------------------------------------------------------------------------
-                    */
-
-                    Cache::forever(
-                        $cacheKey . '_last_good',
-                        $data
-                    );
-
-                    return $data;
-
-                } catch (\Throwable $e) {
-
-                    report($e);
-
-                    return Cache::get(
-                        $cacheKey . '_last_good'
-                    );
-                }
-            }
+        /*
+        |--------------------------------------------------------------------------
+        | 3. Tandai bahwa kita akan melakukan request API
+        |--------------------------------------------------------------------------
+        */
+        RateLimiter::hit(
+            $rateLimitKey,
+            self::RATE_LIMIT_SECONDS
         );
+
+        try {
+            /*
+            |--------------------------------------------------------------------------
+            | 4. Request ke SIGAPURA
+            |--------------------------------------------------------------------------
+            */
+            $res = Http::timeout(10)
+                ->retry(
+                    1,
+                    500,
+                    throw: false
+                )
+                ->acceptJson()
+                ->get(
+                    config('services.sigapura.url') . '/market-price-change-average',
+                    [
+                        'commodities' => implode(',', array_keys(self::KOMODITAS)),
+                        'mart_type' => 'tradisional',
+                        'district_id' => $districtId ?? '',
+                        'start_date' => now()
+                            ->subDays(6)
+                            ->toDateString(),
+                        'end_date' => now()
+                            ->toDateString(),
+                    ]
+                );
+
+            /*
+            |--------------------------------------------------------------------------
+            | 5. Kalau API gagal
+            |--------------------------------------------------------------------------
+            */
+            if ($res->failed()) {
+                return Cache::get($lastGoodKey);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | 6. Normalisasi response
+            |--------------------------------------------------------------------------
+            */
+            $data = $this->normalize($res->json());
+
+            /*
+            |--------------------------------------------------------------------------
+            | 7. Kalau tidak ada data valid
+            |--------------------------------------------------------------------------
+            */
+            if (empty($data['items'])) {
+                return Cache::get($lastGoodKey);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | 8. Simpan cache utama
+            |--------------------------------------------------------------------------
+            */
+            Cache::put(
+                $cacheKey,
+                $data,
+                now()->addMinutes(self::CACHE_MINUTES)
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | 9. Simpan backup data terakhir yang valid
+            |--------------------------------------------------------------------------
+            |
+            | Backup ini tidak memiliki expiration.
+            |
+            */
+            Cache::forever(
+                $lastGoodKey,
+                $data
+            );
+
+            return $data;
+
+        } catch (\Throwable $e) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | 10. Kalau terjadi exception
+            |--------------------------------------------------------------------------
+            */
+            report($e);
+
+            return Cache::get($lastGoodKey);
+        }
     }
 
-    /**
-     * Normalisasi response SIGAPURA.
-     */
     private function normalize(array $json): array
     {
         $items = [];
-
         $tanggal = null;
 
-        $rows = data_get(
-            $json,
-            'data',
-            []
-        );
+        $rows = data_get($json, 'data', []);
 
         if (!is_array($rows)) {
             return [
@@ -135,12 +186,6 @@ class HargaBerasService
 
         foreach ($rows as $row) {
 
-            /*
-            |--------------------------------------------------------------------------
-            | ID komoditas
-            |--------------------------------------------------------------------------
-            */
-
             $commodityId = data_get(
                 $row,
                 'commodity.id'
@@ -149,12 +194,6 @@ class HargaBerasService
             if (!isset(self::KOMODITAS[$commodityId])) {
                 continue;
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | Data harga
-            |--------------------------------------------------------------------------
-            */
 
             $prices = data_get(
                 $row,
@@ -168,10 +207,9 @@ class HargaBerasService
 
             /*
             |--------------------------------------------------------------------------
-            | Ambil semua harga yang valid
+            | Ambil data harga yang valid
             |--------------------------------------------------------------------------
             */
-
             $validPrices = collect($prices)
                 ->filter(function ($price) {
 
@@ -196,23 +234,19 @@ class HargaBerasService
             | Harga terbaru
             |--------------------------------------------------------------------------
             */
-
             $latest = $validPrices->first();
 
             $hargaSekarang = (float) $latest['avg_market_price'];
-
             $tanggalSekarang = $latest['input_date'];
 
             /*
             |--------------------------------------------------------------------------
             | Harga sebelumnya
             |--------------------------------------------------------------------------
-            |
-            | Kita ambil data harga sebelum harga terbaru.
-            |
             */
-
-            $previous = $validPrices->skip(1)->first();
+            $previous = $validPrices
+                ->skip(1)
+                ->first();
 
             $hargaSebelumnya = $previous
                 ? (float) $previous['avg_market_price']
@@ -223,16 +257,13 @@ class HargaBerasService
             | Hitung perubahan
             |--------------------------------------------------------------------------
             */
-
             $selisih = 0;
-
             $persen = 0;
 
             if (
                 $hargaSebelumnya !== null
                 && $hargaSebelumnya > 0
             ) {
-
                 $selisih = $hargaSekarang - $hargaSebelumnya;
 
                 $persen = (
@@ -242,11 +273,9 @@ class HargaBerasService
 
             /*
             |--------------------------------------------------------------------------
-            | Kalau API punya calculation,
-            | gunakan nilai API jika tersedia.
+            | Prioritaskan calculation dari API SIGAPURA
             |--------------------------------------------------------------------------
             */
-
             $apiSelisih = data_get(
                 $row,
                 'market_price_data.calculation.difference_amount'
@@ -256,12 +285,6 @@ class HargaBerasService
                 $row,
                 'market_price_data.calculation.difference_percentage'
             );
-
-            /*
-            |--------------------------------------------------------------------------
-            | API calculation valid
-            |--------------------------------------------------------------------------
-            */
 
             if (
                 $apiSelisih !== null
@@ -279,32 +302,23 @@ class HargaBerasService
 
             /*
             |--------------------------------------------------------------------------
-            | Tambahkan item
+            | Masukkan data
             |--------------------------------------------------------------------------
             */
-
             $items[] = [
-
                 'id' => $commodityId,
-
                 'nama' => self::KOMODITAS[$commodityId],
-
                 'harga' => $hargaSekarang,
-
                 'tanggal' => $tanggalSekarang,
-
                 'selisih' => $selisih,
-
                 'persen' => $persen,
-
             ];
 
             /*
             |--------------------------------------------------------------------------
-            | Tanggal terbaru
+            | Tentukan tanggal terbaru
             |--------------------------------------------------------------------------
             */
-
             if (
                 $tanggal === null
                 || $tanggalSekarang > $tanggal
@@ -318,7 +332,6 @@ class HargaBerasService
         | Urutkan berdasarkan ID komoditas
         |--------------------------------------------------------------------------
         */
-
         usort(
             $items,
             fn ($a, $b) => $a['id'] <=> $b['id']
