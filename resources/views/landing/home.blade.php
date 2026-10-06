@@ -1,8 +1,6 @@
 @extends('layouts.landing')
 
 @section('content')
-
-
     {{-- HERO SECTION --}}
 
     <div id="home" class="relative min-h-screen flex items-center pt-20 overflow-hidden scroll-mt-20">
@@ -168,6 +166,264 @@
         </div>
     </div>
 
+    {{-- HARGA ACUAN SECTION --}}
+    <div id="harga" class="bg-white py-20 scroll-mt-20">
+
+        <div class="max-w-6xl mx-auto px-6">
+
+            <div class="text-center mb-10">
+
+                <span class="text-green-700 text-xs font-bold tracking-widest uppercase block mb-2">
+                    Harga Acuan
+                </span>
+
+                <h2 class="text-3xl md:text-4xl font-black text-gray-950 uppercase tracking-tight">
+                    Harga Beras Provinsi Bali
+                </h2>
+
+                <p class="text-sm text-gray-600 mt-3">
+                    Rata-rata harga di pasar tradisional se-Bali
+                </p>
+
+            </div>
+
+
+            {{-- FILTER KABUPATEN --}}
+            <div class="max-w-md mx-auto mb-10">
+
+                <label for="district_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Pilih Kabupaten/Kota
+                </label>
+
+                <select name="district_id" id="district_id"
+                    class="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm
+                       focus:border-green-600 focus:ring-green-600">
+
+                    <option value="">
+                        Seluruh Bali
+                    </option>
+
+                    @foreach ($districts as $district)
+                        <option value="{{ $district['id'] }}" @selected($selectedDistrict == $district['id'])>
+
+                            {{ $district['name'] }}
+
+                        </option>
+                    @endforeach
+
+                </select>
+
+            </div>
+
+
+            {{-- CONTAINER HARGA --}}
+            <div id="harga-acuan-container" class="relative transition-opacity duration-200">
+
+                {{-- LOADING OVERLAY --}}
+                <div id="harga-loading"
+                    class="hidden absolute inset-0 z-10 bg-white/70 backdrop-blur-[1px]
+                       flex items-center justify-center rounded-3xl">
+
+                    <div class="flex flex-col items-center gap-3">
+
+                        <div
+                            class="w-8 h-8 border-4 border-green-200 border-t-green-700
+                               rounded-full animate-spin">
+                        </div>
+
+                        <p class="text-xs text-gray-500 font-medium">
+                            Memuat harga...
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {{-- DATA HARGA --}}
+                @include('landing.partials.harga-acuan')
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {{-- SCRIPT FILTER HARGA --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const districtSelect = document.getElementById('district_id');
+            const hargaContainer = document.getElementById('harga-acuan-container');
+            const loading = document.getElementById('harga-loading');
+
+            if (!districtSelect || !hargaContainer || !loading) {
+                return;
+            }
+
+            districtSelect.addEventListener('change', async function() {
+
+                const districtId = this.value;
+
+                /*
+                |--------------------------------------------------------------------------
+                | Tampilkan loading
+                |--------------------------------------------------------------------------
+                */
+
+                loading.classList.remove('hidden');
+
+                hargaContainer.classList.add('opacity-60');
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Buat URL
+                |--------------------------------------------------------------------------
+                */
+
+                const url = new URL(
+                    '{{ route('home') }}',
+                    window.location.origin
+                );
+
+                if (districtId) {
+                    url.searchParams.set('district_id', districtId);
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Update URL browser tanpa reload
+                |--------------------------------------------------------------------------
+                */
+
+                window.history.pushState({},
+                    '',
+                    url
+                );
+
+
+                try {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Request AJAX
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const response = await fetch(url, {
+
+                        method: 'GET',
+
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'text/html'
+                        }
+
+                    });
+
+
+                    if (!response.ok) {
+                        throw new Error(
+                            'Gagal mengambil data harga.'
+                        );
+                    }
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Ambil HTML hasil response
+                    |--------------------------------------------------------------------------
+                    */
+
+                    const html = await response.text();
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Ganti hanya bagian harga
+                    |--------------------------------------------------------------------------
+                    */
+
+                    hargaContainer.innerHTML = `
+                    <div
+                        id="harga-loading"
+                        class="hidden absolute inset-0 z-10 bg-white/70 backdrop-blur-[1px]
+                               flex items-center justify-center rounded-3xl">
+
+                        <div class="flex flex-col items-center gap-3">
+
+                            <div
+                                class="w-8 h-8 border-4 border-green-200 border-t-green-700
+                                       rounded-full animate-spin">
+                            </div>
+
+                            <p class="text-xs text-gray-500 font-medium">
+                                Memuat harga...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    ${html}
+                `;
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    hargaContainer.innerHTML = `
+                    <div class="rounded-3xl border border-red-200
+                                bg-red-50 p-8 text-center">
+
+                        <div
+                            class="w-12 h-12 mx-auto mb-4 rounded-full
+                                   bg-red-100 flex items-center justify-center">
+
+                            <i class="fa-solid fa-triangle-exclamation
+                                      text-red-500">
+                            </i>
+
+                        </div>
+
+                        <p class="font-semibold text-red-700">
+                            Gagal mengambil data harga
+                        </p>
+
+                        <p class="text-sm text-red-500 mt-1">
+                            Silakan coba lagi.
+                        </p>
+
+                        <button
+                            type="button"
+                            onclick="window.location.reload()"
+                            class="mt-4 px-5 py-2.5 bg-red-600
+                                   hover:bg-red-700 text-white
+                                   rounded-xl text-sm font-semibold">
+
+                            Muat Ulang
+
+                        </button>
+
+                    </div>
+                `;
+
+                } finally {
+
+                    loading.classList.add('hidden');
+
+                    hargaContainer.classList.remove('opacity-60');
+
+                }
+
+            });
+
+        });
+    </script>
+
     {{-- KONTAK SECTION --}}
 
     <div id="kontak" class="bg-white py-20 scroll-mt-20">
@@ -201,7 +457,8 @@
                         <div class="flex items-start gap-4">
                             <i class="fa-solid fa-phone text-green-600 text-lg mt-1 w-5"></i>
                             <div>
-                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">WhatsApp / Telepon</h4>
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">WhatsApp / Telepon
+                                </h4>
                                 <a href="https://wa.me/628123456789" target="_blank"
                                     class="text-sm font-semibold text-gray-800 hover:text-green-600 transition-colors mt-0.5 block">
                                     08123456789

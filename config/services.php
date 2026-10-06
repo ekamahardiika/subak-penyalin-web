@@ -13,6 +13,9 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'sigapura' => [
+        'url' => env('SIGAPURA_API_URL'),
+    ],
 
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),

@@ -21,7 +21,7 @@
     activeSection: 'home',
     isTop: true,
     init() {
-        const sections = ['home', 'tentang', 'produk', 'kontak'];
+        const sections = ['home', 'tentang', 'produk', 'harga', 'kontak'];
         window.addEventListener('scroll', () => {
             // Cek apakah posisi scroll masih di paling atas (Hero)
             this.isTop = window.scrollY < 50;
@@ -65,6 +65,13 @@
                     :class="activeSection === 'produk' ? 'bg-green-400 text-green-950 font-bold' :
                         'hover:text-white text-gray-300'"
                     class="px-4 py-2 rounded-full transition-all duration-300">Gabah</a>
+
+                <a href="#harga" @click="activeSection = 'harga'"
+                    :class="activeSection === 'harga' ? 'bg-green-400 text-green-950 font-bold' :
+                        'hover:text-white text-gray-300'"
+                    class="px-4 py-2 rounded-full transition-all duration-300">
+                    Harga Acuan
+                </a>
 
                 <a href="#kontak" @click="activeSection = 'kontak'"
                     :class="activeSection === 'kontak' ? 'bg-green-400 text-green-950 font-bold' :
