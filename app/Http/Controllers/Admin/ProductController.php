@@ -28,7 +28,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'nama_produk' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'gambar' => 'nullable|image|max:2048',
+            'gambar' => 'nullable|image|max:5048',
             'harga_jual' => 'required|numeric|min:0',
             'satuan' => 'required|string|max:20',
             'status' => 'required|in:aktif,nonaktif',

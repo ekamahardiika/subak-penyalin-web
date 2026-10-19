@@ -4,7 +4,7 @@
     {{-- HERO SECTION --}}
 
     <div id="home" class="relative min-h-screen flex items-center pt-20 overflow-hidden scroll-mt-20">
-        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('hero/hero1.jpg') }}');">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('hero/hero11.jpeg') }}');">
         </div>
         <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/90 via-emerald-950/70 to-emerald-950/40"></div>
 
@@ -62,11 +62,11 @@
 
                 <div class="lg:col-span-7 grid grid-cols-2 gap-4 md:gap-6">
                     <div class="rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl border border-white/10">
-                        <img src="{{ asset('hero/subak2.jpg') }}" alt="Petani Subak Penyalin 1"
+                        <img src="{{ asset('hero/Fotosubak4.jpeg') }}" alt="Petani Subak Penyalin 1"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </div>
                     <div class="rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl border border-white/10">
-                        <img src="{{ asset('hero/subak3.jpg') }}" alt="Petani Subak Penyalin 2"
+                        <img src="{{ asset('hero/Fotosubak2.jpeg') }}" alt="Petani Subak Penyalin 2"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </div>
                 </div>
@@ -178,7 +178,7 @@
                 </span>
 
                 <h2 class="text-3xl md:text-4xl font-black text-gray-950 uppercase tracking-tight">
-                    Harga Beras Provinsi Bali
+                    Harga Gabah Provinsi Bali
                 </h2>
 
                 <p class="text-sm text-gray-600 mt-3">

@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\RateLimiter;
 class HargaBerasService
 {
     private const KOMODITAS = [
-        1  => 'Beras Medium',
-        3  => 'Beras Super',
-        74 => 'Beras SPHP',
-        75 => 'Beras Premium',
+        1  => 'Gabah Medium',
+        3  => 'Gabah Super',
+        74 => 'Gabah SPHP',
+        75 => 'Gabah Premium',
     ];
 
     /**
-     * Cache data selama 3 jam.
+     * Cache data selama 8 jam.
      */
     private const CACHE_MINUTES = 480;
 
@@ -32,17 +32,13 @@ class HargaBerasService
 
     public function get(?int $districtId = null): ?array
     {
-        $cacheKey = 'harga_beras_sigapura_' . ($districtId ?? 'all');
+        $cacheKey = 'harga_gabah_sigapura_' . ($districtId ?? 'all');
         $lastGoodKey = $cacheKey . '_last_good';
 
         /*
         |--------------------------------------------------------------------------
         | 1. Cek cache utama
         |--------------------------------------------------------------------------
-        |
-        | Kalau data masih ada, langsung return.
-        | Tidak ada request ke SIGAPURA.
-        |
         */
         $cached = Cache::get($cacheKey);
 
@@ -54,9 +50,6 @@ class HargaBerasService
         |--------------------------------------------------------------------------
         | 2. Rate limit request ke SIGAPURA
         |--------------------------------------------------------------------------
-        |
-        | Maksimal 10 request dalam 1 menit.
-        |
         */
         $rateLimitKey = 'sigapura-api-request';
 
@@ -146,9 +139,6 @@ class HargaBerasService
             |--------------------------------------------------------------------------
             | 9. Simpan backup data terakhir yang valid
             |--------------------------------------------------------------------------
-            |
-            | Backup ini tidak memiliki expiration.
-            |
             */
             Cache::forever(
                 $lastGoodKey,
