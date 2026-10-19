@@ -38,66 +38,59 @@
     </div>
 
     {{-- TENTANG SECTION --}}
-    <div id="tentang" class="bg-green-950 text-white py-24 scroll-mt-20 overflow-hidden">
+    <div id="tentang" class="bg-green-950 text-white py-20 scroll-mt-20 overflow-hidden">
         <div class="max-w-7xl mx-auto px-6">
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
-                <div class="lg:col-span-7">
-                    <span class="text-green-400 text-xs font-bold tracking-widest uppercase block mb-3">Mengenal Subak
-                        Penyalin</span>
-                    <h2 class="text-3xl md:text-5xl font-black tracking-tight leading-tight uppercase">
-                        Menjaga Tradisi, <br> Menghasilkan Gabah Terbaik
-                    </h2>
-                </div>
-                <div class="lg:col-span-5 lg:pt-8">
-                    <p class="text-green-100/80 text-sm md:text-base leading-relaxed">
-                        Subak Penyalin adalah komunitas petani di Kerambitan, Tabanan, yang mengelola irigasi dan lahan
-                        persawahan secara gotong royong berlandaskan filosofi Tri Hita Karana. Kami berkomitmen menghasilkan
-                        gabah unggulan yang melimpah dan berkualitas.
-                    </p>
-                </div>
+            <div class="mb-10">
+                <span class="text-green-400 text-xs font-bold tracking-widest uppercase block mb-2">
+                    Mengenal Kami
+                </span>
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight leading-tight uppercase text-white">
+                    Tentang Subak Penyalin Tabanan
+                </h2>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {{-- items-stretch membuat kolom kiri dan kanan memiliki tinggi yang sama --}}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
 
-                <div class="lg:col-span-7 grid grid-cols-2 gap-4 md:gap-6">
-                    <div class="rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl border border-white/10">
+                {{-- Gambar tanpa round border (rounded-none) --}}
+                <div class="lg:col-span-6 grid grid-cols-2 gap-4 md:gap-6">
+                    <div class="rounded-none overflow-hidden aspect-[3/4] shadow-2xl border border-white/10">
                         <img src="{{ asset('hero/Fotosubak4.jpeg') }}" alt="Petani Subak Penyalin 1"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </div>
-                    <div class="rounded-3xl overflow-hidden aspect-[3/4] shadow-2xl border border-white/10">
+                    <div class="rounded-none overflow-hidden aspect-[3/4] shadow-2xl border border-white/10">
                         <img src="{{ asset('hero/Fotosubak2.jpeg') }}" alt="Petani Subak Penyalin 2"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </div>
                 </div>
 
-                <div class="lg:col-span-5 space-y-10 pl-0 lg:pl-6">
+                {{-- Penjelasan 3 Paragraf Terkembang --}}
+                <div
+                    class="lg:col-span-6 h-full flex flex-col justify-between text-white text-sm md:text-base leading-relaxed pl-0 lg:pl-6 py-1">
 
-                    <div class="border-b border-white/10 pb-6 last:border-0 last:pb-0">
-                        <p class="text-4xl md:text-4xl font-black text-white tracking-tight">Gabah Asli</p>
-                        <p class="text-xs md:text-sm text-green-100/60 mt-1 leading-relaxed">
-                            Dipanen langsung dari persawahan Subak Penyalin tanpa campuran, menjamin kesegaran dan mutu
-                            gabah.
-                        </p>
-                    </div>
+                    <p class="opacity-95 font-normal">
+                        Subak Penyalin adalah organisasi pertanian tradisional berbasis kemasyarakatan yang berlokasi di
+                        Samsam, Kerambitan, Tabanan. Komunitas ini mengelola persawahan secara gotong royong dengan
+                        mempertahankan kearifan lokal sistem irigasi Bali yang telah diwariskan dan teruji secara
+                        turun-temurun.
+                    </p>
 
-                    <div class="border-b border-white/10 pb-6 last:border-0 last:pb-0">
-                        <p class="text-4xl md:text-4xl font-black text-white tracking-tight">Petani Lokal</p>
-                        <p class="text-xs md:text-sm text-green-100/60 mt-1 leading-relaxed">
-                            Dikelola oleh puluhan krama subak yang berpengalaman dengan pola tanam teratur dan pengelolaan
-                            air yang terjaga.
-                        </p>
-                    </div>
+                    <p class="opacity-85 font-normal">
+                        Seluruh tata kelola pertanian dijalankan berlandaskan filosofi Tri Hita Karana untuk menjaga
+                        keharmonisan antara manusia, alam, dan Sang Pencipta. Melalui pola tanam teratur dan pembagian air
+                        yang adil antar krama subak, kami senantiasa merawat kesuburan tanah dan kelestarian ekosistem
+                        lingkungan persawahan.
+                    </p>
 
-                    <div class="border-b border-white/10 pb-6 last:border-0 last:pb-0">
-                        <p class="text-4xl md:text-4xl font-black text-white tracking-tight">Jujur & Adil</p>
-                        <p class="text-xs md:text-sm text-green-100/60 mt-1 leading-relaxed">
-                            Membeli gabah langsung dari Subak Penyalin membantu menyejahterakan kehidupan petani lokal
-                            secara langsung.
-                        </p>
-                    </div>
+                    <p class="opacity-75 font-normal">
+                        Dengan dedikasi penuh puluhan krama subak yang berpengalaman, Subak Penyalin berkomitmen untuk terus
+                        menghasilkan pasokan gabah unggulan bermutu tinggi, segar, dan murni tanpa campuran langsung dari
+                        hasil jerih payah para petani lokal Kerambitan demi mendukung ketahanan pangan.
+                    </p>
 
                 </div>
+
             </div>
 
         </div>
