@@ -9,7 +9,7 @@
             <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Belanja Gabah</p>
             <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Daftar Produk</h1>
             <p class="text-sm text-gray-500 mt-1">Pilih produk yang ingin Anda pesan, atur jumlahnya, lalu lanjutkan ke
-                checkout.</p>
+                pesanan.</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -121,7 +121,7 @@
                     <a href="{{ route('konsumen.orders.create') }}"
                         :class="cartItems.length === 0 ? 'pointer-events-none opacity-40' : ''"
                         class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 cursor-pointer">
-                        Checkout <i class="fa-solid fa-arrow-right text-xs"></i>
+                        Pesan Sekarang <i class="fa-solid fa-arrow-right text-xs"></i>
                     </a>
                 </div>
             </div>

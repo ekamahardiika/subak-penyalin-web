@@ -5,11 +5,13 @@
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Panel Kerja Petani</h1>
-        <p class="text-sm text-gray-500 mt-1">Pantau pasokan komoditas Anda serta pantau pergerakan harga acuan pasar hari
-            ini.</p>
+        <p class="text-sm text-gray-500 mt-1">Pantau pasokan komoditas gabah serta aktivitas penjualan Anda secara berkala.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {{-- KARTU STATISTIK (1 BARIS TERDIRI DARI 3 CARD) --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        {{-- Card 1: Total Stok --}}
         <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-xs flex items-center justify-between">
             <div class="space-y-1">
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Akumulasi Total Stok Anda</h3>
@@ -18,49 +20,12 @@
                         class="text-sm font-semibold text-gray-500">KG</span>
                 </p>
             </div>
-            <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-xl border border-emerald-100">
+            <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-xl border border-emerald-100 shrink-0">
                 <i class="fa-solid fa-boxes-stacked text-xl"></i>
             </div>
         </div>
 
-        <div
-            class="bg-gradient-to-br from-amber-50 to-amber-100/40 p-6 rounded-xl border border-amber-200/70 shadow-xs flex items-center justify-between">
-            <div class="space-y-1">
-                <h3 class="text-xs font-bold text-amber-800 uppercase tracking-wider">Harga Acuan Pasar Hari Ini</h3>
-                @if ($hargaTerbaru)
-                    <p class="text-2xl font-extrabold text-amber-950 tracking-tight">
-                        Rp {{ number_format($hargaTerbaru->harga_gabah, 0, ',', '.') }}<span
-                            class="text-sm font-semibold text-amber-700"> / KG</span>
-                    </p>
-                    <p class="text-xs text-amber-800/80 mt-1.5 flex items-center gap-1">
-                        <i class="fa-solid fa-circle-info text-[10px]"></i>
-                        Sumber: {{ $hargaTerbaru->sumber_label }}
-                        @if ($hargaTerbaru->keterangan)
-                            &mdash; {{ $hargaTerbaru->keterangan }}
-                        @endif
-                    </p>
-                    @if ($rataHargaJual)
-                        <p
-                            class="text-xs mt-2 pt-2 border-t border-amber-200/50 {{ $selisihHarga >= 0 ? 'text-emerald-700' : 'text-red-600' }}">
-                            <i
-                                class="fa-solid {{ $selisihHarga >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down' }} text-[10px]"></i>
-                            Rata-rata harga jual Anda di platform ini:
-                            <strong>Rp {{ number_format($rataHargaJual, 0, ',', '.') }}</strong>
-                            ({{ $selisihHarga >= 0 ? 'lebih tinggi' : 'lebih rendah' }}
-                            {{ number_format(abs($selisihPersen), 1) }}% dari harga acuan)
-                        </p>
-                    @endif
-                @else
-                    <p class="text-sm font-medium text-amber-700/80 pt-1">Belum ada rilis harga acuan resmi dari admin.</p>
-                @endif
-            </div>
-            <div class="bg-white text-amber-600 p-3.5 rounded-xl border border-amber-200/50 shadow-xs">
-                <i class="fa-solid fa-wheat-awn text-xl"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        {{-- Card 2: Terjual Bulan Ini --}}
         <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-xs flex items-center justify-between">
             <div class="space-y-1">
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Terjual Bulan Ini</h3>
@@ -69,11 +34,12 @@
                         class="text-sm font-semibold text-gray-500">KG</span>
                 </p>
             </div>
-            <div class="bg-sky-50 text-sky-600 p-3.5 rounded-xl border border-sky-100">
+            <div class="bg-sky-50 text-sky-600 p-3.5 rounded-xl border border-sky-100 shrink-0">
                 <i class="fa-solid fa-truck-ramp-box text-xl"></i>
             </div>
         </div>
 
+        {{-- Card 3: Pendapatan Bulan Ini --}}
         <div
             class="bg-gradient-to-br from-violet-50 to-violet-100/40 p-6 rounded-xl border border-violet-200/70 shadow-xs flex items-center justify-between">
             <div class="space-y-1">
@@ -81,31 +47,27 @@
                 <p class="text-2xl font-extrabold text-violet-950 tracking-tight">
                     Rp {{ number_format($totalPendapatanBulanIni, 0, ',', '.') }}
                 </p>
-                <p class="text-xs text-violet-800/80 mt-1.5 flex items-center gap-1">
-                    <i class="fa-solid fa-circle-info text-[10px]"></i> Hanya pesanan berstatus selesai
+                <p class="text-[11px] text-violet-800/80 mt-1 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-info text-[9px]"></i> Pesanan selesai
                 </p>
             </div>
-            <div class="bg-white text-violet-600 p-3.5 rounded-xl border border-violet-200/50 shadow-xs">
+            <div class="bg-white text-violet-600 p-3.5 rounded-xl border border-violet-200/50 shadow-xs shrink-0">
                 <i class="fa-solid fa-sack-dollar text-xl"></i>
             </div>
         </div>
+
     </div>
 
-    <div class="mt-4 text-right">
-        <a href="{{ route('petani.penjualan.index') }}"
-            class="inline-flex items-center gap-1.5 text-xs font-semibold text-violet-600 hover:text-violet-700 bg-violet-50 px-3 py-1.5 rounded-lg transition-colors">
-            Lihat Riwayat Penjualan Lengkap <i class="fa-solid fa-arrow-right text-[10px]"></i>
-        </a>
+    <div class="mt-3 text-right">
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-gray-100 shadow-xs">
-            <h3 class="text-sm font-bold text-gray-700 tracking-tight mb-3">Rincian Stok Komoditas</h3>
+            <h3 class="text-sm font-bold text-gray-700 tracking-tight mb-3">Rincian Stok Gabah Anda</h3>
             <div class="divide-y divide-gray-100">
                 @forelse($stokPerProduk as $stok)
                     <div class="flex justify-between items-center py-3">
                         <div class="flex items-center gap-3">
-
                             <div
                                 class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100 flex items-center justify-center">
                                 @if (!empty($stok->product->gambar) && file_exists(public_path('storage/' . $stok->product->gambar)))
@@ -167,7 +129,7 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-gray-100 bg-gray-50/50">
-                        <th class="p-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Komoditas</th>
+                        <th class="p-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Komoditas Gabah</th>
                         <th class="p-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Jumlah Terkini</th>
                         <th class="p-3 text-xs font-bold text-gray-400 uppercase tracking-wider">Waktu Update</th>
                     </tr>

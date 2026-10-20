@@ -7,11 +7,21 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Subak Penyalin') - Subak Penyalin</title>
-    <link rel="icon" type="image/png" href="{{ asset('logo/Logo1.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('logo/Logosubak.png') }}">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body, .font-sans {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+    </style>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -170,7 +180,7 @@
 
                 <div class="flex items-center gap-2.5">
 
-                    <img src="{{ asset('logo/Logo1.png') }}" alt="Subak Penyalin Logo"
+                    <img src="{{ asset('logo/Logosubak.png') }}" alt="Subak Penyalin Logo"
                         class="w-9 h-9 object-contain shrink-0">
 
                     <span x-show="desktopExpanded" class="text-lg font-bold text-white tracking-wide whitespace-nowrap">
@@ -224,13 +234,13 @@
                         <span x-show="desktopExpanded" class="whitespace-nowrap">Kelola Produk</span>
                     </a>
 
-                    <a href="{{ route('admin.harga.index') }}" title="Broadcast Harga"
+                    {{-- <a href="{{ route('admin.harga.index') }}" title="Broadcast Harga"
                         :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
                         class="flex items-center h-10 rounded-xl text-sm font-medium hover:bg-emerald-900 hover:text-white transition-all group {{ Request::is('admin/harga*') ? 'bg-emerald-600 text-white font-semibold' : '' }}">
                         <i
                             class="fa-solid fa-bullhorn w-5 text-center text-emerald-400 group-hover:text-white transition-colors shrink-0"></i>
                         <span x-show="desktopExpanded" class="whitespace-nowrap">Broadcast Harga</span>
-                    </a>
+                    </a> --}}
 
                     <a href="{{ route('admin.orders.index') }}" title="Semua Pesanan"
                         :class="desktopExpanded ? 'px-3 justify-start gap-3' : 'px-0 justify-center'"
@@ -252,7 +262,7 @@
                 @if (Auth::user()->isPetani())
                     <div class="mb-2" :class="desktopExpanded ? 'px-3' : 'px-0 flex justify-center'">
                         <p x-show="desktopExpanded"
-                            class="text-[10px] font-bold tracking-wider text-emerald-500 uppercase">Panel Petani</p>
+                            {{-- class="text-[10px] font-bold tracking-wider text-emerald-500 uppercase">Panel Petani</p> --}}
                         <hr x-show="!desktopExpanded" class="border-emerald-900 w-8 transition-all">
                     </div>
 
@@ -315,11 +325,6 @@
 
             </nav>
 
-            <div
-                class="h-12 flex items-center justify-center border-t border-emerald-900/60 bg-emerald-950/40 text-xs text-emerald-500 overflow-hidden whitespace-nowrap px-2">
-                <span x-show="desktopExpanded">&copy; 2026 Sistem Gabah V.1</span>
-                <span x-show="!desktopExpanded" class="font-bold text-emerald-400">V.1</span>
-            </div>
         </aside>
 
         <div x-show="mobileOpen" @click="mobileOpen = false"

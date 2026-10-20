@@ -5,7 +5,7 @@
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Semua Pesanan Masuk</h1>
-        <p class="text-sm text-gray-500 mt-1">Kelola, konfirmasi pembayaran, dan pantau status logistik pengiriman gabah
+        <p class="text-sm text-gray-500 mt-1">Kelola, konfirmasi pembayaran, dan pantau status pesanan gabah
             seluruh konsumen.</p>
     </div>
 

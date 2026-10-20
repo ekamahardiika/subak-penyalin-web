@@ -5,11 +5,12 @@
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Panel Konsumen</h1>
-        <p class="text-sm text-gray-500 mt-1">Selamat datang kembali! Pantau riwayat belanjaan dan informasi harga gabah
-            terkini.</p>
+        <p class="text-sm text-gray-500 mt-1">Selamat datang kembali! Pantau riwayat belanjaan dan ketersediaan komoditas
+            gabah terkini.</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {{-- KARTU STATISTIK (Dibuat 2 kolom sejajar karena panel harga acuan dihilangkan) --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
         <div
             class="bg-gradient-to-br from-emerald-900 to-emerald-950 p-6 rounded-xl shadow-xs flex items-center justify-between text-white">
@@ -19,7 +20,7 @@
                     Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}
                 </p>
             </div>
-            <div class="bg-white/10 text-emerald-400 p-3.5 rounded-xl border border-white/10">
+            <div class="bg-white/10 text-emerald-400 p-3.5 rounded-xl border border-white/10 shrink-0">
                 <i class="fa-solid fa-wallet text-xl"></i>
             </div>
         </div>
@@ -31,38 +32,8 @@
                     {{ $totalTransaksi }} <span class="text-sm font-semibold text-gray-500">Kali</span>
                 </p>
             </div>
-            <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-xl border border-emerald-100">
+            <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-xl border border-emerald-100 shrink-0">
                 <i class="fa-solid fa-bag-shopping text-xl"></i>
-            </div>
-        </div>
-
-        <div
-            class="bg-white p-6 rounded-xl border border-gray-100 shadow-xs flex items-center justify-between sm:col-span-2 lg:col-span-1">
-            <div class="space-y-1">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Harga Acuan Gabah Hari Ini</h3>
-                @if ($hargaHariIni)
-                    <p class="text-2xl font-extrabold text-amber-600 tracking-tight">
-                        Rp {{ number_format($hargaHariIni->harga_gabah, 0, ',', '.') }}<span
-                            class="text-sm font-semibold text-gray-500"> / KG</span>
-                    </p>
-                    <p class="text-[11px] text-gray-400">
-                        Sumber: {{ $hargaHariIni->sumber_label }}
-                    </p>
-                    @if ($rataHargaJual)
-                        <p
-                            class="text-[11px] {{ $selisihPersen >= 0 ? 'text-emerald-600' : 'text-red-500' }} font-semibold mt-1">
-                            <i
-                                class="fa-solid {{ $selisihPersen >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down' }} text-[10px]"></i>
-                            Harga di platform ini rata-rata Rp {{ number_format($rataHargaJual, 0, ',', '.') }}/KG
-                            ({{ $selisihPersen >= 0 ? '+' : '' }}{{ number_format($selisihPersen, 1) }}% dari acuan)
-                        </p>
-                    @endif
-                @else
-                    <p class="text-sm font-medium text-gray-400 pt-1">Belum ada rilis harga.</p>
-                @endif
-            </div>
-            <div class="bg-amber-50 text-amber-600 p-3.5 rounded-xl border border-amber-100">
-                <i class="fa-solid fa-wheat-awn text-xl"></i>
             </div>
         </div>
 
@@ -136,8 +107,8 @@
                             <div
                                 class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100 flex items-center justify-center">
                                 @if (!empty($product->gambar) && file_exists(public_path('storage/' . $product->gambar)))
-                                    <img src="{{ asset('storage/' . $product->gambar) }}"
-                                        alt="{{ $product->nama_produk }}" class="w-full h-full object-cover">
+                                    <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama_produk }}"
+                                        class="w-full h-full object-cover">
                                 @else
                                     <div
                                         class="bg-emerald-50 text-emerald-600 w-full h-full flex items-center justify-center text-sm">

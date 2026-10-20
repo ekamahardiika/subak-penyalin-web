@@ -5,7 +5,7 @@
 
         <div class="text-center mb-8">
             <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Daftar Akun Baru</h2>
-            <p class="text-sm text-gray-500 mt-1.5">Bergabung sebagai Konsumen di Platform Sistem Gabah</p>
+            <p class="text-sm text-gray-500 mt-1.5">Bergabung sebagai Konsumen di Subak Penyalin</p>
         </div>
 
         <form method="POST" action="{{ route('register') }}" class="space-y-6">
@@ -99,7 +99,7 @@
             <div class="pt-4">
                 <button type="submit"
                     class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer">
-                    Daftar Akun Konsumen <i class="fa-solid fa-user-plus text-xs"></i>
+                    Daftar Konsumen <i class="fa-solid fa-user-plus text-xs"></i>
                 </button>
             </div>
 

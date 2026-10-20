@@ -5,8 +5,7 @@
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Dashboard Admin</h1>
-        <p class="text-sm text-gray-500 mt-1">Ringkasan data operasional sistem, kontrol pasokan stok, dan akumulasi omset
-            platform.</p>
+        <p class="text-sm text-gray-500 mt-1">Ringkasan data operasional sistem subak penyalin.</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">

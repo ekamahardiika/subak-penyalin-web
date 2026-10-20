@@ -12,8 +12,7 @@
             <div class="max-w-2xl space-y-6">
 
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight">
-                    <span class="text-green-400">Gabah Berkualitas</span>
-                    <span class="text-white">Langsung dari</span>
+                    <span class="text-white">Gabah Berkualitas</span>
                     <br class="hidden lg:block">
                     <span class="text-white">Petani Subak Penyalin</span>
                 </h1>
@@ -51,7 +50,7 @@
             </div>
 
             {{-- items-stretch membuat kolom kiri dan kanan memiliki tinggi yang sama --}}
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
                 {{-- Gambar tanpa round border (rounded-none) --}}
                 <div class="lg:col-span-6 grid grid-cols-2 gap-4 md:gap-6">
@@ -65,9 +64,9 @@
                     </div>
                 </div>
 
-                {{-- Penjelasan 3 Paragraf Terkembang --}}
+                {{-- Penjelasan 3 Paragraf dengan space-y-5 agar ada jarak antar paragraf --}}
                 <div
-                    class="lg:col-span-6 h-full flex flex-col justify-between text-white text-sm md:text-base leading-relaxed pl-0 lg:pl-6 py-1">
+                    class="lg:col-span-6 flex flex-col justify-center text-white text-sm md:text-base leading-relaxed pl-0 lg:pl-6 space-y-5">
 
                     <p class="opacity-95 font-normal">
                         Subak Penyalin adalah organisasi pertanian tradisional berbasis kemasyarakatan yang berlokasi di
@@ -459,16 +458,7 @@
                             </div>
                         </div>
 
-                        <div class="flex items-start gap-4">
-                            <i class="fa-solid fa-envelope text-green-600 text-lg mt-1 w-5"></i>
-                            <div>
-                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Email</h4>
-                                <a href="mailto:admin@gabah.com"
-                                    class="text-sm font-semibold text-gray-800 hover:text-green-600 transition-colors mt-0.5 block">
-                                    admin@gabah.com
-                                </a>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
 

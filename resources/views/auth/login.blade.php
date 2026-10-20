@@ -3,7 +3,7 @@
 <x-guest-layout>
     <div class="text-center mb-6 py-3">
         <h2 class="text-2xl font-bold text-gray-900">Selamat Datang</h2>
-        <p class="text-sm text-gray-500 mt-1">Silakan masuk ke akun Sistem Gabah Anda</p>
+        <p class="text-sm text-gray-500 mt-1">Silakan masukan akun Anda</p>
     </div>
 
     <x-auth-session-status class="mb-4 text-emerald-600 bg-emerald-50 p-3 rounded-xl border border-emerald-100 text-sm"
@@ -61,7 +61,7 @@
         <div class="pt-2">
             <button type="submit"
                 class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl text-sm transition-all shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer">
-                Masuk ke Panel <i class="fa-solid fa-right-to-bracket text-xs"></i>
+                Masuk <i class="fa-solid fa-right-to-bracket text-xs"></i>
             </button>
         </div>
 

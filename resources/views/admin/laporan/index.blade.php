@@ -6,7 +6,7 @@
 
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Laporan Penjualan Selesai</h1>
-        <p class="text-sm text-gray-500 mt-0.5">Pantau ringkasan omset pendapatan dari seluruh pesanan yang telah berhasil
+        <p class="text-sm text-gray-500 mt-0.5">Pantau ringkasan pendapatan dari seluruh pesanan yang telah berhasil
             diselesaikan.</p>
     </div>
 

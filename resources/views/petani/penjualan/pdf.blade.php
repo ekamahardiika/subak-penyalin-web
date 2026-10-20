@@ -129,7 +129,7 @@
         @endif
     </table>
 
-    <div class="footer">Dokumen ini dihasilkan otomatis oleh Sistem Gabah.</div>
+    <div class="footer">Dokumen ini dihasilkan otomatis oleh Sistem Subak Penyalin.</div>
 </body>
 
 </html>

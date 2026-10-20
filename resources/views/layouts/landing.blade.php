@@ -5,14 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Subak Penyalin') - Subak Penyalin</title>
-    <link rel="icon" type="image/png" href="{{ asset('logo/Logo1.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('logo/Logosubak.png') }}">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link rel="icon" type="image/png" href="{{ asset('logo/Logo1.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('logo/Logosubak.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
     <style>
         html {
             scroll-behavior: smooth;
+        }
+
+        body,
+        .font-sans {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
     </style>
 </head>
@@ -44,7 +51,7 @@
         <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
 
             <a href="{{ route('home') }}#home" class="flex items-center gap-2.5">
-                <img src="{{ asset('logo/Logo1.png') }}" alt="Subak Penyalin Logo" class="w-12 h-12 object-contain">
+                <img src="{{ asset('logo/Logosubak.png') }}" alt="Subak Penyalin Logo" class="w-12 h-12 object-contain">
                 <span class="text-xl font-black text-white tracking-wide uppercase">Subak Penyalin</span>
             </a>
 
@@ -164,7 +171,7 @@
             class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-green-900/60 pb-16 mb-8">
             <div class="md:col-span-2 space-y-4">
                 <a href="{{ route('home') }}#home" class="flex items-center gap-2.5">
-                    <img src="{{ asset('logo/Logo1.png') }}" alt="Subak Penyalin Logo"
+                    <img src="{{ asset('logo/Logosubak.png') }}" alt="Subak Penyalin Logo"
                         class="w-12 h-12 object-contain">
                     <span class="text-xl font-black text-white tracking-wide uppercase">Subak Penyalin</span>
                 </a>
@@ -172,35 +179,20 @@
                     Platform digital transparan yang menjembatani hasil panen terbaik para petani lokal langsung ke
                     tangan konsumen demi kesejahteraan bersama.
                 </p>
-                <div class="flex gap-4 pt-2">
-                    <a href="#"
-                        class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-400 hover:text-green-950 transition-all text-white text-sm"><i
-                            class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#"
-                        class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-400 hover:text-green-950 transition-all text-white text-sm"><i
-                            class="fa-brands fa-instagram"></i></a>
-                    <a href="#"
-                        class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-400 hover:text-green-950 transition-all text-white text-sm"><i
-                            class="fa-brands fa-whatsapp"></i></a>
-                </div>
             </div>
             <div>
-                <h4 class="text-white font-bold mb-4 text-xs tracking-wider uppercase">Tautan Cepat</h4>
+                <h4 class="text-white font-bold mb-4 text-xs tracking-wider uppercase">Menu</h4>
                 <ul class="space-y-2.5 text-sm text-gray-400">
                     <li><a href="#home" class="hover:text-green-400 transition-colors">Beranda</a></li>
                     <li><a href="#produk" class="hover:text-green-400 transition-colors">Gabah</a></li>
                     <li><a href="#tentang" class="hover:text-green-400 transition-colors">Tentang Kami</a></li>
+                    <li><a href="#harga" class="hover:text-green-400 transition-colors">Harga Acuan</a></li>
                     <li><a href="#kontak" class="hover:text-green-400 transition-colors">Kontak</a></li>
                 </ul>
             </div>
         </div>
-        <div
-            class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
-            <p>&copy; 2026 Sistem Gabah. Hak Cipta Dilindungi.</p>
-            <div class="flex gap-6 mt-3 md:mt-0">
-                <a href="#" class="hover:text-gray-400 transition-colors">Kebijakan Privasi</a>
-                <a href="#" class="hover:text-gray-400 transition-colors">Syarat & Ketentuan</a>
-            </div>
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-gray-500">
+            <p>&copy; 2026 Subak Penyalin. Hak Cipta Dilindungi.</p>
         </div>
     </footer>
 
