@@ -1,7 +1,5 @@
 <?php
 
-// app/Http/Controllers/Petani/DashboardController.php
-
 namespace App\Http\Controllers\Petani;
 
 use App\Http\Controllers\Controller;

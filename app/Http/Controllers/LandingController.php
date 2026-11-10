@@ -33,12 +33,6 @@ class LandingController extends Controller
             ->pluck('harga_gabah')
             ->toArray();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Daftar Kabupaten / Kota
-        |--------------------------------------------------------------------------
-        */
-
         $districtResponse = Http::timeout(5)
             ->acceptJson()
             ->get(
@@ -49,31 +43,9 @@ class LandingController extends Controller
             ? $districtResponse->json('data', [])
             : [];
 
-        /*
-        |--------------------------------------------------------------------------
-        | Kabupaten yang dipilih
-        |--------------------------------------------------------------------------
-        */
-
         $selectedDistrict = request()->integer('district_id') ?: null;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Harga Beras
-        |--------------------------------------------------------------------------
-        */
-
         $hargaApi = $hargaBeras->get($selectedDistrict);
-
-        /*
-        |--------------------------------------------------------------------------
-        | AJAX Request
-        |--------------------------------------------------------------------------
-        |
-        | Jika request berasal dari JavaScript, kita hanya mengembalikan
-        | HTML bagian harga. Halaman tidak perlu di-render ulang.
-        |
-        */
 
         if (request()->ajax()) {
             return view('landing.partials.harga-acuan', compact(

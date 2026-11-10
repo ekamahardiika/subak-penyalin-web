@@ -15,19 +15,10 @@ class HargaBerasService
         75 => 'Gabah Premium',
     ];
 
-    /**
-     * Cache data selama 8 jam.
-     */
     private const CACHE_MINUTES = 480;
 
-    /**
-     * Maksimal request ke API SIGAPURA.
-     */
     private const MAX_API_REQUESTS = 10;
 
-    /**
-     * Durasi rate limit dalam detik.
-     */
     private const RATE_LIMIT_SECONDS = 60;
 
     public function get(?int $districtId = null): ?array
@@ -35,22 +26,12 @@ class HargaBerasService
         $cacheKey = 'harga_gabah_sigapura_' . ($districtId ?? 'all');
         $lastGoodKey = $cacheKey . '_last_good';
 
-        /*
-        |--------------------------------------------------------------------------
-        | 1. Cek cache utama
-        |--------------------------------------------------------------------------
-        */
         $cached = Cache::get($cacheKey);
 
         if ($cached !== null) {
             return $cached;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | 2. Rate limit request ke SIGAPURA
-        |--------------------------------------------------------------------------
-        */
         $rateLimitKey = 'sigapura-api-request';
 
         if (
@@ -62,22 +43,12 @@ class HargaBerasService
             return Cache::get($lastGoodKey);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | 3. Tandai bahwa kita akan melakukan request API
-        |--------------------------------------------------------------------------
-        */
         RateLimiter::hit(
             $rateLimitKey,
             self::RATE_LIMIT_SECONDS
         );
 
         try {
-            /*
-            |--------------------------------------------------------------------------
-            | 4. Request ke SIGAPURA
-            |--------------------------------------------------------------------------
-            */
             $res = Http::timeout(10)
                 ->retry(
                     1,
@@ -99,47 +70,22 @@ class HargaBerasService
                     ]
                 );
 
-            /*
-            |--------------------------------------------------------------------------
-            | 5. Kalau API gagal
-            |--------------------------------------------------------------------------
-            */
             if ($res->failed()) {
                 return Cache::get($lastGoodKey);
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | 6. Normalisasi response
-            |--------------------------------------------------------------------------
-            */
             $data = $this->normalize($res->json());
 
-            /*
-            |--------------------------------------------------------------------------
-            | 7. Kalau tidak ada data valid
-            |--------------------------------------------------------------------------
-            */
             if (empty($data['items'])) {
                 return Cache::get($lastGoodKey);
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | 8. Simpan cache utama
-            |--------------------------------------------------------------------------
-            */
             Cache::put(
                 $cacheKey,
                 $data,
                 now()->addMinutes(self::CACHE_MINUTES)
             );
 
-            /*
-            |--------------------------------------------------------------------------
-            | 9. Simpan backup data terakhir yang valid
-            |--------------------------------------------------------------------------
-            */
             Cache::forever(
                 $lastGoodKey,
                 $data
@@ -148,14 +94,7 @@ class HargaBerasService
             return $data;
 
         } catch (\Throwable $e) {
-
-            /*
-            |--------------------------------------------------------------------------
-            | 10. Kalau terjadi exception
-            |--------------------------------------------------------------------------
-            */
             report($e);
-
             return Cache::get($lastGoodKey);
         }
     }
@@ -194,12 +133,6 @@ class HargaBerasService
             if (!is_array($prices) || empty($prices)) {
                 continue;
             }
-
-            /*
-            |--------------------------------------------------------------------------
-            | Ambil data harga yang valid
-            |--------------------------------------------------------------------------
-            */
             $validPrices = collect($prices)
                 ->filter(function ($price) {
 
@@ -219,21 +152,10 @@ class HargaBerasService
                 continue;
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Harga terbaru
-            |--------------------------------------------------------------------------
-            */
             $latest = $validPrices->first();
-
             $hargaSekarang = (float) $latest['avg_market_price'];
             $tanggalSekarang = $latest['input_date'];
 
-            /*
-            |--------------------------------------------------------------------------
-            | Harga sebelumnya
-            |--------------------------------------------------------------------------
-            */
             $previous = $validPrices
                 ->skip(1)
                 ->first();
@@ -242,11 +164,6 @@ class HargaBerasService
                 ? (float) $previous['avg_market_price']
                 : null;
 
-            /*
-            |--------------------------------------------------------------------------
-            | Hitung perubahan
-            |--------------------------------------------------------------------------
-            */
             $selisih = 0;
             $persen = 0;
 
@@ -261,11 +178,6 @@ class HargaBerasService
                 ) * 100;
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Prioritaskan calculation dari API SIGAPURA
-            |--------------------------------------------------------------------------
-            */
             $apiSelisih = data_get(
                 $row,
                 'market_price_data.calculation.difference_amount'
@@ -290,11 +202,6 @@ class HargaBerasService
                 $persen = (float) $apiPersen;
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | Masukkan data
-            |--------------------------------------------------------------------------
-            */
             $items[] = [
                 'id' => $commodityId,
                 'nama' => self::KOMODITAS[$commodityId],
@@ -304,11 +211,6 @@ class HargaBerasService
                 'persen' => $persen,
             ];
 
-            /*
-            |--------------------------------------------------------------------------
-            | Tentukan tanggal terbaru
-            |--------------------------------------------------------------------------
-            */
             if (
                 $tanggal === null
                 || $tanggalSekarang > $tanggal
@@ -317,11 +219,6 @@ class HargaBerasService
             }
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Urutkan berdasarkan ID komoditas
-        |--------------------------------------------------------------------------
-        */
         usort(
             $items,
             fn ($a, $b) => $a['id'] <=> $b['id']

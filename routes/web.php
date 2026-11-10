@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-// use App\Http\Controllers\Admin\HargaBroadcastController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PetaniController;
@@ -33,8 +32,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('users', UserController::class)->except('show');
     Route::resource('petani', PetaniController::class)->except('show');
     Route::resource('products', AdminProductController::class);
-
-    // Route::resource('harga', HargaBroadcastController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');

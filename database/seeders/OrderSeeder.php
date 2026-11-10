@@ -27,34 +27,28 @@ class OrderSeeder extends Seeder
 
         $petaniStock = PetaniStock::where('product_id', $product->id)->first();
 
-        // 20 data dummy tersebar dari 5 bulan lalu hingga bulan ini
         $orderData = [
-            // Month -5
+
             ['qty' => 10, 'status' => 'selesai', 'sub_months' => 5, 'sub_days' => 20, 'catatan' => 'Pembelian perdana.'],
             ['qty' => 15, 'status' => 'selesai', 'sub_months' => 5, 'sub_days' => 10, 'catatan' => 'Restock warung.'],
             ['qty' => 5,  'status' => 'selesai', 'sub_months' => 5, 'sub_days' => 2,  'catatan' => 'Sample produk.'],
 
-            // Month -4
             ['qty' => 30, 'status' => 'selesai', 'sub_months' => 4, 'sub_days' => 25, 'catatan' => 'Pesanan rutin.'],
             ['qty' => 20, 'status' => 'selesai', 'sub_months' => 4, 'sub_days' => 12, 'catatan' => 'Packing rapi ya.'],
             ['qty' => 40, 'status' => 'selesai', 'sub_months' => 4, 'sub_days' => 3,  'catatan' => 'Kirim via kargo.'],
 
-            // Month -3
             ['qty' => 12, 'status' => 'selesai', 'sub_months' => 3, 'sub_days' => 28, 'catatan' => 'Mendadak butuh tambahan.'],
             ['qty' => 50, 'status' => 'selesai', 'sub_months' => 3, 'sub_days' => 15, 'catatan' => 'Grosir bulanan.'],
             ['qty' => 8,  'status' => 'selesai', 'sub_months' => 3, 'sub_days' => 1,  'catatan' => 'Pesanan kecil.'],
 
-            // Month -2
             ['qty' => 25, 'status' => 'selesai', 'sub_months' => 2, 'sub_days' => 22, 'catatan' => 'Mohon diproses cepat.'],
             ['qty' => 18, 'status' => 'selesai', 'sub_months' => 2, 'sub_days' => 14, 'catatan' => 'Kirim sebelum sore.'],
             ['qty' => 60, 'status' => 'selesai', 'sub_months' => 2, 'sub_days' => 5,  'catatan' => 'Pesanan acara kantor.'],
 
-            // Month -1
             ['qty' => 35, 'status' => 'selesai', 'sub_months' => 1, 'sub_days' => 20, 'catatan' => 'Pengiriman reguler.'],
             ['qty' => 22, 'status' => 'selesai', 'sub_months' => 1, 'sub_days' => 10, 'catatan' => 'Tolong dipercepat.'],
             ['qty' => 15, 'status' => 'diproses', 'sub_months' => 1, 'sub_days' => 2,  'catatan' => 'Tertunda konfirmasi.'],
 
-            // Bulan Ini (Current Month)
             ['qty' => 10, 'status' => 'diproses', 'sub_months' => 0, 'sub_days' => 12, 'catatan' => 'Pesanan mendesak, mohon segera diproses.'],
             ['qty' => 25, 'status' => 'diproses', 'sub_months' => 0, 'sub_days' => 8,  'catatan' => 'Packing kayu ya min.'],
             ['qty' => 5,  'status' => 'diproses', 'sub_months' => 0, 'sub_days' => 5,  'catatan' => 'Kirim sebelum jam 5 sore.'],
@@ -65,8 +59,7 @@ class OrderSeeder extends Seeder
         foreach ($orderData as $index => $data) {
             $qty = $data['qty'];
             $subtotal = $qty * $product->harga_jual;
-
-            // Generate tanggal pesanan sesuai mundur bulan dan hari
+            
             $orderDate = Carbon::now()
                 ->subMonths($data['sub_months'])
                 ->subDays($data['sub_days']);

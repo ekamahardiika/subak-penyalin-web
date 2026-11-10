@@ -9,7 +9,6 @@
             gabah terkini.</p>
     </div>
 
-    {{-- KARTU STATISTIK (Dibuat 2 kolom sejajar karena panel harga acuan dihilangkan) --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
         <div

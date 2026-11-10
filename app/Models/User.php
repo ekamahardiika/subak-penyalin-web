@@ -1,8 +1,5 @@
 <?php
 
-// app/Models/User.php
-// FIX: tambahkan SoftDeletes supaya destroy() di atas tidak menghapus data secara permanen
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;

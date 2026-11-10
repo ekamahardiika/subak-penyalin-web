@@ -4,19 +4,15 @@
 
         @foreach ($hargaApi['items'] as $item)
             <div class="rounded-3xl border border-gray-200 bg-gray-50 p-6 text-center">
-
                 <p class="text-sm text-gray-500 font-semibold">
                     {{ $item['nama'] }}
                 </p>
-
                 <p class="text-2xl md:text-3xl font-black text-green-700 mt-2">
                     Rp {{ number_format($item['harga'], 0, ',', '.') }}
                 </p>
-
                 <p class="text-xs text-gray-400">
                     per kg
                 </p>
-
                 @if ($item['selisih'] > 0)
                     <p class="text-xs font-semibold text-red-600 mt-3">
                         <span class="inline-flex items-center gap-1">
@@ -33,19 +29,16 @@
                     </p>
                 @elseif ($item['selisih'] < 0)
                     <p class="text-xs font-semibold text-green-600 mt-3">
-
                         <span class="inline-flex items-center gap-1">
                             <i class="fa-solid fa-arrow-trend-down"></i>
 
                             Turun
                         </span>
-
                         Rp {{ number_format(abs($item['selisih']), 0, ',', '.') }}
 
                         <span>
                             ({{ number_format(abs($item['persen']), 2, ',', '.') }}%)
                         </span>
-
                     </p>
                 @else
                     <p class="text-xs text-gray-400 mt-3">
@@ -88,9 +81,7 @@
         </p>
 
         <p class="text-xs text-gray-400 mt-3">
-
             {{ \Illuminate\Support\Carbon::parse($hargaTerbaru->tanggal)->translatedFormat('d F Y') }}
-
         </p>
 
     </div>

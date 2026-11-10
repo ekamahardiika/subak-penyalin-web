@@ -1,8 +1,8 @@
 @extends('layouts.landing')
 
 @section('content')
-    {{-- HERO SECTION --}}
 
+    {{-- HERO SECTION --}}
     <div id="home" class="relative min-h-screen flex items-center pt-20 overflow-hidden scroll-mt-20">
         <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('hero/hero11.jpeg') }}');">
         </div>
@@ -49,10 +49,8 @@
                 </h2>
             </div>
 
-            {{-- items-stretch membuat kolom kiri dan kanan memiliki tinggi yang sama --}}
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
-                {{-- Gambar tanpa round border (rounded-none) --}}
                 <div class="lg:col-span-6 grid grid-cols-2 gap-4 md:gap-6">
                     <div class="rounded-none overflow-hidden aspect-[3/4] shadow-2xl border border-white/10">
                         <img src="{{ asset('hero/Fotosubak4.jpeg') }}" alt="Petani Subak Penyalin 1"
@@ -64,7 +62,6 @@
                     </div>
                 </div>
 
-                {{-- Penjelasan 3 Paragraf dengan space-y-5 agar ada jarak antar paragraf --}}
                 <div
                     class="lg:col-span-6 flex flex-col justify-center text-white text-sm md:text-base leading-relaxed pl-0 lg:pl-6 space-y-5">
 
@@ -97,7 +94,6 @@
 
 
     {{-- PRODUK SECTION --}}
-
     <div id="produk" class="bg-gray-50 py-24 scroll-mt-20">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center max-w-2xl mx-auto mb-16">
@@ -180,7 +176,7 @@
             </div>
 
 
-            {{-- FILTER KABUPATEN --}}
+            {{-- FILTER --}}
             <div class="max-w-md mx-auto mb-10">
 
                 <label for="district_id" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -207,42 +203,27 @@
 
             </div>
 
-
-            {{-- CONTAINER HARGA --}}
             <div id="harga-acuan-container" class="relative transition-opacity duration-200">
 
-                {{-- LOADING OVERLAY --}}
                 <div id="harga-loading"
                     class="hidden absolute inset-0 z-10 bg-white/70 backdrop-blur-[1px]
                        flex items-center justify-center rounded-3xl">
-
                     <div class="flex flex-col items-center gap-3">
-
                         <div
                             class="w-8 h-8 border-4 border-green-200 border-t-green-700
                                rounded-full animate-spin">
                         </div>
-
                         <p class="text-xs text-gray-500 font-medium">
                             Memuat harga...
                         </p>
-
                     </div>
-
                 </div>
-
-
-                {{-- DATA HARGA --}}
                 @include('landing.partials.harga-acuan')
-
             </div>
-
         </div>
 
     </div>
 
-
-    {{-- SCRIPT FILTER HARGA --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -255,26 +236,9 @@
             }
 
             districtSelect.addEventListener('change', async function() {
-
                 const districtId = this.value;
-
-                /*
-                |--------------------------------------------------------------------------
-                | Tampilkan loading
-                |--------------------------------------------------------------------------
-                */
-
                 loading.classList.remove('hidden');
-
                 hargaContainer.classList.add('opacity-60');
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | Buat URL
-                |--------------------------------------------------------------------------
-                */
-
                 const url = new URL(
                     '{{ route('home') }}',
                     window.location.origin
@@ -284,38 +248,19 @@
                     url.searchParams.set('district_id', districtId);
                 }
 
-
-                /*
-                |--------------------------------------------------------------------------
-                | Update URL browser tanpa reload
-                |--------------------------------------------------------------------------
-                */
-
                 window.history.pushState({},
                     '',
                     url
                 );
 
-
                 try {
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Request AJAX
-                    |--------------------------------------------------------------------------
-                    */
-
                     const response = await fetch(url, {
-
                         method: 'GET',
-
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
                             'Accept': 'text/html'
                         }
-
                     });
-
 
                     if (!response.ok) {
                         throw new Error(
@@ -323,43 +268,23 @@
                         );
                     }
 
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Ambil HTML hasil response
-                    |--------------------------------------------------------------------------
-                    */
-
                     const html = await response.text();
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Ganti hanya bagian harga
-                    |--------------------------------------------------------------------------
-                    */
 
                     hargaContainer.innerHTML = `
                     <div
                         id="harga-loading"
                         class="hidden absolute inset-0 z-10 bg-white/70 backdrop-blur-[1px]
                                flex items-center justify-center rounded-3xl">
-
                         <div class="flex flex-col items-center gap-3">
-
                             <div
                                 class="w-8 h-8 border-4 border-green-200 border-t-green-700
                                        rounded-full animate-spin">
                             </div>
-
                             <p class="text-xs text-gray-500 font-medium">
                                 Memuat harga...
                             </p>
-
                         </div>
-
                     </div>
-
                     ${html}
                 `;
 
@@ -397,27 +322,19 @@
                                    rounded-xl text-sm font-semibold">
 
                             Muat Ulang
-
                         </button>
-
                     </div>
                 `;
-
                 } finally {
 
                     loading.classList.add('hidden');
-
                     hargaContainer.classList.remove('opacity-60');
-
                 }
-
             });
-
         });
     </script>
 
     {{-- KONTAK SECTION --}}
-
     <div id="kontak" class="bg-white py-20 scroll-mt-20">
         <div class="max-w-7xl mx-auto px-6">
 
