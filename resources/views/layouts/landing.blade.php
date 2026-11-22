@@ -52,7 +52,7 @@
 
             <a href="{{ route('home') }}#home" class="flex items-center gap-2.5">
                 <img src="{{ asset('logo/Logosubak.png') }}" alt="Subak Penyalin Logo" class="w-12 h-12 object-contain">
-                <span class="text-xl font-black text-white tracking-wide uppercase">Subak Penyalin</span>
+                <span class="text-xl font-black text-white tracking-wide uppercase">SIPEHAPAPEPA</span>
             </a>
 
             <nav class="hidden md:flex items-center gap-1 border px-2 py-1.5 rounded-full text-xs font-semibold transition-all duration-300"
