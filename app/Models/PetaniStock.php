@@ -18,7 +18,7 @@ class PetaniStock extends Model
 
     public function petani()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
     public function product()

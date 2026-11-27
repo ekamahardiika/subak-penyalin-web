@@ -70,6 +70,14 @@ class PetaniController extends Controller
 
     public function destroy(User $petani)
     {
+        $hasRemainingStock = $petani->stocks()->where('stok_kg', '>', 0)->exists();
+
+        if ($hasRemainingStock) {
+            return redirect()
+                ->route('admin.petani.index')
+                ->with('error', 'Petani tidak dapat dinonaktifkan karena masih memiliki stok yang tersedia.');
+        }
+
         $petani->delete();
 
         return redirect()->route('admin.petani.index')->with('success', 'Petani berhasil dinonaktifkan');

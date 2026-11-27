@@ -18,11 +18,14 @@
             if (this.search.trim() === '') {
                 return this.orders;
             }
+            const q = this.search.toLowerCase();
             return this.orders.filter(o => {
-                const consumerName = o.user && o.user.name ? o.user.name.toLowerCase() : 'konsumen tidak dikenal';
-                return (o.no_order && o.no_order.toLowerCase().includes(this.search.toLowerCase())) ||
-                    consumerName.includes(this.search.toLowerCase()) ||
-                    (o.status && o.status.toLowerCase().includes(this.search.toLowerCase()));
+                const consumerName = (o.nama_pemesan || (o.user && o.user.name) || 'konsumen tidak dikenal').toLowerCase();
+                const wa = (o.whatsapp_pemesan || '').toLowerCase();
+                return (o.no_order && o.no_order.toLowerCase().includes(q)) ||
+                    consumerName.includes(q) ||
+                    wa.includes(q) ||
+                    (o.status && o.status.toLowerCase().includes(q));
             });
         },
         get totalPages() {
@@ -61,7 +64,7 @@
                 <span class="absolute inset-y-0 left-3.5 flex items-center pointer-events-none text-gray-400">
                     <i class="fa-solid fa-magnifying-glass text-xs"></i>
                 </span>
-                <input type="text" x-model="search" placeholder="Cari No Order, Nama, Status..."
+                <input type="text" x-model="search" placeholder="Cari No Order, Nama, WA, Status..."
                     class="block w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs placeholder-gray-400 focus:outline-hidden focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
             </div>
         </div>
@@ -73,6 +76,7 @@
                         <tr>
                             <th scope="col" class="px-6 py-3.5 font-bold">No Order</th>
                             <th scope="col" class="px-6 py-3.5 font-bold">Nama Konsumen</th>
+                            <th scope="col" class="px-6 py-3.5 font-bold">No. WhatsApp</th>
                             <th scope="col" class="px-6 py-3.5 font-bold">Total Nilai</th>
                             <th scope="col" class="px-6 py-3.5 font-bold text-center">Status</th>
                             <th scope="col" class="px-6 py-3.5 font-bold text-center">Aksi</th>
@@ -83,7 +87,9 @@
                             <tr class="hover:bg-gray-50/50 transition-colors">
                                 <td class="px-6 py-4 font-mono font-bold text-emerald-950" x-text="o.no_order"></td>
                                 <td class="px-6 py-4 font-medium text-gray-700"
-                                    x-text="o.user ? o.user.name : 'Konsumen Tidak Dikenal'"></td>
+                                    x-text="o.nama_pemesan || (o.user ? o.user.name : 'Konsumen Tidak Dikenal')"></td>
+                                <td class="px-6 py-4 font-medium text-gray-700"
+                                    x-text="o.whatsapp_pemesan || '-'"></td>
                                 <td class="px-6 py-4 font-bold text-gray-900" x-text="formatRupiah(o.total_harga)"></td>
                                 <td class="px-6 py-4 text-center">
                                     <span
@@ -112,7 +118,7 @@
                         </template>
 
                         <tr x-show="filteredOrders.length === 0">
-                            <td colspan="5" class="px-6 py-10 text-center text-gray-400">
+                            <td colspan="6" class="px-6 py-10 text-center text-gray-400">
                                 <div class="flex flex-col items-center justify-center space-y-2">
                                     <i class="fa-solid fa-inbox text-3xl text-gray-300"></i>
                                     <p class="text-sm">Belum ada pesanan masuk atau hasil tidak ditemukan.</p>

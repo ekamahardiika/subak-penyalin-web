@@ -21,7 +21,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ProductSeeder::class,
             PetaniStockSeeder::class,
-            HargaBroadcastSeeder::class,
             OrderSeeder::class,
         ]);
     }

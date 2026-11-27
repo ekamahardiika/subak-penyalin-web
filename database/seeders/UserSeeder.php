@@ -19,23 +19,31 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Eka Mahardika',
-            'email' => 'eka@gmail.com',
+            'name' => 'Maha Sudayasa',
+            'email' => 'mahasudayasa@gmail.com',
             'password' => Hash::make('admin123'),
             'role' => 'petani',
             'phone' => '081234567891',
         ]);
 
         User::create([
-            'name' => 'Wayan Petani',
-            'email' => 'petani2@subak.test',
-            'password' => Hash::make('password'),
+            'name' => 'Sudayasa Made',
+            'email' => 'sudayasamade@gmail.com',
+            'password' => Hash::make('admin123'),
             'role' => 'petani',
             'phone' => '081234567892',
         ]);
 
         User::create([
-            'name' => 'Budi Satu',
+            'name' => 'Putu Mandaru',
+            'email' => 'putumandaru@gmail.com',
+            'password' => Hash::make('admin123'),
+            'role' => 'petani',
+            'phone' => '081234567892',
+        ]);
+
+        User::create([
+            'name' => 'I Made Budiarta',
             'email' => 'budi@gmail.com',
             'password' => Hash::make('admin123'),
             'role' => 'konsumen',
@@ -43,9 +51,9 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Konsumen Dua',
-            'email' => 'konsumen2@subak.test',
-            'password' => Hash::make('password'),
+            'name' => 'Komang Sukandi',
+            'email' => 'sukandi@gmail.com',
+            'password' => Hash::make('admin123'),
             'role' => 'konsumen',
             'phone' => '081234567894',
         ]);

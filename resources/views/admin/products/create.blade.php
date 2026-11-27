@@ -18,7 +18,24 @@
                     katalog konsumen.</p>
             </div>
 
-            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4"
+            @if (session('error') || $errors->any())
+                <div class="mb-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs space-y-1">
+                    <p class="font-bold flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        {{ session('error') ?? 'Periksa kembali input form Anda:' }}
+                    </p>
+                    @if ($errors->any())
+                        <ul class="list-disc list-inside space-y-0.5 text-red-600">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+            @endif
+
+            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data"
+                class="space-y-4"
                 @submit.prevent="$dispatch('open-confirm-modal', {
                     form: $el,
                     type: 'primary',
@@ -94,6 +111,10 @@
                         class="border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50 flex items-center justify-between">
                         <input type="file" name="gambar"
                             class="block w-full text-xs text-gray-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition-all cursor-pointer" />
+                        <p class="text-[11px] text-gray-400 mt-1.5">
+                            Format JPG, JPEG, PNG, atau WEBP. Maksimal ukuran file <span
+                                class="font-semibold text-gray-600">2 MB</span>.
+                        </p>
                         <i class="fa-regular fa-image text-gray-400 text-lg pr-2"></i>
                     </div>
                 </div>

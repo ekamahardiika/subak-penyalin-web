@@ -74,8 +74,10 @@
                     <tr>
                         <th scope="col" class="px-6 py-3.5 font-bold">No. Order / Transaksi</th>
                         <th scope="col" class="px-6 py-3.5 font-bold">Nama Konsumen</th>
+                        <th scope="col" class="px-6 py-3.5 font-bold">No. WhatsApp</th>
                         <th scope="col" class="px-6 py-3.5 font-bold">Tanggal Selesai</th>
                         <th scope="col" class="px-6 py-3.5 font-bold text-right">Total Pendapatan (Nett)</th>
+                        <th scope="col" class="px-6 py-3.5 font-bold text-center">Detail</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -85,7 +87,10 @@
                                 #{{ $o->no_order }}
                             </td>
                             <td class="px-6 py-4 font-semibold text-gray-700">
-                                {{ $o->user->name }}
+                                {{ $o->nama_pemesan ?? ($o->user->name ?? 'Konsumen Tidak Dikenal') }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-gray-700">
+                                {{ $o->whatsapp_pemesan ?: '-' }}
                             </td>
                             <td class="px-6 py-4 text-gray-500 text-xs">
                                 {{ $o->updated_at->format('d M Y, H:i') }} WIB
@@ -93,10 +98,16 @@
                             <td class="px-6 py-4 text-right font-bold text-emerald-700 font-mono">
                                 Rp {{ number_format($o->total_harga, 0, ',', '.') }}
                             </td>
+                            <td class="px-6 py-4 text-center">
+                                <a href="{{ route('admin.orders.show', $o->id) }}"
+                                    class="inline-flex items-center gap-1 bg-gray-50 hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 font-bold px-3 py-1.5 rounded-lg text-xs border border-gray-200 hover:border-emerald-200 transition-all cursor-pointer">
+                                    <i class="fa-solid fa-file-invoice text-xs"></i> Detail
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-10 text-center text-gray-400">
+                            <td colspan="6" class="px-6 py-10 text-center text-gray-400">
                                 <div class="flex flex-col items-center justify-center space-y-2">
                                     <i class="fa-solid fa-receipt text-3xl text-gray-300"></i>
                                     <p class="text-sm">Tidak ditemukan riwayat data transaksi penjualan selesai pada periode

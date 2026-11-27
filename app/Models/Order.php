@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
-        'no_order', 'user_id', 'total_harga', 'status', 'tanggal_pesan', 'catatan',
+        'no_order',
+        'user_id',
+        'nama_pemesan',
+        'whatsapp_pemesan',
+        'total_harga',
+        'status',
+        'tanggal_pesan',
+        'catatan',
     ];
 
     protected $casts = [
@@ -27,7 +34,7 @@ class Order extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function items()

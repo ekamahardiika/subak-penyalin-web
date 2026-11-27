@@ -26,19 +26,35 @@ class ProductController extends Controller
         $validated = $request->validate([
             'nama_produk' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'gambar' => 'nullable|image|max:5048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'harga_jual' => 'required|numeric|min:0',
             'satuan' => 'required|string|max:20',
             'status' => 'required|in:aktif,nonaktif',
+        ], [
+            'gambar.image' => 'Berkas harus berupa file gambar.',
+            'gambar.mimes' => 'Format gambar harus JPG, JPEG, PNG, atau WEBP.',
+            'gambar.max' => 'Ukuran gambar terlalu besar. Maksimal 2 MB (2048 KB).',
         ]);
 
-        if ($request->hasFile('gambar')) {
-            $validated['gambar'] = $request->file('gambar')->store('products', 'public');
+        try {
+            if ($request->hasFile('gambar')) {
+                $path = $request->file('gambar')->store('products', 'public');
+                if (! $path) {
+                    return back()
+                        ->withInput()
+                        ->with('error', 'Gagal menyimpan gambar produk. Periksa ukuran file atau konfigurasi penyimpanan.');
+                }
+                $validated['gambar'] = $path;
+            }
+
+            Product::create($validated);
+
+            return redirect()->route('admin.products.index')->with('success', 'Produk berhasil ditambahkan');
+        } catch (\Throwable $e) {
+            return back()
+                ->withInput()
+                ->with('error', 'Gagal menambahkan produk: '.$e->getMessage());
         }
-
-        Product::create($validated);
-
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil ditambahkan');
     }
 
     public function show(Product $product)
@@ -58,27 +74,52 @@ class ProductController extends Controller
         $validated = $request->validate([
             'nama_produk' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'gambar' => 'nullable|image|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'harga_jual' => 'required|numeric|min:0',
             'satuan' => 'required|string|max:20',
             'status' => 'required|in:aktif,nonaktif',
+        ], [
+            'gambar.image' => 'Berkas harus berupa file gambar.',
+            'gambar.mimes' => 'Format gambar harus JPG, JPEG, PNG, atau WEBP.',
+            'gambar.max' => 'Ukuran gambar terlalu besar. Maksimal 2 MB (2048 KB).',
         ]);
 
-        if ($request->hasFile('gambar')) {
-            if ($product->gambar && Storage::disk('public')->exists($product->gambar)) {
-                Storage::disk('public')->delete($product->gambar);
+        try {
+            if ($request->hasFile('gambar')) {
+                $path = $request->file('gambar')->store('products', 'public');
+                if (! $path) {
+                    return back()
+                        ->withInput()
+                        ->with('error', 'Gagal mengunggah gambar baru. Ukuran file mungkin terlalu besar atau penyimpanan bermasalah.');
+                }
+
+                if ($product->gambar && Storage::disk('public')->exists($product->gambar)) {
+                    Storage::disk('public')->delete($product->gambar);
+                }
+
+                $validated['gambar'] = $path;
             }
 
-            $validated['gambar'] = $request->file('gambar')->store('products', 'public');
+            $product->update($validated);
+
+            return redirect()->route('admin.products.index')->with('success', 'Produk berhasil diupdate');
+        } catch (\Throwable $e) {
+            return back()
+                ->withInput()
+                ->with('error', 'Gagal memperbarui produk: '.$e->getMessage());
         }
-
-        $product->update($validated);
-
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil diupdate');
     }
 
     public function destroy(Product $product)
     {
+        $hasOrders = $product->orderItems()->exists();
+
+        if ($hasOrders) {
+            return redirect()
+                ->route('admin.products.index')
+                ->with('error', 'Produk tidak dapat dihapus karena masih tercatat pada pesanan.');
+        }
+
         if ($product->gambar && Storage::disk('public')->exists($product->gambar)) {
             Storage::disk('public')->delete($product->gambar);
         }

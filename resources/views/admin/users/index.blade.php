@@ -21,34 +21,35 @@
         search: '',
         perPage: 10,
         currentPage: 1,
-            users: {{ \Illuminate\Support\Js::from(method_exists($users, 'items') ? $users->items() : $users) }},
-
-            get filteredUsers() {
-                if (this.search.trim() === '') {
-                    return this.users;
-                }
-                return this.users.filter(u => {
-                    return (u.name && u.name.toLowerCase().includes(this.search.toLowerCase())) ||
-                        (u.email && u.email.toLowerCase().includes(this.search.toLowerCase())) ||
-                        (u.phone && u.phone.toLowerCase().includes(this.search.toLowerCase()));
-                });
-            },
-
-            get totalPages() {
-                return Math.ceil(this.filteredUsers.length / this.perPage) || 1;
-            },
-
-            get pagedUsers() {
-                let start = (this.currentPage - 1) * this.perPage;
-                let end = start + parseInt(this.perPage);
-                return this.filteredUsers.slice(start, end);
-            },
-
-            init() {
-                this.$watch(' search', ()=> this.currentPage = 1);
-        this.$watch('perPage', () => this.currentPage = 1);
+        users: {{ \Illuminate\Support\Js::from(method_exists($users, 'items') ? $users->items() : $users) }},
+    
+        get filteredUsers() {
+            if (this.search.trim() === '') {
+                return this.users;
+            }
+            const q = this.search.toLowerCase();
+            return this.users.filter(u => {
+                return (u.name && u.name.toLowerCase().includes(q)) ||
+                    (u.email && u.email.toLowerCase().includes(q)) ||
+                    (u.phone && u.phone.toLowerCase().includes(q));
+            });
+        },
+    
+        get totalPages() {
+            return Math.ceil(this.filteredUsers.length / this.perPage) || 1;
+        },
+    
+        get pagedUsers() {
+            const start = (this.currentPage - 1) * this.perPage;
+            const end = start + parseInt(this.perPage);
+            return this.filteredUsers.slice(start, end);
+        },
+    
+        init() {
+            this.$watch('search', () => this.currentPage = 1);
+            this.$watch('perPage', () => this.currentPage = 1);
         }
-        }" class="space-y-4">
+    }" class="space-y-4">
 
         <div
             class="bg-white p-4 rounded-2xl border border-gray-100 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
@@ -111,7 +112,7 @@
                                             @submit.prevent="$dispatch('open-confirm-modal', {
                                                 form: $el,
                                                 title: 'Nonaktifkan Konsumen?',
-                                                message: `Data konsumen \'${u.name}\' akan dihapus permanen dan tidak dapat dikembalikan.`
+                                                message: `Akun konsumen '${u.name}' akan dinonaktifkan jika tidak memiliki pesanan yang sedang diproses.`
                                             })">
                                             @csrf
                                             @method('DELETE')

@@ -70,6 +70,14 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        $hasActiveOrders = $user->orders()->where('status', 'diproses')->exists();
+
+        if ($hasActiveOrders) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'Konsumen tidak dapat dinonaktifkan karena masih memiliki pesanan yang sedang diproses.');
+        }
+
         $user->delete();
 
         return redirect()->route('admin.users.index')->with('success', 'Konsumen berhasil dinonaktifkan');

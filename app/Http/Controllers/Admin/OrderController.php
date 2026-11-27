@@ -19,7 +19,7 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $order->load('user', 'items.product');
+        $order->load('user', 'items.product', 'items.stockAllocations.petaniStock.petani');
 
         return view('admin.orders.show', compact('order'));
     }

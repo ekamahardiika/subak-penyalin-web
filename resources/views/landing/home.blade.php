@@ -368,9 +368,9 @@
                             <div>
                                 <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">WhatsApp / Telepon
                                 </h4>
-                                <a href="https://wa.me/628123456789" target="_blank"
+                                <a href="https://wa.me/6281236089184" target="_blank"
                                     class="text-sm font-semibold text-gray-800 hover:text-green-600 transition-colors mt-0.5 block">
-                                    08123456789
+                                    081236089184
                                 </a>
                             </div>
                         </div>
